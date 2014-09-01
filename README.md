@@ -1,0 +1,4 @@
+GraphClass
+==========
+
+A graph class
