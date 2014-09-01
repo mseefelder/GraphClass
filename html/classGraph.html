@@ -37,6 +37,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -61,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -68,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -80,6 +82,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classGraph-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Graph Class Reference</div>  </div>
@@ -90,16 +94,316 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
  <a href="classGraph.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="graph_8h_source.html">graph.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ae4c72b8ac4d693c49800a4c7e273654f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#ae4c72b8ac4d693c49800a4c7e273654f">Graph</a> ()</td></tr>
+<tr class="memdesc:ae4c72b8ac4d693c49800a4c7e273654f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classGraph.html" title="The Graph class. ">Graph</a> Default constructor.  <a href="#ae4c72b8ac4d693c49800a4c7e273654f">More...</a><br/></td></tr>
+<tr class="separator:ae4c72b8ac4d693c49800a4c7e273654f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc717aca3e9b9461e39ca5277224e673"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#afc717aca3e9b9461e39ca5277224e673">logGraphInfo</a> (string path=&quot;./graphInfo.txt&quot;)</td></tr>
+<tr class="memdesc:afc717aca3e9b9461e39ca5277224e673"><td class="mdescLeft">&#160;</td><td class="mdescRight">logGraphInfo Logs info about the graph to a text file.  <a href="#afc717aca3e9b9461e39ca5277224e673">More...</a><br/></td></tr>
+<tr class="separator:afc717aca3e9b9461e39ca5277224e673"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6c509aa3988d91c15cafd67a0b1b096"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#ad6c509aa3988d91c15cafd67a0b1b096">BFS</a> (int inicial, string path=&quot;./graphBFS.txt&quot;)</td></tr>
+<tr class="memdesc:ad6c509aa3988d91c15cafd67a0b1b096"><td class="mdescLeft">&#160;</td><td class="mdescRight">BFS Runs a Breadth-first search and saves the result to a text file.  <a href="#ad6c509aa3988d91c15cafd67a0b1b096">More...</a><br/></td></tr>
+<tr class="separator:ad6c509aa3988d91c15cafd67a0b1b096"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae85759cf5830f7899cfb872124fae808"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#ae85759cf5830f7899cfb872124fae808">DFS</a> (int inicial, string path=&quot;./graphBFS.txt&quot;)</td></tr>
+<tr class="memdesc:ae85759cf5830f7899cfb872124fae808"><td class="mdescLeft">&#160;</td><td class="mdescRight">DFS Runs a Depth-first search and saves the result to a text file.  <a href="#ae85759cf5830f7899cfb872124fae808">More...</a><br/></td></tr>
+<tr class="separator:ae85759cf5830f7899cfb872124fae808"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a684873414628f08f55ed4a08e9172255"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a684873414628f08f55ed4a08e9172255">connectedComponents</a> ()</td></tr>
+<tr class="memdesc:a684873414628f08f55ed4a08e9172255"><td class="mdescLeft">&#160;</td><td class="mdescRight">connectedComponents Computes the graph's Connected Components on a text file.  <a href="#a684873414628f08f55ed4a08e9172255">More...</a><br/></td></tr>
+<tr class="separator:a684873414628f08f55ed4a08e9172255"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a902c5b3eacb66d60752525ab23297a95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a902c5b3eacb66d60752525ab23297a95">~Graph</a> ()</td></tr>
+<tr class="separator:a902c5b3eacb66d60752525ab23297a95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a8a8f6f6dc0d558fb187c23d504664e56"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">graphMatrix</a></td></tr>
+<tr class="memdesc:a8a8f6f6dc0d558fb187c23d504664e56"><td class="mdescLeft">&#160;</td><td class="mdescRight">graphMatrix Data structure if the user chooses Matrix Mode  <a href="#a8a8f6f6dc0d558fb187c23d504664e56">More...</a><br/></td></tr>
+<tr class="separator:a8a8f6f6dc0d558fb187c23d504664e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb26e5219f026636b1bb81f195a9e62d"><td class="memItemLeft" align="right" valign="top">int **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">graphList</a></td></tr>
+<tr class="memdesc:abb26e5219f026636b1bb81f195a9e62d"><td class="mdescLeft">&#160;</td><td class="mdescRight">graphList Data structure if the user chooses List Mode  <a href="#abb26e5219f026636b1bb81f195a9e62d">More...</a><br/></td></tr>
+<tr class="separator:abb26e5219f026636b1bb81f195a9e62d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classGraph.html" title="The Graph class. ">Graph</a> class. </p>
-</div><hr/>The documentation for this class was generated from the following files:<ul>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="ae4c72b8ac4d693c49800a4c7e273654f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Graph::Graph </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classGraph.html" title="The Graph class. ">Graph</a> Default constructor. </p>
+
+</div>
+</div>
+<a class="anchor" id="a902c5b3eacb66d60752525ab23297a95"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Graph::~Graph </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="ad6c509aa3988d91c15cafd67a0b1b096"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Graph::BFS </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>inicial</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em> = <code>&quot;./graphBFS.txt&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>BFS Runs a Breadth-first search and saves the result to a text file. </p>
+<p>The text output contains: <br/>
+The search tree. <br/>
+The root's degree is zero. <br/>
+To represent the tree just list for each vertex: <br/>
+ it's parent <br/>
+ it's degree <br/>
+ </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inicial</td><td>Vertex from wich the search starts </td></tr>
+    <tr><td class="paramname">path</td><td>Where to save the results </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if successfull, -1 if not </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a684873414628f08f55ed4a08e9172255"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Graph::connectedComponents </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>connectedComponents Computes the graph's Connected Components on a text file. </p>
+<p>Text output format:<br/>
+The number of connected components<br/>
+Size of each component<br/>
+Lists of vertices belonging to each component (in decrescent order of component size)<br/>
+ </p>
+<dl class="section return"><dt>Returns</dt><dd>1 if successfull, -1 if not </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae85759cf5830f7899cfb872124fae808"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Graph::DFS </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>inicial</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em> = <code>&quot;./graphBFS.txt&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>DFS Runs a Depth-first search and saves the result to a text file. </p>
+<p>The text output contains:<br/>
+The search tree.<br/>
+The root's degree is zero.<br/>
+To represent the tree just list for each vertex:<br/>
+ it's parent<br/>
+ it's degree<br/>
+ </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inicial</td><td>Vertex from wich the search starts </td></tr>
+    <tr><td class="paramname">path</td><td>Where to save the results </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if successfull, -1 if not </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afc717aca3e9b9461e39ca5277224e673"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Graph::logGraphInfo </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>path</em> = <code>&quot;./graphInfo.txt&quot;</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>logGraphInfo Logs info about the graph to a text file. </p>
+<p>The text file format is: <br/>
+'#' n = number of vertices <br/>
+'#' m = number of edges <br/>
+'#' d_medio = mean degree <br/>
+1 f(1) = n(1)/n <br/>
+2 f(2) = n(2)/n <br/>
+... <br/>
+d f(d) <br/>
+ </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>Where to save the log </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if successfull, -1 if not </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="abb26e5219f026636b1bb81f195a9e62d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int** Graph::graphList</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>graphList Data structure if the user chooses List Mode </p>
+
+</div>
+</div>
+<a class="anchor" id="a8a8f6f6dc0d558fb187c23d504664e56"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int* Graph::graphMatrix</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>graphMatrix Data structure if the user chooses Matrix Mode </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="graph_8h_source.html">graph.h</a></li>
-<li>graph.cpp</li>
+<li><a class="el" href="graph_8cpp.html">graph.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 1 2014 10:04:27 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 1 2014 15:32:01 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

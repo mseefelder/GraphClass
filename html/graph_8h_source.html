@@ -37,6 +37,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -68,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -82,7 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">graph.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef GRAPH_H</span></div>
+<a href="graph_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef GRAPH_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define GRAPH_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -90,22 +91,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classGraph.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classGraph.html">Graph</a></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="classGraph.html">Graph</a>() {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        graphMatrix = NULL;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        graphList = NULL;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classGraph.html#ae4c72b8ac4d693c49800a4c7e273654f">   17</a></span>&#160;    <a class="code" href="classGraph.html#ae4c72b8ac4d693c49800a4c7e273654f">Graph</a>() {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">graphMatrix</a> = NULL;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">graphList</a> = NULL;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">int</span> logGraphInfo(<span class="keywordtype">string</span> path = <span class="stringliteral">&quot;./graphInfo.txt&quot;</span>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classGraph.html#afc717aca3e9b9461e39ca5277224e673">logGraphInfo</a>(<span class="keywordtype">string</span> path = <span class="stringliteral">&quot;./graphInfo.txt&quot;</span>);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">int</span> BFS(<span class="keywordtype">int</span> inicial, <span class="keywordtype">string</span> path = <span class="stringliteral">&quot;./graphBFS.txt&quot;</span>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classGraph.html#ad6c509aa3988d91c15cafd67a0b1b096">BFS</a>(<span class="keywordtype">int</span> inicial, <span class="keywordtype">string</span> path = <span class="stringliteral">&quot;./graphBFS.txt&quot;</span>);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">int</span> DFS(<span class="keywordtype">int</span> inicial, <span class="keywordtype">string</span> path = <span class="stringliteral">&quot;./graphBFS.txt&quot;</span>);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classGraph.html#ae85759cf5830f7899cfb872124fae808">DFS</a>(<span class="keywordtype">int</span> inicial, <span class="keywordtype">string</span> path = <span class="stringliteral">&quot;./graphBFS.txt&quot;</span>);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">int</span> connectedComponents();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classGraph.html#a684873414628f08f55ed4a08e9172255">connectedComponents</a>();</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    ~<a class="code" href="classGraph.html">Graph</a>() {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">if</span> (graphMatrix) <span class="keyword">delete</span> graphMatrix;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span> (graphList) <span class="keyword">delete</span> graphList;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classGraph.html#a902c5b3eacb66d60752525ab23297a95">   83</a></span>&#160;    <a class="code" href="classGraph.html#a902c5b3eacb66d60752525ab23297a95">~Graph</a>() {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">graphMatrix</a>) <span class="keyword">delete</span> <a class="code" href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">graphMatrix</a>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">graphList</a>) <span class="keyword">delete</span> <a class="code" href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">graphList</a>;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keyword">protected</span>:</div>
@@ -113,17 +114,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">int</span> * graphMatrix;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">   96</a></span>&#160;    <span class="keywordtype">int</span> * <a class="code" href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">graphMatrix</a>;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">int</span> ** graphList;</div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">  101</a></span>&#160;    <span class="keywordtype">int</span> ** <a class="code" href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">graphList</a>;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;};</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#endif // GRAPH_H</span></div>
+<div class="ttc" id="classGraph_html_afc717aca3e9b9461e39ca5277224e673"><div class="ttname"><a href="classGraph.html#afc717aca3e9b9461e39ca5277224e673">Graph::logGraphInfo</a></div><div class="ttdeci">int logGraphInfo(string path=&quot;./graphInfo.txt&quot;)</div><div class="ttdoc">logGraphInfo Logs info about the graph to a text file. </div></div>
 <div class="ttc" id="classGraph_html"><div class="ttname"><a href="classGraph.html">Graph</a></div><div class="ttdoc">The Graph class. </div><div class="ttdef"><b>Definition:</b> graph.h:11</div></div>
+<div class="ttc" id="classGraph_html_a684873414628f08f55ed4a08e9172255"><div class="ttname"><a href="classGraph.html#a684873414628f08f55ed4a08e9172255">Graph::connectedComponents</a></div><div class="ttdeci">int connectedComponents()</div><div class="ttdoc">connectedComponents Computes the graph&#39;s Connected Components on a text file. </div></div>
+<div class="ttc" id="classGraph_html_ae4c72b8ac4d693c49800a4c7e273654f"><div class="ttname"><a href="classGraph.html#ae4c72b8ac4d693c49800a4c7e273654f">Graph::Graph</a></div><div class="ttdeci">Graph()</div><div class="ttdoc">Graph Default constructor. </div><div class="ttdef"><b>Definition:</b> graph.h:17</div></div>
+<div class="ttc" id="classGraph_html_a8a8f6f6dc0d558fb187c23d504664e56"><div class="ttname"><a href="classGraph.html#a8a8f6f6dc0d558fb187c23d504664e56">Graph::graphMatrix</a></div><div class="ttdeci">int * graphMatrix</div><div class="ttdoc">graphMatrix Data structure if the user chooses Matrix Mode </div><div class="ttdef"><b>Definition:</b> graph.h:96</div></div>
+<div class="ttc" id="classGraph_html_ae85759cf5830f7899cfb872124fae808"><div class="ttname"><a href="classGraph.html#ae85759cf5830f7899cfb872124fae808">Graph::DFS</a></div><div class="ttdeci">int DFS(int inicial, string path=&quot;./graphBFS.txt&quot;)</div><div class="ttdoc">DFS Runs a Depth-first search and saves the result to a text file. </div></div>
+<div class="ttc" id="classGraph_html_a902c5b3eacb66d60752525ab23297a95"><div class="ttname"><a href="classGraph.html#a902c5b3eacb66d60752525ab23297a95">Graph::~Graph</a></div><div class="ttdeci">~Graph()</div><div class="ttdef"><b>Definition:</b> graph.h:83</div></div>
+<div class="ttc" id="classGraph_html_abb26e5219f026636b1bb81f195a9e62d"><div class="ttname"><a href="classGraph.html#abb26e5219f026636b1bb81f195a9e62d">Graph::graphList</a></div><div class="ttdeci">int ** graphList</div><div class="ttdoc">graphList Data structure if the user chooses List Mode </div><div class="ttdef"><b>Definition:</b> graph.h:101</div></div>
+<div class="ttc" id="classGraph_html_ad6c509aa3988d91c15cafd67a0b1b096"><div class="ttname"><a href="classGraph.html#ad6c509aa3988d91c15cafd67a0b1b096">Graph::BFS</a></div><div class="ttdeci">int BFS(int inicial, string path=&quot;./graphBFS.txt&quot;)</div><div class="ttdoc">BFS Runs a Breadth-first search and saves the result to a text file. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 1 2014 10:04:27 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Sep 1 2014 15:32:01 for My Project by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
