@@ -1,18 +1,20 @@
-#include "graph.h"
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<cstdlib>
+#include<cstring>
+using namespace std;
 
-
-Graph::Graph()
+int main()
 {
-}
-
-int Graph::loadGraph(string path, int type){
 	string line;
 	int n,x,y;
 	char * value = NULL;
-	ifstream file (path , ios::in|ios::binary);
+	bool** graphMatrix;
+	ifstream file ("as_graph.txt",ios::in|ios::binary);
 	getline (file,line);
 	sscanf(line.c_str(), "%d", &n);
-	if (type == 0 ){
+	if (true){
 		graphMatrix= new bool*[n-1];
 		for ( int i = 0; i< n-1; i++){
 			graphMatrix[i] = new bool [n-1-i];
@@ -33,10 +35,8 @@ int Graph::loadGraph(string path, int type){
 			else graphMatrix[y][x] = true;
 		}
 	}
-	if (type == 1){
-		cout << "tarcos"<< endl;
-	}
-
-
+	
+	cout<<graphMatrix[5][6]<<graphMatrix[10][250]<<endl;
 
 }
+	
