@@ -29,8 +29,11 @@ int Graph::loadGraph(string path, int type){
 			//value = strtok(line.c_str()," ");
 			//y = atoi(value);
 			sscanf(line.c_str(), "%d %d", &x, &y);
-			if (y > x) graphMatrix[x][y] = true;
-			else graphMatrix[y][x] = true;
+			graphMatrix[x][y] = true;
+			graphMatrix[y][x] = true;
+			/*if (y > x) graphMatrix[x][y] = true;
+			else graphMatrix[y][x] = true;*/
+
 		}
 	}
 	if (type == 1){
