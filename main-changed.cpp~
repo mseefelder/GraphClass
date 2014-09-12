@@ -60,12 +60,13 @@ int main()
 
 	//delete lista;
 	for(int n = 0; n<lista->getSize(); n++) cout<<lista->listAll()[n]<<endl;
-	
+	int* minhalista;
+	minhalista = lista->listAll();
+	for(int m=0; m<lista->getSize(); m++) cout<<minhalista[m]<<endl;
 	int tamanho = lista->getSize();
 	int listaJunta[tamanho];
 	lista->list2Array(listaJunta);
 	for(int m=0; m<tamanho; m++) cout<<"ELEMENTO:"<<listaJunta[m]<<endl;
-	
 	return 1;
 }
 	

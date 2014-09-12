@@ -71,7 +71,7 @@ class linkedList
     int* listAll();
 
     //Converts linkedList to int array:
-    void list2Array(int* target);
+    void list2Array(int target[]);
     
     /*
 Lists all elements in two steps:
@@ -265,15 +265,19 @@ prevNode pointer points to;
         }
     }
 
-void linkedList::list2Array(int* target)
+void linkedList::list2Array(int target[])
 {
 	int i = 0;
-	int element[size];
+	//int element[size];
 
-	for(i = 0; i<size; i++)
-	{
-		element[i]=head->nextNode->value;
-	}
+	Node *p;
+    p=head->nextNode;
+    while (p->nextNode != NULL)
+    {
+        target[i] =  p->value;
+        p=p->nextNode;
+		i++;
+    }
 
-	target = element;
+	//target = element;
 }

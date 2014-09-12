@@ -2,7 +2,9 @@
 #define GRAPH_H
 
 #include <string>
-
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
 /**
  * \class Graph
  *
@@ -35,6 +37,8 @@ class Graph
      * @return 1 if successfull, -1 if not
      */
     int logGraphInfo(string path = "./graphInfo.txt");
+
+	int loadGraph(string path,int type);
 
     /**
      * @brief BFS Runs a Breadth-first search and saves the result to a text file
@@ -93,7 +97,7 @@ private:
     /**
      * @brief graphMatrix Data structure if the user chooses Matrix Mode
      */
-    int * graphMatrix;
+    bool ** graphMatrix;
 
     /**
      * @brief graphList Data structure if the user chooses List Mode
