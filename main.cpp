@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 using namespace std;
 
 int main()
@@ -10,18 +11,21 @@ int main()
 	string line;
 	int n,x,y;
 	char * value = NULL;
-	bool** graphMatrix;
+	vector<bool> bitMatrix;
+	//bool** graphMatrix;
 	ifstream file ("as_graph.txt",ios::in|ios::binary);
 	getline (file,line);
 	sscanf(line.c_str(), "%d", &n);
 	if (true){
-		graphMatrix= new bool*[n-1];
-		for ( int i = 0; i< n-1; i++){
-			graphMatrix[i] = new bool [n-1-i];
-			for( int j = 0 ; j < n-1-i ; j++){
-				graphMatrix[i][j] = false;
+		//graphMatrix= new bool*[n-1];
+		bitMatrix.resize(n*n, false);
+		/*for ( int i = 0; i< n-1; i++){
+			//graphMatrix[i] = new bool [n-1];
+			for( int j = 0 ; j < n-1 ; j++){
+				//graphMatrix[i][j] = false;
+				cout<<bitMatrix[1*n+1]<<endl;
 			}
-		}	
+		}*/	
 		while (!file.eof()){
 			getline(file,line);
 			//if (value) delete value;
@@ -31,12 +35,16 @@ int main()
 			//value = strtok(line.c_str()," ");
 			//y = atoi(value);
 			sscanf(line.c_str(), "%d %d", &x, &y);
-			if (y > x) graphMatrix[x][y] = true;
-			else graphMatrix[y][x] = true;
+			//graphMatrix[y][x] = true;
+			x--;
+			y--;
+			bitMatrix[x*n+y] = true;
+			bitMatrix[y*n+x] = true;
+			//graphMatrix[y][x] = true;
 		}
 	}
 	
-	cout<<graphMatrix[5][6]<<graphMatrix[10][250]<<endl;
+	cout<<bitMatrix[9*n+249]<<endl;
 
 }
 	

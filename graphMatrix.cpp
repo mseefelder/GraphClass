@@ -6,7 +6,7 @@ GraphMatrix::GraphMatrix()
 	graph = NULL
 }
 
-int GraphMatrix::loadGraph(string path){
+int GraphMatrix::loadGraph(string path,string output = "./graphInfo.txt"){
 	string line;
 	int n,x,y;
 	char * value = NULL;
