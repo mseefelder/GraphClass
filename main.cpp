@@ -50,6 +50,9 @@ int main()
 	int nVertices,x,y, mEdges;
 	float d_medio;
 
+	nVertices= 0;
+	x = 0;
+	y = 0;
 	mEdges = 0;
 	d_medio = 0.0;
 	char * value = NULL;
@@ -61,7 +64,8 @@ int main()
 	bitMatrix.resize(nVertices*nVertices,false); //resizing the bitMatrix to a fix size
 	int vertDegree[nVertices];//for each vertex, store it's degree
 	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
-		
+	for( int i = 0 ; i<nVertices ; i++) vertDegree[i] = 0;
+
 	while (!file.eof()){
 		getline(file,line);
 		sscanf(line.c_str(), "%d %d", &x, &y);
@@ -83,9 +87,8 @@ int main()
 
 	string degreeString;
 	for (int w= 0; w<nVertices; w++){
-		degreeString+= std::to_string(w)+ std::to_string(degrees[w]/nVertices)+"\n";
-	}	
-
+		degreeString+= std::to_string(w)+ " " + std::to_string(degrees[w]/(float)nVertices)+"\n";
+	}
 	d_medio = d_medio/nVertices;
 
 	ofstream outFile;
@@ -94,4 +97,3 @@ int main()
 	outFile.close();
 
 }
-	
