@@ -22,7 +22,7 @@ class GraphList: public Graph
     
     int logGraphInfo(string path = "./graphInfo.txt");
 
-	int loadGraph(string path);
+	int loadGraph(string path,string output = "./graphInfo.txt");
 
     int BFS(int inicial, string path = "./graphBFS.txt");
 

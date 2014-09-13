@@ -1,12 +1,12 @@
-#include "graphMatrix.h"
+#include "graphLista.h"
 
 
-GraphMatrix::GraphMatrix()
+GraphList::GraphList()
 {
 	graph = NULL
 }
 
-int GraphMatrix::loadGraph(string path){
+int GraphList::loadGraph(string path){
 	string line;
 	int n,x,y;
 	char * value = NULL;

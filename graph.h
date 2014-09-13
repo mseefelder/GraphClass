@@ -35,7 +35,7 @@ class Graph
      */
     int logGraphInfo(string path = "./graphInfo.txt");
 
-	virtual int loadGraph(string path);
+	virtual int loadGraph(string path,string output = "./graphInfo.txt");
 
     /**
      * @brief BFS Runs a Breadth-first search and saves the result to a text file

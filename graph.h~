@@ -16,10 +16,7 @@ class Graph
     /**
      * @brief Graph Default constructor
      */
-    Graph() {
-        graphMatrix = NULL;
-        graphList = NULL;
-    }
+    Graph();
 
     /**
      * @brief logGraphInfo Logs info about the graph to a text file.
@@ -38,7 +35,7 @@ class Graph
      */
     int logGraphInfo(string path = "./graphInfo.txt");
 
-	int loadGraph(string path,int type);
+	virtual int loadGraph(string path);
 
     /**
      * @brief BFS Runs a Breadth-first search and saves the result to a text file
@@ -54,7 +51,7 @@ class Graph
      * @param path Where to save the results
      * @return 1 if successfull, -1 if not
      */
-    int BFS(int inicial, string path = "./graphBFS.txt");
+    virtual int BFS(int inicial, string path = "./graphBFS.txt");
 
     /**
      * @brief DFS Runs a Depth-first search and saves the result to a text file
@@ -70,7 +67,7 @@ class Graph
      * @param path Where to save the results
      * @return 1 if successfull, -1 if not
      */
-    int DFS(int inicial, string path = "./graphBFS.txt");
+    virtual int DFS(int inicial, string path = "./graphBFS.txt");
 
     /**
      * @brief connectedComponents Computes the graph's Connected Components on a text file.
@@ -82,23 +79,15 @@ class Graph
      *
      * @return 1 if successfull, -1 if not
      */
-    int connectedComponents();
+    virtual int connectedComponents();
 
-    ~Graph() {
-        if (graphMatrix) delete graphMatrix;
-        if (graphList) delete graphList;
-    }
+    ~Graph();
 
 protected:
 
 
 
 private:
-    /**
-     * @brief graphMatrix Data structure if the user chooses Matrix Mode
-     */
-    bool ** graphMatrix;
-
     /**
      * @brief graphList Data structure if the user chooses List Mode
      */
