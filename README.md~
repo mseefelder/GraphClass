@@ -12,7 +12,6 @@ Classes working:
 GraphMatrixA --> graphM.h & graphM.cpp
 	to compile an example with it:
 	g++ -std=c++11 -Wall -o programis  graph.cpp graphM.cpp main.cpp
-linkedList --> linkedlist.h
 
 Classes broken:
 GraphList --> graphList.h & graphist.cpp (has to be implemented!)

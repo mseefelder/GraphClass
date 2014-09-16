@@ -12,11 +12,12 @@
  */
 class Graph
 {
-
+	public:
     /**
      * @brief Graph Default constructor
      */
-    Graph();
+    Graph(){}
+
 
     /**
      * @brief logGraphInfo Logs info about the graph to a text file.
@@ -33,9 +34,9 @@ class Graph
      * @param path Where to save the log
      * @return 1 if successfull, -1 if not
      */
-    int logGraphInfo(string path = "./graphInfo.txt");
+    //int logGraphInfo(std::string path);// = "./graphInfo.txt");
 
-	virtual int loadGraph(string path,string output = "./graphInfo.txt");
+	virtual int loadGraph(std::string path,std::string output) = 0;// = "./graphInfo.txt");
 
     /**
      * @brief BFS Runs a Breadth-first search and saves the result to a text file
@@ -51,7 +52,7 @@ class Graph
      * @param path Where to save the results
      * @return 1 if successfull, -1 if not
      */
-    virtual int BFS(int inicial, string path = "./graphBFS.txt");
+    virtual int BFS(int inicial, std::string path) = 0;// = "./graphBFS.txt");
 
     /**
      * @brief DFS Runs a Depth-first search and saves the result to a text file
@@ -67,7 +68,7 @@ class Graph
      * @param path Where to save the results
      * @return 1 if successfull, -1 if not
      */
-    virtual int DFS(int inicial, string path = "./graphBFS.txt");
+    //virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
     /**
      * @brief connectedComponents Computes the graph's Connected Components on a text file.
@@ -79,9 +80,9 @@ class Graph
      *
      * @return 1 if successfull, -1 if not
      */
-    virtual int connectedComponents();
+    //virtual int connectedComponents();
 
-    ~Graph();
+    ~Graph(){}
 
 protected:
 
@@ -91,7 +92,7 @@ private:
     /**
      * @brief graphList Data structure if the user chooses List Mode
      */
-    int ** graphList;
+    //int ** graphList;
 };
 
 #endif // GRAPH_H

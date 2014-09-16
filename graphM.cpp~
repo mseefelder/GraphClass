@@ -1,4 +1,4 @@
-#include "graphMatrix.h"
+#include "graphM.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,7 +10,7 @@
 //using namespace std;
 
 
-int GraphMatrix::loadGraph(std::string path, std::string output){// = OUTPATH){
+int GraphMatrixA::loadGraph(std::string path, std::string output){// = OUTPATH){
 	std::string line;
 	int x,y, mEdges;
 	float d_medio;
@@ -21,30 +21,30 @@ int GraphMatrix::loadGraph(std::string path, std::string output){// = OUTPATH){
 	mEdges = 0;
 	d_medio = 0.0;
 	char * value = NULL;
-	if (bitMatrix) delete bitMatrix;
-	bitMatrix = new std::vector<bool>;
+	
 	//std::ifstream file (path , ios::in|ios::binary);
 	std::ifstream file;
 	file.open(path, std::ifstream::in);
 	std::getline (file,line);
 	std::sscanf(line.c_str(), "%d", &nVertices);
 	std::cout<<nVertices<<"\n";
+	
+	if (bitMatrix) delete bitMatrix;
+	bitMatrix = new bool[nVertices*nVertices];
 
-	bitMatrix->resize(nVertices*nVertices,false); //resizing the bitMatrix to a fix size
 	int vertDegree[nVertices];//for each vertex, store it's degree
 	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
 	for( int i = 0 ; i<nVertices ; i++) vertDegree[i] = 0;
 	
-	std::getline(file,line);
+	std::getline(file,line);//gets line here, beacuse last line is eof
 	while (!file.eof()){
-		//std::getline(file,line);
 		std::sscanf(line.c_str(), "%d %d", &x, &y);
 		x--;y--;// trying not fill the index 0.
-		std::cout<<"Vertices:"<<x<<" "<<y<<"\n";
-		bitMatrix->assign(x*nVertices+y, true);
-		std::cout<<"ok1 \n";
-		bitMatrix->assign(y*nVertices+x, true);// redundance
-		std::cout<<"ok2 \n";
+		//std::cout<<"Vertices:"<<x<<" "<<y<<"\n";
+		bitMatrix[x*nVertices+y] = true;
+		//std::cout<<"ok1 \n";
+		bitMatrix[y*nVertices+x] = true;// redundance
+		//std::cout<<"ok2 \n";
 		mEdges++;
 		vertDegree[x]++;
 		vertDegree[y]++;
@@ -71,17 +71,17 @@ int GraphMatrix::loadGraph(std::string path, std::string output){// = OUTPATH){
 	outFile<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#d_medio = "<<d_medio<<"\n"<<degreeString<<std::endl;
 	outFile.close();
 	
-	for(int i = 0; i<nVertices*nVertices; i++){
-		std::cout<<"i = "<<i<<" - valor na bitMatrix: "<<bitMatrix[i]<<"\n";
-	}
+	//for(int i = 0; i<nVertices*nVertices; i++){
+	//	std::cout<<"i = "<<i<<" - valor na bitMatrix: "<<bitMatrix[i]<<"\n";
+	//}
 
 	return 1;
 }
 
-int GraphMatrix::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
+int GraphMatrixA::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	inicial = inicial -1;
 
-	std::cout<<"Tamanho da bitmatrix:"<<bitMatrix->size()<<"\n";
+	//std::cout<<"Tamanho da bitmatrix:"<<bitMatrix->size()<<"\n";
 	std::queue<int> fifo;
 	bool visited[nVertices]; //we can use vector<bool>
 	int parents[nVertices];
@@ -98,18 +98,21 @@ int GraphMatrix::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	
 	int line = 0;
 	int elementIndex=0;
-	while(fifo.size()!=0){
+	while(!fifo.empty()){
 			line = fifo.front(); //fifo.pop() <--removes the object and returns void
 			for (int column = 0; column<nVertices; column++){
 				elementIndex = line*nVertices+column;
-				std::cout<<elementIndex<<"\n";
-					if (bitMatrix->at(elementIndex)==true){
-						visited[column]=true;
-						fifo.push(column);
-						parents[column]=line;
-						levels[column]=levels[line]+1;
+				//std::cout<<elementIndex<<"\n";
+					if (bitMatrix[elementIndex]==true){
+						if (!visited[column]){
+							visited[column]=true;
+							fifo.push(column);
+							parents[column]=line;
+							levels[column]=levels[line]+1;
+						}
 					}
 			}
+			fifo.pop();
 
 	}
 	std::string vertexString;
@@ -125,5 +128,3 @@ int GraphMatrix::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	return 1;
 
 }
-
-

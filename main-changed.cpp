@@ -41,6 +41,7 @@ int main()
 	cout<<graphMatrix[5][6]<<graphMatrix[10][250]<<endl;
 	*/
 
+	/*
 	linkedList* lista;
 	lista = new linkedList;
 	lista->insert(1);
@@ -65,6 +66,72 @@ int main()
 	int listaJunta[tamanho];
 	lista->list2Array(listaJunta);
 	for(int m=0; m<tamanho; m++) cout<<"ELEMENTO:"<<listaJunta[m]<<endl;
+	*/
+	linkedList** graph;
+	string line;
+	int nVertices,x,y,mEdges;
+	float d_medio; //(sum of all degrees)/number of vertices()
+	
+	mEdges = 0;
+	d_medio = 0.0;
+	char * value = NULL;
+	
+	ifstream file ("as_graph.txt" , ios::in|ios::binary);
+	getline (file,line);
+	sscanf(line.c_str(), "%d", &nVertices);
+	cout<<nVertices<<"\n";
+	linkedList* grafo;
+	grafo = new linkedList[nVertices];
+	graph = &grafo; 
+	int vertDegree[nVertices];//for each vertex, store it's degree
+	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
+
+	//for (int i = 0; i<nVertices; i++){
+	//	graph[i] = new linkedList();
+	//}
+	cout<<"initialized!"<<endl;
+	while (!file.eof()){
+		getline(file,line);
+		sscanf(line.c_str(), "%d %d", &x, &y);
+		cout<<"line scanned \n";
+		if ((graph[0])->insert(1)==-1){
+				cout<<"deu ruim!"<<endl;
+				return -1;
+		}
+		cout<<"Teste:"<<graph[0]->listAll()[0]<<"\n";
+		for(int i = 0; i<nVertices; i++){
+				graph[i]->insert(1);
+				cout<<"Tá bom:"<<i<<"\n";
+		}
+		cout<<"No error until now... \n";
+		graph[x-1]->insert(y-1);
+		cout<<"[x-1] and no error \n";
+		graph[y-1]->insert(x-1);
+		cout<<"[y-1] and no error \n";
+		mEdges++;
+		vertDegree[x]++;
+		vertDegree[y]++;
+		d_medio+=2.0;
+	}
+
+	file.close();
+	
+	for (int j = 0; j<nVertices; j++){
+		degrees[vertDegree[j]]++;
+	}
+
+
+	string degreeString;
+	for (int j= 0; j<nVertices; j++){
+		degreeString+= std::to_string(j) + std::to_string(degrees[j]/nVertices) + "\n"; //when compiling, set flag -std=c++11
+	}	
+
+	d_medio = d_medio/nVertices;
+
+	ofstream outFile;
+	outFile.open("log_bolado.txt");
+	outFile<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#d_medio = "<<d_medio<<"\n"<<degreeString<<endl;
+
 	
 	return 1;
 }

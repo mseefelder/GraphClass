@@ -10,7 +10,6 @@ int GraphList::loadGraph(string path,string output = "./graphInfo.txt"){
 	string line;
 	int nVertices,x,y,mEdges;
 	float d_medio; //(sum of all degrees)/number of vertices()
-	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
 	
 	mEdges = 0;
 	d_medio = 0.0;
@@ -22,7 +21,8 @@ int GraphList::loadGraph(string path,string output = "./graphInfo.txt"){
 	
 	graph = new linkedList[n];
 	int vertDegree[nVertices];//for each vertex, store it's degree
-	
+	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
+
 	for (int i = 0; i<n; i++){
 			graph[i]=new linkedList;
 	}

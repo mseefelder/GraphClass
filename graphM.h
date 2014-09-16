@@ -1,5 +1,5 @@
-#ifndef GRAPHMATRIX_H
-#define GRAPHMATRIX_H
+#ifndef GRAPHMATRIXA_H
+#define GRAPHMATRIXA_H
 
 #include <fstream>
 #include <iostream>
@@ -15,13 +15,13 @@ using std::string;
  *
  * @brief The Graph class
  */
-class GraphMatrix: public Graph{
+class GraphMatrixA: public Graph{
 	
 	public:
     /**
      * @brief Graph Default constructor
      */
-    GraphMatrix() {
+    GraphMatrixA() {
         bitMatrix = NULL;
 		nVertices = 0;
     }
@@ -36,7 +36,7 @@ class GraphMatrix: public Graph{
 
     //int connectedComponents();
 
-    ~GraphMatrix() {
+    ~GraphMatrixA() {
         if (bitMatrix) delete bitMatrix;
      }
 
@@ -48,7 +48,7 @@ private:
     /**
      * @brief graphMatrix Data structure if the user chooses Matrix Mode
      */
-	std::vector<bool>* bitMatrix;
+	bool* bitMatrix;
 	int nVertices;
 
 };

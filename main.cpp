@@ -1,9 +1,12 @@
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <cstdlib>
-#include <cstring>
-#include <vector>
+using std::string;
+#include <string>
+#include <queue>
+#include "graph.h"
+
+#include "graphM.h"
 using namespace std;
 
 int main()
@@ -46,6 +49,7 @@ int main()
 	
 	cout<<bitMatrix[9*n+249]<<endl;*/
 
+	/*
 	string line;
 	int nVertices,x,y, mEdges;
 	float d_medio;
@@ -95,5 +99,18 @@ int main()
 	outFile.open("./graphInfo.txt");
 	outFile<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#d_medio = "<<d_medio<<"\n"<<degreeString<<endl;
 	outFile.close();
+	*/
+	cout<<"start \n";
+	GraphMatrixA Jujuba;
+	std::cout<<"grafo criado \n";
+	std::string inPath = "old_graphs/as_graph.txt";
+	std::string infoPath = "results/graph_info.txt";
+	std::string outPath = "results/graph_BFS.txt";
+	Jujuba.loadGraph(inPath, infoPath);
+	std::cout<<"grafo carregado \n";
+	Jujuba.BFS(1,outPath);
+	std::cout<<"BFS feita \n";
 
+	return 1;
+	
 }
