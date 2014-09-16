@@ -6,7 +6,7 @@ using std::string;
 #include <queue>
 #include "graph.h"
 
-#include "graphM.h"
+#include "graphMred.h"
 using namespace std;
 
 int main()
@@ -101,7 +101,7 @@ int main()
 	outFile.close();
 	*/
 	cout<<"start \n";
-	GraphMatrixA Jujuba;
+	GraphMatrixR Jujuba;
 	std::cout<<"grafo criado \n";
 	std::string inPath = "old_graphs/as_graph.txt";
 	std::string infoPath = "results/graph_info.txt";
