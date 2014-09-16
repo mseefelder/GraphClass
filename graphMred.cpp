@@ -133,3 +133,50 @@ int GraphMatrixR::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	return 1;
 
 }
+int GraphMatrixA::DFS(int inicial, std::string path){
+	std::stack<int> lifo;
+	bool visited[nVertices];
+	int parents[nVertices];
+	int levels[nVertices];
+	for (int i = 0; i<nVertices;i++){
+		visited[i] = false;
+		parents[i] = -2;
+		levels[i] = -1;
+	}
+	visited[inicial] = true;
+	parents[inicial] = -1;
+	levels[inicial] = 0;
+	lifo.push(inicial);
+
+	int line = 0;
+	int elementIndex = 0;
+	while(!fifo.empty()){
+		line = lifo.top();
+		lifo.pop();
+		for (int column = 0; column<nVertices;column++){
+			if (line>column){
+				elementIndex = ((line*line-line)/2)-(line-2)+column-2;}
+			else {
+				elementIndex = ((column*column-column)/2)-(column-2)+line-2;}
+			if (bitMatrix[elementIndex] == true){
+				if (!visited[column]){
+					visited[column]=true;
+					lifo.push(column);
+					parents[column] = line;
+					line[column] = levels[line] +1;
+				}
+			}
+		}
+	}
+	std::string vertexString;
+	for (int j= 0; j<nVertices; j++){
+		vertexString+= "V: "+std::to_string(j+1)+"Pai: "+std::to_string(parents[j]+1)+"Nivel: "+std::to_string(levels[j])+"\n";
+	}	
+
+	std::ofstream outFile;
+	outFile.open(path);
+	outFile<<"Resultado da BFS: \n"<<vertexString<<std::endl;
+	outFile.close();
+
+	return 1;
+}
