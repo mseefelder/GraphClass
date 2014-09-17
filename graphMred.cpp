@@ -184,11 +184,14 @@ int GraphMatrixR::DFS(int inicial, std::string path){
 	return 1;
 }
 int GraphMatrixR::connectedComponents(){
-	int nComponents = 0;
-	vector<int> edges (nVertices,0);
+	int nComponents = 1 ;
+	int edges[nVertices];
 	std::queue<int> fifo;
 	int line;
 	int elementIndex;
+	for(int x = 0;x<nVertices;x++){
+		edges[x] = 0;
+	}
 	for(int i = 0;i<nVertices;i++){
 		if(edges[i]==0){
 			fifo.push(i);
@@ -202,13 +205,13 @@ int GraphMatrixR::connectedComponents(){
 					if (bitMatrix[elementIndex]==true){
 						if (edges[column]==0){
 							fifo.push(column);
-							nComponents++;
-							edges[i] = 1;
+							edges[column] = nComponents;
 						}
 					}
 				}
 			fifo.pop();
 			}
+		nComponents += 1;
 		}
 	}
 	for (int j=0;j<nVertices;j++){
@@ -216,3 +219,4 @@ int GraphMatrixR::connectedComponents(){
 	}
 	return 1;
 }
+
