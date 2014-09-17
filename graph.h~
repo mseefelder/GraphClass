@@ -16,8 +16,7 @@ class Graph
     /**
      * @brief Graph Default constructor
      */
-    Graph(){	
-	}
+    Graph(){}
 
 
     /**
@@ -37,7 +36,7 @@ class Graph
      */
     //int logGraphInfo(std::string path);// = "./graphInfo.txt");
 
-	virtual int loadGraph(std::string path,std::string output);// = "./graphInfo.txt");
+	virtual int loadGraph(std::string path,std::string output) = 0;// = "./graphInfo.txt");
 
     /**
      * @brief BFS Runs a Breadth-first search and saves the result to a text file
@@ -53,7 +52,7 @@ class Graph
      * @param path Where to save the results
      * @return 1 if successfull, -1 if not
      */
-    virtual int BFS(int inicial, std::string path);// = "./graphBFS.txt");
+    virtual int BFS(int inicial, std::string path) = 0;// = "./graphBFS.txt");
 
     /**
      * @brief DFS Runs a Depth-first search and saves the result to a text file

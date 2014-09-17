@@ -80,7 +80,7 @@ class Graph
      *
      * @return 1 if successfull, -1 if not
      */
-    //virtual int connectedComponents();
+    virtual int connectedComponents()=0;
 
     ~Graph(){}
 

@@ -10,7 +10,7 @@
 //using namespace std;
 
 
-int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
+int GraphMatrixRB::loadGraph(std::string path, std::string output){// = OUTPATH){
 	std::string line;
 	int x,y, mEdges;
 	float d_medio;
@@ -29,8 +29,10 @@ int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
 	std::sscanf(line.c_str(), "%d", &nVertices);
 	std::cout<<nVertices<<"\n";
 	
-	if (bitMatrix) delete bitMatrix;
-	bitMatrix = new bool[(nVertices*(nVertices-1))/2];
+	//if (bitMatrix) delete bitMatrix;
+	//bitMatrix = new bool[(nVertices*(nVertices-1))/2];
+
+	bitMatrix = new vector<bool> ((nVertices*(nVertices-1))/2, false);
 
 	int vertDegree[nVertices];//for each vertex, store it's degree
 	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
@@ -85,7 +87,7 @@ int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
 	return 1;
 }
 
-int GraphMatrixR::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
+int GraphMatrixRB::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	inicial = inicial -1;
 
 	//std::cout<<"Tamanho da bitmatrix:"<<bitMatrix->size()<<"\n";
@@ -139,7 +141,7 @@ int GraphMatrixR::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	return 1;
 
 }
-int GraphMatrixR::DFS(int inicial, std::string path){
+int GraphMatrixRB::DFS(int inicial, std::string path){
 	inicial = inicial -1;
 	std::stack<int> lifo;
 	int parents[nVertices];
@@ -183,7 +185,7 @@ int GraphMatrixR::DFS(int inicial, std::string path){
 
 	return 1;
 }
-int GraphMatrixR::connectedComponents(){
+int GraphMatrixRB::connectedComponents(){
 	int nComponents = 1 ;
 	int edges[nVertices];
 	std::queue<int> fifo;
