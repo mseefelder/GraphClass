@@ -19,13 +19,15 @@ int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo
 	graph = new std::forward_list<int>[nVertices];
 
 	std::cout<<"Stayin' alive \n";
-
-	int vertDegree[nVertices];//for each vertex, store it's degree
+	
+	int* vertDegree;
+	vertDegree = new int[nVertices];//for each vertex, store it's degree
 	for (int i = 0; i<nVertices; i++){
 			vertDegree[i]=0;
 	}
-	int degrees[nVertices-1]; //for each degree, indicate # of vertices that has it
-	
+
+	int* degrees;
+	degrees = new int[nVertices-1]; //for each degree, indicate # of vertices that has it
 	for (int i = 0; i<(nVertices-1); i++){
 			degrees[i]=0;
 	}
@@ -33,7 +35,7 @@ int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo
 	std::cout<<"Before while: ";	
 	std::getline(file,line);
 	while (!file.eof()){
-		std::cout<<"-";
+		//std::cout<<"-";
 		//getline(file,line);
 		std::sscanf(line.c_str(), "%d %d", &x, &y);
 		x--; y--;
@@ -47,7 +49,7 @@ int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo
 		//std::cout<<"Degrees foi! \n";
 		d_medio+=2.0;
 		std::getline(file,line);
-		std::cout<<".";
+		//std::cout<<".";
 	}
 
 	file.close();
@@ -74,6 +76,8 @@ int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo
 	std::ofstream outFile;
 	outFile.open(output);
 	outFile<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#d_medio = "<<d_medio<<"\n"<<degreeString<<std::endl;
+	
+	delete degrees; delete vertDegree;
 
 	return 1;
 
@@ -85,8 +89,10 @@ int GraphListS::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	//std::cout<<"Tamanho da bitmatrix:"<<bitMatrix->size()<<"\n";
 	std::queue<int> fifo;
 	//bool visited[nVertices]; //we can use vector<bool>
-	int parents[nVertices];
-	int levels[nVertices];
+	int* parents;
+	parents = new int[nVertices];
+	int* levels;
+	levels = new int[nVertices];
 	for (int i  = 0; i<nVertices; i++){ 
 			//visited[i]=false;
 			parents[i]=-2;
@@ -142,8 +148,11 @@ int GraphListS::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 int GraphListS::DFS(int inicial, std::string path){
 	inicial = inicial -1;
 	std::stack<int> lifo;
-	int parents[nVertices];
-	int levels[nVertices];
+	int* parents;
+	parents = new int[nVertices];
+	int* levels;
+	levels = new int[nVertices];
+
 	for (int i = 0; i<nVertices;i++){
 		parents[i] = -2;
 		levels[i] = -1;
@@ -196,7 +205,8 @@ int GraphListS::DFS(int inicial, std::string path){
 }
 int GraphListS::connectedComponents(){
 	int nComponents = 1 ;
-	int edges[nVertices];
+	int* edges;
+	edges = new int[nVertices];
 	std::queue<int> fifo;
 	int line;
 	int elementIndex;
@@ -206,6 +216,7 @@ int GraphListS::connectedComponents(){
 	for(int i = 0;i<nVertices;i++){
 		if(edges[i]==0){
 			fifo.push(i);
+			edges[i] = nComponents;
 			while(!fifo.empty()){
 				line = fifo.front(); //fifo.pop() <--removes the object and returns void
 				for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
@@ -219,8 +230,21 @@ int GraphListS::connectedComponents(){
 		nComponents += 1;
 		}
 	}
+	
+	std::string caminhao = "results/ConnectedComp.txt";
+	std::ofstream outFile;
+	outFile.open(caminhao);
+	outFile<<"Componentes conexas: \n";
 	for (int j=0;j<nVertices;j++){
-		std::cout<<edges[j]<< "\n";
+		outFile<<edges[j]<< " - ";
 	}
+	outFile<<std::endl;
+
+	outFile.close();
+
+
+	//for (int j=0;j<nVertices;j++){
+	//	std::cout<<edges[j]<< "\n";
+	//}
 	return 1;
 }
