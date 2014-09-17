@@ -48,22 +48,25 @@ int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
 			bitMatrix[((y*y-y)/2)-(x-2)+x-2] = true;}
 		//std::cout<<"ok2 \n";
 		mEdges++;
-		vertDegree[x]++;
-		vertDegree[y]++;
+		vertDegree[x-1]++;
+		vertDegree[y-1]++;
 		d_medio+=2.0;
 		std::getline(file,line);
 	}
 
 	file.close();
+	for (int x = 0; x<nVertices;x++){
+		degrees[x] = 0;
+	}
 
 	for (int j = 0; j<nVertices; j++){
-		degrees[vertDegree[j]]++;
+		degrees[vertDegree[j]]+=1;
 	}
 
 
 	std::string degreeString;
 	for (int j= 0; j<nVertices; j++){
-		degreeString+= std::to_string(j)+" -  " +std::to_string(degrees[j]/(float)nVertices)+" aqui acaba uma linha\n";
+		degreeString+= std::to_string(j)+" - " +std::to_string(degrees[j]/(float)nVertices)+"\n";
 	}	
 
 	d_medio = d_medio/nVertices;
@@ -133,7 +136,7 @@ int GraphMatrixR::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	return 1;
 
 }
-int GraphMatrixA::DFS(int inicial, std::string path){
+int GraphMatrixR::DFS(int inicial, std::string path){
 	std::stack<int> lifo;
 	bool visited[nVertices];
 	int parents[nVertices];
@@ -150,7 +153,7 @@ int GraphMatrixA::DFS(int inicial, std::string path){
 
 	int line = 0;
 	int elementIndex = 0;
-	while(!fifo.empty()){
+	while(!lifo.empty()){
 		line = lifo.top();
 		lifo.pop();
 		for (int column = 0; column<nVertices;column++){
@@ -163,7 +166,7 @@ int GraphMatrixA::DFS(int inicial, std::string path){
 					visited[column]=true;
 					lifo.push(column);
 					parents[column] = line;
-					line[column] = levels[line] +1;
+					levels[column] = levels[line] +1;
 				}
 			}
 		}
@@ -175,7 +178,7 @@ int GraphMatrixA::DFS(int inicial, std::string path){
 
 	std::ofstream outFile;
 	outFile.open(path);
-	outFile<<"Resultado da BFS: \n"<<vertexString<<std::endl;
+	outFile<<"Resultado da DFS: \n"<<vertexString<<std::endl;
 	outFile.close();
 
 	return 1;

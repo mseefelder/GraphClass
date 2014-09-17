@@ -34,7 +34,7 @@ class GraphMatrixR: public Graph{
 
     virtual int BFS(int inicial, std::string path);// = "./graphBFS.txt");
 
-    //int DFS(int inicial, std::string path);// = "./graphBFS.txt");
+    virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
     //int connectedComponents();
 

@@ -103,13 +103,16 @@ int main()
 	cout<<"start \n";
 	GraphMatrixR Jujuba;
 	std::cout<<"grafo criado \n";
-	std::string inPath = "old_graphs/as_graph.txt";
+	std::string inPath = "old_graphs/ten_graph.txt";
 	std::string infoPath = "results/graph_info.txt";
 	std::string outPath = "results/graph_BFS.txt";
 	Jujuba.loadGraph(inPath, infoPath);
 	std::cout<<"grafo carregado \n";
 	Jujuba.BFS(1,outPath);
 	std::cout<<"BFS feita \n";
+	outPath = "results/graph_DFS.txt";
+	Jujuba.DFS(1,outPath);
+	std::cout<< "DFS feita \n";
 
 	return 1;
 	
