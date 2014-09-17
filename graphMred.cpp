@@ -41,15 +41,17 @@ int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
 		std::sscanf(line.c_str(), "%d %d", &x, &y);
 		//x;y;// trying not fill the index 0.
 		//std::cout<<"Vertices:"<<x<<" "<<y<<"\n";
+		x--;y--;
 		if(x>y){
-			bitMatrix[((x*x-x)/2)-(x-2)+y-2] = true;}//bruxaria de soma gaussiana, depois explico melhor
+			//bitMatrix[((x*x-x)/2)-(x-2)+y-2] = true;}//bruxaria de soma gaussiana, depois explico melhor
+			bitMatrix[(((x+1)*x)/2)-x+y] = true;}
 		//std::cout<<"ok1 \n";
 		else{
-			bitMatrix[((y*y-y)/2)-(x-2)+x-2] = true;}
+			bitMatrix[(((y+1)*y)/2)-y+x] = true;}
 		//std::cout<<"ok2 \n";
 		mEdges++;
-		vertDegree[x-1]++;
-		vertDegree[y-1]++;
+		vertDegree[x]++;
+		vertDegree[y]++;
 		d_medio+=2.0;
 		std::getline(file,line);
 	}
@@ -84,19 +86,19 @@ int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
 }
 
 int GraphMatrixR::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
-	//inicial = inicial -1;
+	inicial = inicial -1;
 
 	//std::cout<<"Tamanho da bitmatrix:"<<bitMatrix->size()<<"\n";
 	std::queue<int> fifo;
-	bool visited[nVertices]; //we can use vector<bool>
+	//bool visited[nVertices]; //we can use vector<bool>
 	int parents[nVertices];
 	int levels[nVertices];
 	for (int i  = 0; i<nVertices; i++){ 
-			visited[i]=false;
+			//visited[i]=false;
 			parents[i]=-2;
 			levels[i]=-1;
 	}
-	visited[inicial]=true;
+	//visited[inicial]=true;
 	parents[inicial]=-1;
 	levels[inicial]=0;
 	fifo.push(inicial);
@@ -104,19 +106,21 @@ int GraphMatrixR::BFS(int inicial, std::string path){// = "./graphBFS.txt"){
 	int line = 0;
 	int elementIndex=0;
 	while(!fifo.empty()){
+			std::cout<<".";
 			line = fifo.front(); //fifo.pop() <--removes the object and returns void
 			for (int column = 0; column<nVertices; column++){
 				if(line>column){
-					elementIndex = ((line*line-line)/2)-(line-2)+column-2;}
+					elementIndex = (((line+1)*line)/2)-(line)+column;}
 				else{
-					elementIndex = ((column*column-column)/2)-(column-2)+line-2;}
+					elementIndex = (((column+1)*column)/2)-(column)+line;}
 				
 					if (bitMatrix[elementIndex]==true){
-						if (!visited[column]){
-							visited[column]=true;
+						//if (!visited[column]){
+						if (parents[column]==-2){
+							//visited[column]=true;
 							fifo.push(column);
-							parents[column]=line;//OLHAR ISSO!!! tá erradinho
-							levels[column]=levels[line]+1;//OLHAR ISSO!!! tá erradinho
+							parents[column]=(line);//parece certo
+							levels[column]=levels[line]+1;//parece certo
 						}
 					}
 			}

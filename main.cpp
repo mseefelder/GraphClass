@@ -36,7 +36,7 @@ int main()
 			//x = atoi(value);
 			//delete value;
 			//value = strtok(line.c_str()," ");
-			//y = atoi(value);
+			//y = atoi(value);R
 			sscanf(line.c_str(), "%d %d", &x, &y);
 			//graphMatrix[y][x] = true;
 			x--;
@@ -75,7 +75,7 @@ using namespace std;
 
 int main()
 {
-	/*string line;
+	//*string line;
 	int n,x,y;
 	char * value = NULL;
 	vector<bool> bitMatrix;
@@ -165,9 +165,9 @@ int main()
 	outFile.close();
 	*/
 	cout<<"start \n";
-	GraphMatrixR Jujuba;
+	GraphMatrixA Jujuba;
 	std::cout<<"grafo criado \n";
-	std::string inPath = "old_graphs/as_graph.txt";
+	std::string inPath = "old_graphs/ten_graph.txt";
 	std::string infoPath = "results/graph_info.txt";
 	std::string outPath = "results/graph_BFS.txt";
 	Jujuba.loadGraph(inPath, infoPath);
