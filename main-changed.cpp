@@ -67,6 +67,7 @@ int main()
 	lista->list2Array(listaJunta);
 	for(int m=0; m<tamanho; m++) cout<<"ELEMENTO:"<<listaJunta[m]<<endl;
 	*/
+	/*
 	linkedList** graph;
 	string line;
 	int nVertices,x,y,mEdges;
@@ -131,7 +132,18 @@ int main()
 	ofstream outFile;
 	outFile.open("log_bolado.txt");
 	outFile<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#d_medio = "<<d_medio<<"\n"<<degreeString<<endl;
-
+*/
+	int n = 0;
+	std::cout<<"Numero de listas? \n";
+	std::cin>>n;
+	linkedList* grafo;
+	grafo = new linkedList[n];
+	for(int i = 0; i<n; i++){
+		grafo[i].insert(i);
+	}
+	for(int i = 0; i<n; i++){
+		grafo[i].listAllS();
+	}
 	
 	return 1;
 }

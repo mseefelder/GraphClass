@@ -1,8 +1,13 @@
 #ifndef GRAPHLIST_H
 #define GRAPHLIST_H
 
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
+using std::string;
+#include <string>
+#include "graph.h"
 #include "linkedlist.h"
-
 
 
 /**
@@ -13,26 +18,26 @@
 class GraphList: public Graph
 {
 
+	public:
     /**
      * @brief Graph Default constructor
      */
-    Graph() {
+    GraphList() {
         graph = NULL;
     }
     
-    int logGraphInfo(string path = "./graphInfo.txt");
+    //int logGraphInfo(string path = "./graphInfo.txt");
 
-	int loadGraph(string path);
+	int loadGraph(std::string path,std::string output);// = "./graphInfo.txt");
 
-    int BFS(int inicial, string path = "./graphBFS.txt");
+    int BFS(int inicial, string path) {return 1;}
 
-    int DFS(int inicial, string path = "./graphBFS.txt");
+    //int DFS(int inicial, string path = "./graphBFS.txt");
 
-    int connectedComponents();
+    //int connectedComponents();
 
-    ~Graph() {
-        if (graphMatrix) delete graphMatrix;
-        if (graphList) delete graphList;
+    ~GraphList() {
+        if (graph) delete graph;
     }
 
 protected:

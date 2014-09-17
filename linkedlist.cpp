@@ -87,7 +87,7 @@ prevNode pointer points to;
   [ index | username ] ->
 */
 
-    void linkedList::listAllS()/
+    void linkedList::listAllS()
     {
         Node *p;
         
