@@ -113,6 +113,8 @@ int main()
 	outPath = "results/graph_DFS.txt";
 	Jujuba.DFS(1,outPath);
 	std::cout<< "DFS feita \n";
+	Jujuba.connectedComponents();
+	std::cout<<"componentes conexas descobertas! \n";
 
 	return 1;
 	
