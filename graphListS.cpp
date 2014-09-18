@@ -214,6 +214,55 @@ int GraphListS::connectedComponents(){
 
 /*
 int GraphListS::connectedComponents(){
+	int nComponents = 0 ;
+	bool* vertices;
+	vertices = new bool[nVertices];
+	std::queue<int> fifo;
+	std::vector<int> firstIndices;
+	int line;
+	int elementIndex;
+	
+	for(int x = 0;x<nVertices;x++){
+		edges[x] = false;
+	}
+	
+	for(int i = 0;i<nVertices;i++){
+		if(edges[i]==false){
+			fifo.push(i);
+			firstIndices.push_back();
+			edges[i] = nComponents;
+			while(!fifo.empty()){
+				line = fifo.front(); //fifo.pop() <--removes the object and returns void
+				for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
+					if (edges[*it]==-1){
+						fifo.push(*it);
+						edges[*it] = true;
+					}
+				}
+			fifo.pop();
+			}
+		nComponents += 1;
+		}
+	}
+	
+	std::string caminhao = "results/ConnectedComp.txt";
+	std::ofstream outFile;
+	outFile.open(caminhao);
+	outFile<<"Componentes conexas: \n";
+	for (int j=0;j<nVertices;j++){
+		outFile<<edges[j]<< " - ";
+	}
+	outFile<<std::endl;
+	outFile.close();
+
+	delete [] edges;
+	
+	return 1;
+}
+
+
+
+int GraphListS::connectedComponents(){
 	int nComponents = 0;
 	std::vector<int>* allComponents;
 	
