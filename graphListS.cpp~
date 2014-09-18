@@ -173,7 +173,7 @@ int GraphListS::DFS(int inicial, std::string path){
 
 	return 1;
 }
-/*
+/*//funciona é rapido mas não faz o que queremos
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	int* edges;
@@ -219,7 +219,8 @@ int GraphListS::connectedComponents(){
 	return 1;
 }
 */
-/*
+
+/*//Funciona e chama a BFS: Muito devagar
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	bool* edges;
@@ -263,6 +264,7 @@ int GraphListS::connectedComponents(){
 }
 */
 
+//igual a a que chama a BFS, mas tá com a BFSescrita inline
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	bool* vertices;
@@ -282,7 +284,7 @@ int GraphListS::connectedComponents(){
 	}
 	for(int i = 0;i<nVertices;i++){
 		if(vertices[i]==false){
-			std::cout<<"bfs:"<<std::endl;
+			//std::cout<<"bfs:"<<std::endl;
 			
 			inicial = i;
 	localComp = new CComp();
@@ -394,7 +396,7 @@ CComp* GraphListS::BFS_R(int inicial, bool* vertices){// = "./graphBFS.txt"){
 
 }
 
-/*
+/*//pode ser q
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	bool* vertices;
