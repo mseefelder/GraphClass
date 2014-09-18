@@ -11,8 +11,17 @@ using std::string;
 #include <stack>
 #include <vector>
 #include "graph.h"
-#include "linkedlist.h"
 
+typedef struct CComp
+{
+	CComp(int i){
+	index = i;
+	size = 0;
+	}
+    int index;
+    int size;
+    vector<int> vertices;
+} CComp; 
 
 /**
  * \class Graph
