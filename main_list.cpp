@@ -8,10 +8,10 @@ using namespace std;
 
 int main()
 {
-		cout<<"start \n";
+	cout<<"start \n";
 	GraphListS Jujuba;
 	std::cout<<"grafo criado \n";
-	std::string inPath = "old_graphs/ten_graph.txt";
+	std::string inPath = "../dblp.txt";
 	//std::string inPath = "../dblp.txt";
 	std::string infoPath = "results/graph_info.txt";
 	std::string outPath1 = "results/graph_BFS.txt";

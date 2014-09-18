@@ -5,6 +5,22 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+
+typedef struct CComp
+{
+	CComp(){
+	size = 0;
+	vertices = NULL;
+	}
+	
+    int size;
+    int* vertices;
+    
+    ~CComp(){
+    if(vertices) delete [] vertices;
+    }
+} CComp; 
+
 /**
  * \class Graph
  *
@@ -81,6 +97,10 @@ class Graph
      * @return 1 if successfull, -1 if not
      */
     virtual int connectedComponents()=0;
+    
+    virtual CComp* BFS_R(int inicial, bool* vertices) = 0;
+    
+    virtual bool compareByLength(const CComp &a, const CComp &b) = 0;
 
     ~Graph(){}
 

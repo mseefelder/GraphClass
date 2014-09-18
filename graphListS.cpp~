@@ -1,5 +1,10 @@
 #include "graphListS.h"
 
+bool GraphListS::compareByLength(const CComp &a, const CComp &b)
+{
+    return a.size < b.size;
+}
+
 int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo.txt"){
 	std::string line;
 	int x,y,mEdges;
@@ -13,7 +18,8 @@ int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo
 	file.open(path, std::ifstream::in);
 	std::getline (file,line);
 	std::sscanf(line.c_str(), "%d", &nVertices);	
-
+	
+	if(graph) delete [] graph;
 	graph = new std::forward_list<int>[nVertices];
 	
 	int* vertDegree;
@@ -48,19 +54,20 @@ int GraphListS::loadGraph(std::string path,std::string output){// = "./graphInfo
 	}
 
 	file.close();
-
+	int maxDegree = 0;
 	for (int j = 0; j<nVertices; j++){
 		//std::cout<<"Vert: "<<j+1<<" Degree: "<<vertDegree[j]<<":";
 		degrees[vertDegree[j]]++;
+		if(vertDegree[j]>maxDegree) maxDegree = vertDegree[j];
 		//std::cout<<"Works! \n";
 	}
 
 	std::string degreeString;
 	float temp = 0.0;
-	for (int j= 0; j<nVertices; j++){
+	for (int j= 0; j<maxDegree; j++){
 		temp = ((float)degrees[j]/nVertices);
 		degreeString+="Degree:"+std::to_string(j)+" --> "+std::to_string(temp)+"\n";
-	}	
+	}
 
 	d_medio = d_medio/nVertices;
 
@@ -166,7 +173,7 @@ int GraphListS::DFS(int inicial, std::string path){
 
 	return 1;
 }
-
+/*
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	int* edges;
@@ -211,7 +218,183 @@ int GraphListS::connectedComponents(){
 	
 	return 1;
 }
+*/
+/*
+int GraphListS::connectedComponents(){
+	int nComponents = 0 ;
+	bool* edges;
+	edges = new bool[nVertices];
+	std::queue<int> fifo;
+	std::vector<CComp*> allCC;
+	//std::list<CComp> allCC;
+	int line;
+	int elementIndex;
+	for(int x = 0;x<nVertices;x++){
+		edges[x] = false;
+	}
+	for(int i = 0;i<nVertices;i++){
+		if(edges[i]==false){
+			std::cout<<"bfs:"<<std::endl;
+			allCC.push_back(BFS_R(i, edges));
+			nComponents++;
+		}
+	}
+	
+	//allCC.sort*(allCC.begin(), allCC.end(), compareByLength);
+	std::cout<<"calculado"<<std::endl;
+	
+	std::string caminhao = "results/ConnectedComp.txt";
+	std::ofstream outFile;
+	outFile.open(caminhao);
+	outFile<<"Componentes conexas: \n";
+	for (int j=0;j<nComponents;j++){
+		outFile<<"Componente #"<<j<<"\n";
+		for(int i=0; i<allCC[j]->size; i++){
+			outFile<<allCC[j]->vertices[i]<<", ";
+		}
+		outFile<<"\n \n";
+	}
+	outFile<<std::endl;
+	outFile.close();
+	
+	delete [] edges;
+	
+	return 1;
+}
+*/
 
+int GraphListS::connectedComponents(){
+	int nComponents = 0 ;
+	bool* vertices;
+	vertices = new bool[nVertices];
+	std::queue<int> fifo;
+	std::vector<CComp*> allCC;
+	
+	CComp* localComp = NULL;
+	bool* belongs = NULL;
+	int inicial = 0;
+	
+	//std::list<CComp> allCC;
+	int line;
+	int elementIndex;
+	for(int x = 0;x<nVertices;x++){
+		vertices[x] = false;
+	}
+	for(int i = 0;i<nVertices;i++){
+		if(vertices[i]==false){
+			std::cout<<"bfs:"<<std::endl;
+			
+			inicial = i;
+	localComp = new CComp();
+	std::queue<int> fifo;
+	belongs = new bool[nVertices];
+	for (int i  = 0; i<nVertices; i++){ 
+			belongs[i]=false;
+	}
+	belongs[inicial]=true;
+	fifo.push(inicial);
+	int line = 0;
+	int elementIndex=0;
+	while(!fifo.empty()){
+			line = fifo.front(); //fifo.pop() <--removes the object and returns void
+			localComp->size++;
+			for ( auto oob = graph[line].begin(); oob != graph[line].end(); ++oob ){
+				if (belongs[*oob]==false){
+					fifo.push(*oob);
+					belongs[*oob]=true;
+					vertices[*oob]=true;
+				}
+			}
+			fifo.pop();
+	}
+	
+	localComp->vertices = new int[localComp->size];
+	
+	int counter = 0;
+	for (int j= 0; j<nVertices; j++){
+		if(belongs[j]){
+			
+			localComp->vertices[counter] = j;//"V: "+std::to_string(j+1)+"Pai: "+std::to_string(parents[j]+1)+"Nivel: "+std::to_string(levels[j])+"\n";
+			counter++;
+		}
+		
+	}
+	
+	delete [] belongs;
+			
+			nComponents++;
+			allCC.push_back(localComp);
+		}
+	}
+	
+	//allCC.sort*(allCC.begin(), allCC.end(), compareByLength);
+	std::cout<<"calculado"<<std::endl;
+	
+	std::string caminhao = "results/ConnectedComp.txt";
+	std::ofstream outFile;
+	outFile.open(caminhao);
+	outFile<<"Componentes conexas: \n";
+	for (int j=0;j<nComponents;j++){
+		outFile<<"Componente #"<<j<<"\n";
+		for(int i=0; i<allCC[j]->size; i++){
+			outFile<<allCC[j]->vertices[i]<<", ";
+		}
+		outFile<<"\n \n";
+	}
+	outFile<<std::endl;
+	outFile.close();
+	
+	delete [] vertices;
+	
+	return 1;
+}
+
+CComp* GraphListS::BFS_R(int inicial, bool* vertices){// = "./graphBFS.txt"){
+	inicial = inicial;
+	CComp* localComp;
+	localComp = new CComp();
+	std::queue<int> fifo;
+	bool* belongs;
+	belongs = new bool[nVertices];
+	for (int i  = 0; i<nVertices; i++){ 
+			belongs[i]=false;
+	}
+	belongs[inicial]=true;
+	fifo.push(inicial);
+	int line = 0;
+	int elementIndex=0;
+	while(!fifo.empty()){
+			line = fifo.front(); //fifo.pop() <--removes the object and returns void
+			localComp->size++;
+			for ( auto oob = graph[line].begin(); oob != graph[line].end(); ++oob ){
+				if (belongs[*oob]==false){
+					fifo.push(*oob);
+					belongs[*oob]=true;
+					vertices[*oob]=true;
+				}
+			}
+			fifo.pop();
+	}
+	
+	localComp->vertices = new int[localComp->size];
+	
+	int counter = 0;
+	for (int j= 0; j<nVertices; j++){
+		if(belongs[j]){
+			
+			localComp->vertices[counter] = j;//"V: "+std::to_string(j+1)+"Pai: "+std::to_string(parents[j]+1)+"Nivel: "+std::to_string(levels[j])+"\n";
+			counter++;
+		}
+		
+	}
+	
+	delete [] belongs;
+
+	return localComp;
+
+}
+
+/*
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	bool* vertices;
@@ -389,44 +572,5 @@ int GraphListS::connectedComponents(){
 	}
 }
 
-CComp GraphListS::BFS_R(int inicial, int index, std::vector<int> vertices){// = "./graphBFS.txt"){
-	inicial = inicial -1;
-	
-	CComp* localComp;
-	localComp = new localComp(index);
 
-	std::queue<int> fifo;
-	int* parents;
-	parents = new int[nVertices];
-	int* levels;
-	levels = new int[nVertices];
-	for (int i  = 0; i<nVertices; i++){ 
-			parents[i]=-2;
-			levels[i]=-1;
-	}
-	parents[inicial]=-1;
-	levels[inicial]=0;
-	fifo.push(inicial);
-	
-	int line = 0;
-	int elementIndex=0;
-	while(!fifo.empty()){
-			line = fifo.front(); //fifo.pop() <--removes the object and returns void
-			localComp.vertices.push_back(line);
-			localComp.size++;
-			for ( auto it = graph[line].begin(); it != graph[line].end(); ++it ){
-				if (parents[*it]==-2){
-					fifo.push(*it);
-					parents[*it]=line;
-					levels[*it]=levels[line]+1;
-				}
-			}
-			fifo.pop();
-	}
-	
-	delete [] parents; delete [] levels;
-
-	return localComp;
-
-}
 */

@@ -10,18 +10,8 @@ using std::string;
 #include <queue>
 #include <stack>
 #include <vector>
+#include <list>
 #include "graph.h"
-
-typedef struct CComp
-{
-	CComp(int i){
-	index = i;
-	size = 0;
-	}
-    int index;
-    int size;
-    std::vector<int> vertices;
-} CComp; 
 
 /**
  * \class Graph
@@ -45,10 +35,14 @@ class GraphListS: public Graph
 	virtual int loadGraph(std::string path,std::string output);// = "./graphInfo.txt");
 
     virtual int BFS(int inicial, std::string path);
+    
+    virtual CComp* BFS_R(int inicial, bool* vertices);
 
     virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
     virtual int connectedComponents();
+    
+    virtual bool compareByLength(const CComp &a, const CComp &b);
 
     ~GraphListS() {
         if (graph) delete [] graph;
