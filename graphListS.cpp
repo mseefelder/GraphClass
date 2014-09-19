@@ -1,5 +1,16 @@
 #include "graphListS.h"
 
+class CompareDist
+{
+public:
+    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2)
+    {
+
+      return n1.second<n2.second;
+
+    }
+};
+
 bool GraphListS::compareByLength(const CComp &a, const CComp &b)
 {
     return a.size < b.size;
@@ -173,7 +184,8 @@ int GraphListS::DFS(int inicial, std::string path){
 
 	return 1;
 }
-/*//funciona é rapido mas não faz o que queremos
+/*
+//funciona é rapido mas não faz o que queremos
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
 	int* edges;
@@ -219,6 +231,110 @@ int GraphListS::connectedComponents(){
 	return 1;
 }
 */
+int GraphListS::connectedComponents(){
+	std::cout<<">>||"<<std::endl;
+	int nComponents = 0 ;//vai contar o número de componentes
+	 
+	//para armazenar pares de <elemento por onde comecei a bfs, tamanho da componente conexa>
+	std::priority_queue< std::pair<int,int>, std::vector< std::pair<int,int> >,CompareDist > myHeap;
+	
+	bool* vertices;
+	vertices = new bool[nVertices];//vai marcar quem já ta em alguma CC
+	std::queue<int> fifo;
+	int line;
+	int size = 0;
+	
+	for(int x = 0;x<nVertices;x++){
+		vertices[x] = false;//pra primeira BFS, começa tudo falso
+	}
+	std::cout<<"1BFS"<<std::endl;
+	//Primeira BFS, pega pra cada componente o vertice inicial e o tamanho
+	for(int i = 0;i<nVertices;i++){
+		size = 0;
+		if(vertices[i]==false){
+			fifo.push(i);
+			vertices[i] = true;
+			size++;
+			nComponents++;
+			while(!fifo.empty()){
+				line = fifo.front(); //fifo.pop() <--removes the object and returns void
+				for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
+					if (vertices[*it]==false){//nessa primeira BFS só olha os vertices que ainda estão false
+						fifo.push(*it);
+						vertices[*it] = true;
+						size++;
+					}
+				}
+			fifo.pop();
+			}
+		myHeap.emplace(i,size);//a heap bota no topo a maior componente (ordena pelo size).
+		}
+	}
+	std::cout<<"1BFS-end"<<std::endl;
+	//IMPORTANTE: Agora, no vertices[], todos os elementos são true. 
+	//Pra proxima BFS vamos usar true como ainda nao marcado e false como marcado
+	
+	int counter = 0;//Em cada loop interno vai conar em que posicao do array da CC estamos colocando o elemento 
+	int vertice = 0;//Vamos guardar o elemento por onde começamos
+	
+	int** ccOrder;//array de arrays para guardar todas as componentes conexas.
+	ccOrder = new int*[nComponents];
+	
+	std::cout<<"2BFS"<<std::endl;
+	for(int i = 0;i<nComponents;i++){
+		counter = 2;
+		size = myHeap.top().second;
+		ccOrder[i] = new int[size+1];//aloca tamanho size+1 pra colocar no elemento 0 qual o tamanho da
+									//componente que ta vindo e depois insere os vertices todos
+		vertice = myHeap.top().first;
+		ccOrder[i][0] = size;//temos q colocar isso no arquivo e usar pra otimizar o loop de output
+		ccOrder[i][1] = vertice+1;//bota o elemento que vai começar a BFS
+		
+		//std::cout<<vertice<<" "<<size<<"\n";
+		
+		myHeap.pop();
+		
+		//rodo a BFS a partir do vertice e aloco na array da componente conexa dele
+		fifo.push(vertice);
+		vertices[vertice] = false;
+		while(!fifo.empty()){
+			line = fifo.front();
+			for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
+				if (vertices[*it]==true){
+					fifo.push(*it);
+					vertices[*it] = false;
+					ccOrder[i][counter] = *it+1;
+					counter++;
+				}
+			}
+		fifo.pop();
+		}
+	}
+	std::cout<<"2BFS-end"<<std::endl;
+	
+	//printo
+	std::string caminhao = "results/ConnectedComp.txt";
+	std::ofstream outFile;
+	outFile.open(caminhao);
+	outFile<<"Componentes conexas: \n";
+	for (int j=0;j<nComponents;j++){
+		size = ccOrder[j][0];
+		//std::cout<<"1"<<std::endl;
+		outFile<<"Componente #"<<j<<" - Tamanho: "<<size<<"\n";
+		for (int i = 1; i<size+1; i++){
+			outFile<<ccOrder[j][i]<<", ";
+		}
+		outFile<<"\n";
+		delete [] ccOrder[j];
+	}
+	outFile<<std::endl;
+	outFile.close();
+
+	delete [] vertices; delete [] ccOrder;
+	
+	return 1;
+}
+
 
 /*//Funciona e chama a BFS: Muito devagar
 int GraphListS::connectedComponents(){
@@ -264,6 +380,7 @@ int GraphListS::connectedComponents(){
 }
 */
 
+/*
 //igual a a que chama a BFS, mas tá com a BFSescrita inline
 int GraphListS::connectedComponents(){
 	int nComponents = 0 ;
@@ -350,7 +467,7 @@ int GraphListS::connectedComponents(){
 	
 	return 1;
 }
-
+*/
 CComp* GraphListS::BFS_R(int inicial, bool* vertices){// = "./graphBFS.txt"){
 	inicial = inicial;
 	CComp* localComp;
