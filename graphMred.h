@@ -39,7 +39,7 @@ class GraphMatrixR: public Graph{
     virtual int connectedComponents();
 
     ~GraphMatrixR() {
-        if (bitMatrix) delete bitMatrix;
+        if (bitMatrix) delete [] bitMatrix;
      }
 
 protected:

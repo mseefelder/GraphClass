@@ -21,6 +21,17 @@ typedef struct CComp
     }
 } CComp; 
 
+class CompareDist
+{
+public:
+    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2)
+    {
+
+      return n1.second<n2.second;
+
+    }
+};
+
 /**
  * \class Graph
  *
@@ -98,9 +109,9 @@ class Graph
      */
     virtual int connectedComponents()=0;
     
-    virtual CComp* BFS_R(int inicial, bool* vertices) = 0;
+    //virtual CComp* BFS_R(int inicial, bool* vertices) = 0;
     
-    virtual bool compareByLength(const CComp &a, const CComp &b) = 0;
+    //virtual bool compareByLength(const CComp &a, const CComp &b) = 0;
 
     ~Graph(){}
 
