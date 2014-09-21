@@ -375,6 +375,8 @@ int GraphListS::Diameter(){
 /**/
 /**/
 int GraphListS::Diameter(){
+	
+	std::cout<<"Starting Diameter()"<<std::endl;
 	int diameter = 0;
 	
 	//int* vertices;
@@ -402,49 +404,52 @@ int GraphListS::Diameter(){
 	std::queue<int>* fifo;
 	fifo = new std::queue<int>[threadN];
 	
+	std::cout<<"Setup done!"<<std::endl;
+	
 #pragma omp parallel
    	{
-   	////
+//////////////A partir daqui tem uma cópia em cada thread, rodando
+   	int thread = omp_get_thread_num();
 	int line = 0;
 	//int nivel = 0;
 	int localDiameter = 0;
 	
 	//Primeira BFS, pega pra cada componente o vertice inicial e o tamanho
 #pragma omp for
-////////--------------------------------------
+////////--------------------------------------Esse for e dividido entre os threads
 	for(int i = 0;i<nVertices;i++){
 			
 			for(int x = 0; x<nVertices; x++){
-				levels[omp_get_thread_num()][x] = -1;}
+				levels[thread][x] = -1;}
 				
-			fifo[omp_get_thread_num()].push(i);
-			levels[omp_get_thread_num()][i] = 0;
+			fifo[thread].push(i);
+			levels[thread][i] = 0;
 			localDiameter = -1;
 			
-			while(!fifo[omp_get_thread_num()].empty()){
-				line = fifo[omp_get_thread_num()].front(); //fifo.pop() <--removes the object and returns void
+			while(!fifo[thread].empty()){
+				line = fifo[thread].front(); //fifo.pop() <--removes the object and returns void
 				//localDiameter++;
 				
 				for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
 					
-					if (levels[omp_get_thread_num()][*it]==-1){
+					if (levels[thread][*it]==-1){
 						
-						fifo[omp_get_thread_num()].push(*it);
-						levels[omp_get_thread_num()][*it]=levels[omp_get_thread_num()][line]+1;
-						if(levels[omp_get_thread_num()][*it]>localDiameter) localDiameter = levels[omp_get_thread_num()][*it];
+						fifo[thread].push(*it);
+						levels[thread][*it]=levels[thread][line]+1;
+						if(levels[thread][*it]>localDiameter) localDiameter = levels[thread][*it];
 						
 					}
 				
 				}
 			
-			fifo[omp_get_thread_num()].pop();
+			fifo[thread].pop();
 			
 			}
-			if(localDiameter>diameters[omp_get_thread_num()]) diameters[omp_get_thread_num()] = localDiameter;
+			if(localDiameter>diameters[thread]) diameters[thread] = localDiameter;
 ////////--------------------------------------
 	}
 
-	////
+//////////////
 	}
 	
 	for(int j = 0; j<threadN; j++){
