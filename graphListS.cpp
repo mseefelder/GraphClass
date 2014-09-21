@@ -325,3 +325,135 @@ CComp* GraphListS::BFS_R(int inicial, bool* vertices){// = "./graphBFS.txt"){
 	return localComp;
 
 }
+/*
+int GraphListS::Diameter(){
+	int diameter = 0;
+	
+	int* vertices;
+	vertices = new int[nVertices];
+	
+	int* levels;
+	levels = new int[nVertices];
+	for(int x = 0;x<nVertices;x++){
+		vertices[x] = -1;//pra primeira BFS, começa tudo falso
+		levels[x] = -1;
+	}
+	
+	std::queue<int> fifo;
+	
+	int line = 0;
+	int localDiameter = 0;
+	
+	std::cout<<"1BFS"<<std::endl;
+	//Primeira BFS, pega pra cada componente o vertice inicial e o tamanho
+	for(int i = 0;i<nVertices;i++){
+		
+			fifo.push(i);
+			vertices[i] = i;
+			levels[i] = 0;
+			localDiameter = -1;
+			while(!fifo.empty()){
+				line = fifo.front(); //fifo.pop() <--removes the object and returns void
+				localDiameter++;
+				for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
+					if (vertices[*it]!=(i)){//nessa primeira BFS só olha os vertices que ainda estão false
+						fifo.push(*it);
+						vertices[*it] = i;
+						levels[*it]=levels[line]+1;
+						if(levels[*it]>localDiameter) localDiameter = levels[*it];
+					}
+				}
+			fifo.pop();
+			}
+			if(localDiameter>diameter) diameter = localDiameter;
+	}
+	
+	std::cout<<diameter<<std::endl;
+	return diameter;
+	
+}
+/**/
+/**/
+int GraphListS::Diameter(){
+	int diameter = 0;
+	
+	//int* vertices;
+	//vertices = new int[nVertices];
+
+	int threadN = omp_get_max_threads();
+	std::cout<<threadN<<std::endl;
+	
+	int* diameters;
+	diameters = new int[threadN];
+	
+	int** levels;
+	levels = new int*[threadN];
+	for(int i = 0; i<threadN; i++){
+		levels[i] = new int[nVertices];
+		diameters[i] = 0;
+	}
+	
+	#pragma omp parallel
+   	{
+   		for(int x = 0; x<nVertices; x++)
+			levels[omp_get_thread_num()][x] = -1;
+	}
+	
+	std::queue<int>* fifo;
+	fifo = new std::queue<int>[threadN];
+	
+#pragma omp parallel
+   	{
+   	////
+	int line = 0;
+	//int nivel = 0;
+	int localDiameter = 0;
+	
+	//Primeira BFS, pega pra cada componente o vertice inicial e o tamanho
+#pragma omp for
+////////--------------------------------------
+	for(int i = 0;i<nVertices;i++){
+			
+			for(int x = 0; x<nVertices; x++){
+				levels[omp_get_thread_num()][x] = -1;}
+				
+			fifo[omp_get_thread_num()].push(i);
+			levels[omp_get_thread_num()][i] = 0;
+			localDiameter = -1;
+			
+			while(!fifo[omp_get_thread_num()].empty()){
+				line = fifo[omp_get_thread_num()].front(); //fifo.pop() <--removes the object and returns void
+				//localDiameter++;
+				
+				for (auto it = graph[line].begin(); it != graph[line].end(); ++it){
+					
+					if (levels[omp_get_thread_num()][*it]==-1){
+						
+						fifo[omp_get_thread_num()].push(*it);
+						levels[omp_get_thread_num()][*it]=levels[omp_get_thread_num()][line]+1;
+						if(levels[omp_get_thread_num()][*it]>localDiameter) localDiameter = levels[omp_get_thread_num()][*it];
+						
+					}
+				
+				}
+			
+			fifo[omp_get_thread_num()].pop();
+			
+			}
+			if(localDiameter>diameters[omp_get_thread_num()]) diameters[omp_get_thread_num()] = localDiameter;
+////////--------------------------------------
+	}
+
+	////
+	}
+	
+	for(int j = 0; j<threadN; j++){
+		if(diameters[j]>diameter) diameter = diameters[j];
+	}
+	
+	std::cout<<"\n ---"<<diameter<<"---\n"<<std::endl;
+	return diameter;
+	
+}
+/**/
+

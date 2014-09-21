@@ -12,6 +12,7 @@ using std::string;
 #include <vector>
 #include <list>
 #include "graph.h"
+#include <omp.h>
 
 /**
  * \class Graph
@@ -43,6 +44,8 @@ class GraphListS: public Graph
     virtual int connectedComponents();
     
     virtual bool compareByLength(const CComp &a, const CComp &b);
+    
+    virtual int Diameter();
 
     ~GraphListS() {
         if (graph) delete [] graph;

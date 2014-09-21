@@ -109,6 +109,8 @@ class Graph
      */
     virtual int connectedComponents()=0;
     
+    virtual int Diameter()=0;
+    
     //virtual CComp* BFS_R(int inicial, bool* vertices) = 0;
     
     //virtual bool compareByLength(const CComp &a, const CComp &b) = 0;
