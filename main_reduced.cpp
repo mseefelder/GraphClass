@@ -14,7 +14,7 @@ int main()
 	cout<<"start \n";
 	GraphMatrixR Jujuba;
 	std::cout<<"grafo criado \n";
-	std::string inPath = "subdblp.txt";
+	std::string inPath = "../subdblp.txt";
 	std::string infoPath = "results/graph_info-matrix.txt";
 	std::string outPath = "results/graph_BFS-matrix.txt";
 	Jujuba.loadGraph(inPath, infoPath);

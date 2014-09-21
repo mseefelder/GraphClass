@@ -11,6 +11,7 @@
 
 
 int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
+	
 	std::string line;
 	int x,y, mEdges;
 	float d_medio;
@@ -27,50 +28,66 @@ int GraphMatrixR::loadGraph(std::string path, std::string output){// = OUTPATH){
 	file.open(path, std::ifstream::in);
 	std::getline (file,line);
 	std::sscanf(line.c_str(), "%d", &nVertices);
+	
 	std::cout<<nVertices<<"\n";
+	
 	if (bitMatrix) delete bitMatrix;
 	bitMatrix = new bool[(nVertices*(nVertices-1))/2];
-	for (int x=0 ;x < (nVertices*(nVertices-1))/2 ;x ++){bitMatrix[x] = false;}
+	for (int x=0 ;x < (nVertices*(nVertices-1))/2 ; x++){bitMatrix[x] = false;}
+	
 	std::cout<<"oi1"<<std::endl;
+	
 	int* vertDegree;
 	vertDegree = new int[nVertices];//for each vertex, store it's degree
 	for( int i = 0 ; i<nVertices ; i++){
 		vertDegree[i] = 0;
 	}
+	
 	std::cout<<"oi2"<<std::endl;
+	
 	int* degrees;
 	degrees = new int[nVertices-1]; //for each degree, indicate # of vertices that has it
 	for (int x = 0; x<nVertices-1;x++){
 		degrees[x] = 0;
 	}
+	
 	std::cout<<"oi3"<<std::endl;
+	
 	std::getline(file,line);//gets line here, beacuse last line is eof
 	while (!file.eof()){
 		std::sscanf(line.c_str(), "%d %d", &x, &y);
 		//x;y;// trying not fill the index 0.
 		//std::cout<<"Vertices:"<<x<<" "<<y<<"\n";
 		x--;y--;
+		
 		if(x>y){
 			//bitMatrix[((x*x-x)/2)-(x-2)+y-2] = true;}//bruxaria de soma gaussiana, depois explico melhor
 			bitMatrix[(((x+1)*x)/2)-x+y] = true;
 			std::cout<<(((x+1)*x)/2)-x+y<<std::endl;}
+		
 		else{
 			bitMatrix[(((y+1)*y)/2)-y+x] = true;
-		std::cout<<(((y+1)*y)/2)-y+x <<std::endl;}
+			std::cout<<(((y+1)*y)/2)-y+x <<std::endl;}
+		
 		mEdges++;
 		vertDegree[x]++;
 		vertDegree[y]++;
 		d_medio+=2.0;
 		std::getline(file,line);
 	}
+	
 	std::cout<<"oi4"<<std::endl;
+	
 	file.close();
+	
 	int maxDegree = 0;
 	for (int j = 0; j<nVertices; j++){
 		degrees[vertDegree[j]]+=1;
 		if(vertDegree[j]>maxDegree) maxDegree = vertDegree[j];
 	}
+	
 	std::cout<<"oi5"<<std::endl;
+	
 	std::string degreeString;
 	float temp = 0.0;
 	for (int j= 0; j<maxDegree; j++){
@@ -300,4 +317,6 @@ int GraphMatrixR::connectedComponents(){
 
 	return 1;
 }
+
+int GraphMatrixR::Diameter(){return 0;}
 

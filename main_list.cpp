@@ -12,8 +12,8 @@ int main()
 	cout<<"start \n";
 	GraphListS Jujuba;
 	//std::cout<<"grafo criado \n";
-	//std::string inPath = "old_graphs/as_graph.txt";
-	std::string inPath = "../dblp.txt";
+	std::string inPath = "old_graphs/as_graph.txt";
+	//std::string inPath = "../dblp.txt";
 	std::string infoPath = "results/graph_info.txt";
 	std::string outPath1 = "results/time.txt";
 	//std::string outPath2 = "results/graph_DFS.txt";

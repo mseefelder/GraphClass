@@ -37,6 +37,8 @@ class GraphMatrixR: public Graph{
     virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
     virtual int connectedComponents();
+    
+    virtual int Diameter();
 
     ~GraphMatrixR() {
         if (bitMatrix) delete [] bitMatrix;
