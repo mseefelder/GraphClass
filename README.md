@@ -3,36 +3,13 @@ GraphClass
 
 A graph class
 
+To use it include "graph.h" and one of the derived versions:
 
+Graph in an Adjacency List: "graphList.h"
 
-Base class:
-Graph --> graph.h & graph.cpp
+Attention, requires to include OpenMP (omp.h) and to compile with -fopenmp flag
 
-Classes working:
-GraphMatrixA --> graphM.h & graphM.cpp
-	to compile an example with it:
-	g++ -std=c++11 -Wall -o example  graph.cpp graphM.cpp main.cpp
-GraphMatrixR --> graphMred.h & graphMred.cpp (reduced matrix owing to Gaussian Sum wizardry)
-	to compile an example with it:
-	g++ -std=c++11 -Wall -o example  graph.cpp graphMred.cpp main_reduced.cpp
-linkedList --> linkedlist.h
+Graph in an Adjacency Matrix: "graphMatrix.h"
 
-Classes broken:
-GraphList --> graphList.h & graphist.cpp (has to be implemented!)
-GraphMatrix --> graphMatrix.h & graphMatrix.cpp
-
-To Do list:
-Matrix:
-[x]Data structure
-[x]LOG
-[x]BFS
-[]DFS
-[]Connected Components
-
-List:
-[not working]Data structure
-[]LOG
-[]BFS
-[]DFS
-[]Connected Components
+One example is included for each. For compilation instructions, refer to INSTRUCTIONS.txt
 
