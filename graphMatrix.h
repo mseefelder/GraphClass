@@ -27,18 +27,18 @@ class GraphMatrix: public Graph{
         bitMatrix = NULL;
 		nVertices = 0;
     }
-    
-    //virtual int logGraphInfo(std::string path);// = "./graphInfo.txt");
 
-	virtual int loadGraph(std::string path, std::string output);// = OUTPATH);
+	virtual int loadGraph(std::string path, std::string output);
 
-    virtual int BFS(int inicial, std::string path);// = "./graphBFS.txt");
+    virtual int BFS(int inicial, std::string path);
 
-    virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
+    virtual int DFS(int inicial, std::string path);
 
-    virtual int connectedComponents();
+    virtual int connectedComponents(std::string path);
     
     virtual int Diameter(int b, int e);
+    
+    virtual int getNumberOfVertices();
 
     ~GraphMatrix() {
         if (bitMatrix) delete [] bitMatrix;

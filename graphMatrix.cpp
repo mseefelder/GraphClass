@@ -188,7 +188,7 @@ int GraphMatrix::DFS(int inicial, std::string path){
 	return 1;
 }
 
-int GraphMatrix::connectedComponents(){
+int GraphMatrix::connectedComponents(std::string path){
 	int nComponents = 0;
 	std::priority_queue< std::pair<int,int>, std::vector< std::pair<int,int> >,CompareDist > myHeap;
 	bool* vertices;
@@ -273,7 +273,6 @@ int GraphMatrix::connectedComponents(){
 	}
 	//FIM DA SECOND BFS
 	std::cout << "termina second bfs !\n";
-	std:: string path = "results/connectedComp-matrix.txt";
 	std::ofstream outFile;
 	outFile.open(path);
 	outFile<<"Componentes conexas: \n";
@@ -299,5 +298,9 @@ int GraphMatrix::Diameter(int b, int e){
 	
 	return 0;
 
+}
+
+int GraphMatrix::getNumberOfVertices(){
+	return nVertices;
 }
 

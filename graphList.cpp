@@ -162,7 +162,7 @@ int GraphList::DFS(int inicial, std::string path){
 	return 1;
 }
 
-int GraphList::connectedComponents(){
+int GraphList::connectedComponents(std::string path){
 	std::cout<<">>||"<<std::endl;
 	int nComponents = 0 ;//vai contar o número de componentes
 	 
@@ -243,7 +243,6 @@ int GraphList::connectedComponents(){
 	std::cout<<"2BFS-end"<<std::endl;
 	
 	//printo
-	std::string path = "results/connectedComp-matrix.txt";
 	std::ofstream outFile;
 	outFile.open(path);
 	outFile<<"Componentes conexas: \n";
@@ -263,6 +262,10 @@ int GraphList::connectedComponents(){
 	delete [] vertices; delete [] ccOrder;
 	
 	return 1;
+}
+
+int GraphList::getNumberOfVertices(){
+	return nVertices;
 }
 
 int GraphList::Diameter(int b, int e){

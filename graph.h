@@ -93,7 +93,9 @@ class Graph
      *
      * @return 1
      */
-    virtual int connectedComponents()=0;
+    virtual int connectedComponents(std::string path)=0;
+    
+    virtual int getNumberOfVertices()=0;
     
     virtual int Diameter(int b, int e)=0;
 

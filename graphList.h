@@ -39,7 +39,9 @@ class GraphList: public Graph
 
     virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
-    virtual int connectedComponents();
+    virtual int connectedComponents(std::string path);
+    
+    virtual int getNumberOfVertices();
     
     virtual int Diameter(int b, int e);
 
