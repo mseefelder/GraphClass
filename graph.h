@@ -6,22 +6,7 @@
 #include <iostream>
 #include <cstdlib>
 
-typedef struct CComp
-{
-	CComp(){
-	size = 0;
-	vertices = NULL;
-	}
-	
-    int size;
-    int* vertices;
-    
-    ~CComp(){
-    if(vertices) delete [] vertices;
-    }
-} CComp; 
-
-class CompareDist
+class CompareDist //used in GraphList::Diameter()
 {
 public:
     bool operator()(std::pair<int,int> n1, std::pair<int,int> n2)
@@ -58,8 +43,9 @@ class Graph
      * ... \n
      * d f(d) \n
      *
-     * @param path Where to save the log
-     * @return 1 if successfull, -1 if not
+     * @param path Where to read graph from
+     * @param output Where to save the log
+     * @return 1
      */
     //int logGraphInfo(std::string path);// = "./graphInfo.txt");
 
@@ -77,7 +63,7 @@ class Graph
      *
      * @param inicial Vertex from wich the search starts
      * @param path Where to save the results
-     * @return 1 if successfull, -1 if not
+     * @return 1
      */
     virtual int BFS(int inicial, std::string path) = 0;// = "./graphBFS.txt");
 
@@ -93,9 +79,9 @@ class Graph
      *
      * @param inicial Vertex from wich the search starts
      * @param path Where to save the results
-     * @return 1 if successfull, -1 if not
+     * @return 1
      */
-    //virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
+    virtual int DFS(int inicial, std::string path) = 0;
 
     /**
      * @brief connectedComponents Computes the graph's Connected Components on a text file.
@@ -105,15 +91,11 @@ class Graph
      * Size of each component\n
      * Lists of vertices belonging to each component (in decrescent order of component size)\n
      *
-     * @return 1 if successfull, -1 if not
+     * @return 1
      */
     virtual int connectedComponents()=0;
     
-    virtual int Diameter()=0;
-    
-    //virtual CComp* BFS_R(int inicial, bool* vertices) = 0;
-    
-    //virtual bool compareByLength(const CComp &a, const CComp &b) = 0;
+    virtual int Diameter(int b, int e)=0;
 
     ~Graph(){}
 
@@ -122,10 +104,7 @@ protected:
 
 
 private:
-    /**
-     * @brief graphList Data structure if the user chooses List Mode
-     */
-    //int ** graphList;
+
 };
 
 #endif // GRAPH_H

@@ -1,0 +1,9 @@
+Para compilar:
+
+Matriz:
+
+g++ -std=c++11 -o grafos graph.cpp graphMatrix.cpp main_matrix.cpp
+
+Lista:
+
+g++ -std=c++11 -fopenmp -o grafos graph.cpp graphList.cpp main_list.cpp

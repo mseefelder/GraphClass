@@ -6,9 +6,13 @@
 #include <cstdlib>
 using std::string;
 #include <string>
+#include <forward_list>//http://www.cplusplus.com/reference/forward_list/forward_list/
+#include <queue>
+#include <stack>
+#include <vector>
+#include <list>
 #include "graph.h"
-#include "linkedlist.h"
-
+#include <omp.h>
 
 /**
  * \class Graph
@@ -24,17 +28,22 @@ class GraphList: public Graph
      */
     GraphList() {
         graph = NULL;
+        nVertices = 0;
     }
     
     //int logGraphInfo(string path = "./graphInfo.txt");
 
-	int loadGraph(std::string path,std::string output);// = "./graphInfo.txt");
+	virtual int loadGraph(std::string path,std::string output);// = "./graphInfo.txt");
 
-    int BFS(int inicial, string path) {return 1;}
+    virtual int BFS(int inicial, std::string path);
 
-    //int DFS(int inicial, string path = "./graphBFS.txt");
+    virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
-    //int connectedComponents();
+    virtual int connectedComponents();
+    
+    virtual bool compareByLength(const CComp &a, const CComp &b);
+    
+    virtual int Diameter(int b, int e);
 
     ~GraphList() {
         if (graph) delete [] graph;
@@ -48,7 +57,8 @@ private:
     /**
      * @brief graphMatrix Data structure if the user chooses Matrix Mode
      */
-    linkedList* graph;
+    std::forward_list<int>* graph;
+    int nVertices;
 
 };
 

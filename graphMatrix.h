@@ -7,7 +7,9 @@
 using std::string;
 #include <string>
 #include <queue>
+#include <stack>
 #include "graph.h"
+
 
 
 /**
@@ -32,12 +34,14 @@ class GraphMatrix: public Graph{
 
     virtual int BFS(int inicial, std::string path);// = "./graphBFS.txt");
 
-    //int DFS(int inicial, std::string path);// = "./graphBFS.txt");
+    virtual int DFS(int inicial, std::string path);// = "./graphBFS.txt");
 
-    //int connectedComponents();
+    virtual int connectedComponents();
+    
+    virtual int Diameter(int b, int e);
 
     ~GraphMatrix() {
-        if (bitMatrix) delete bitMatrix;
+        if (bitMatrix) delete [] bitMatrix;
      }
 
 protected:
@@ -48,7 +52,7 @@ private:
     /**
      * @brief graphMatrix Data structure if the user chooses Matrix Mode
      */
-	std::vector<bool>* bitMatrix;
+	bool* bitMatrix;
 	int nVertices;
 
 };
