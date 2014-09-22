@@ -17,7 +17,7 @@ int main()
 	std::string inPath = "../subdblp.txt";//substituir pelo caminho desejado
 	std::string infoPath = "results/graph_info-matrix.txt";
 
-	Jujuba.loadGraph(inPath, infoPath);
+	Grafo.loadGraph(inPath, infoPath);
 
 
 	return 1;

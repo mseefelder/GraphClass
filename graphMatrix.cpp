@@ -293,7 +293,7 @@ int GraphMatrix::connectedComponents(){
 	return 1;
 }
 
-int GraphMatrix::Diameter(){
+int GraphMatrix::Diameter(int b, int e){
 	
 	std::cout<<"NOT IMPLEMENTED"<<std::endl;	
 	

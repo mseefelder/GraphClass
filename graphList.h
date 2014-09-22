@@ -41,8 +41,6 @@ class GraphList: public Graph
 
     virtual int connectedComponents();
     
-    virtual bool compareByLength(const CComp &a, const CComp &b);
-    
     virtual int Diameter(int b, int e);
 
     ~GraphList() {

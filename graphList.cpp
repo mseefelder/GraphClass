@@ -1,12 +1,5 @@
 #include "graphList.h"
 
-
-
-bool GraphList::compareByLength(const CComp &a, const CComp &b)
-{
-    return a.size < b.size;
-}
-
 int GraphList::loadGraph(std::string path,std::string output){
 	std::string line;
 	int x,y,mEdges;
