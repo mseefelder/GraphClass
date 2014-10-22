@@ -24,7 +24,7 @@ class adjMatrix
      * @brief Graph Default constructor
      */
     adjMatrix(){
-      data = NULL;
+      data = 0;
     }
 
     void generate(int numVertices);
@@ -42,4 +42,3 @@ protected:
 };
 
 #endif // ADJLIST_H
-

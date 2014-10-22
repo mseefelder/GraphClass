@@ -27,7 +27,6 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   if(count == 1) weighted = false;
   else if (count == 2) weighted = true;
 
-
   //Instantiate------------------------------------------------------
   //if(graph) delete graph;
   //graph = new type graph;//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
@@ -45,7 +44,6 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   for (int i = 0; i<(nVertices-1); i++){
       degrees[i]=0;
   }
-
   //Begin graph filling:
   int x,y,weight;
   if(weighted){
@@ -83,7 +81,6 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
     }
   }
   file.close();
-
   //Graph analysis:--------------------------------------------------------------
   int maxDegree = 0;
   for (int j = 0; j<nVertices; j++){
