@@ -109,4 +109,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   return;
 
 }
+
 template class Graph<adjList>;
+
+template class Graph<adjMatrix>;

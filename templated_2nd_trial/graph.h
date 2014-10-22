@@ -2,6 +2,7 @@
 //#define GRAPH_H
 
 #include "adjlist.h"
+#include "adjmatrix.h"
 
 /**
  * \class Graph

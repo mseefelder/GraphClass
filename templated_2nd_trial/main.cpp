@@ -5,8 +5,8 @@ int main(){
   std::string open = "grafoteste.txt";
   std::string out = "saindabolada.txt";
 
-  Graph<adjList>* grafo;
-  grafo =  new Graph<adjList>;
+  Graph<adjMatrix>* grafo;
+  grafo =  new Graph<adjMatrix>;
   grafo->buildGraph(open,out);
 
   return 0;

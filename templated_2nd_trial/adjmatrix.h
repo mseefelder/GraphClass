@@ -17,7 +17,7 @@ class adjMatrix
 {
   private:
 
-    long* data;
+    int* data;
 
   public:
     /**
@@ -32,8 +32,8 @@ class adjMatrix
     void push(int x, int y, int w);
 
     ~adjMatrix(){
-	if (data) delete [] data;
-}
+      if (data) delete [] data;
+    }
 
 protected:
 
