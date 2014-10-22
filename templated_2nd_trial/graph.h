@@ -1,5 +1,5 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+//#ifndef GRAPH_H
+//#define GRAPH_H
 
 #include "adjlist.h"
 
@@ -8,34 +8,38 @@
  *
  * @brief The Graph class
  */
-template<type T>
+template<class T>
 class Graph
 {
+
+
   public:
     /**
      * @brief Graph Default constructor
      */
     Graph(){
-      graph = 0;
+      weighted = false;
+      nVertices = 0;
     }
 
+    void buildGraph(std::string path,std::string output);
+
     Graph(std::string path,std::string output){
-      graph = 0;
+      nVertices = 0;
+      weighted = false;
       buildGraph(path, output);
     }
 
     ~Graph(){}
 
-    virtual void buildGraph(std::string path,std::string output);
+  protected:
 
-protected:
-
-private:
+  private:
 
   bool weighted;//if graph is weigthed = true; else = false
-
-  type graph;
+  int nVertices;
+  T graph;
 
 };
 
-#endif // GRAPH_H
+//#endif // GRAPH_H

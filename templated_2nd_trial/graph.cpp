@@ -1,11 +1,11 @@
 #include "graph.h"
 
-void Graph::buildGraph(std::string path,std::string output){
+template<class T> void Graph<T>::buildGraph(std::string path,std::string output){
 
   std::string line;
   float d_medio; //(sum of all degrees)/number of vertices()
 
-  mEdges = 0;
+  int mEdges = 0;
   d_medio = 0.0;
   char * value = NULL;
 
@@ -31,7 +31,7 @@ void Graph::buildGraph(std::string path,std::string output){
   //Instantiate------------------------------------------------------
   //if(graph) delete graph;
   //graph = new type graph;//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
-  graph->generate(nVertices);//WE HAVE TO IMPLEMENT THIS
+  graph.generate(nVertices);//WE HAVE TO IMPLEMENT THIS
 
   //Auxiliary structures--------------------------------------------
   int* vertDegree;
@@ -47,17 +47,17 @@ void Graph::buildGraph(std::string path,std::string output){
   }
 
   //Begin graph filling:
-  int x,y,weight,mEdges;
+  int x,y,weight;
   if(weighted){
     std::sscanf(line.c_str(), "%d %d %d", &x, &y, &weight);
-    graph->push(x,y,weight);//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
+    graph.push(x,y,weight);//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
 
 
     std::getline(file,line);
     while (!file.eof()){
       std::sscanf(line.c_str(), "%d %d %d", &x, &y, &weight);
       x--; y--;
-      graph->push(x,y,weight);
+      graph.push(x,y,weight);
       mEdges++;
       vertDegree[x]++;
       vertDegree[y]++;
@@ -67,14 +67,14 @@ void Graph::buildGraph(std::string path,std::string output){
   }
   else{
     std::sscanf(line.c_str(), "%d %d", &x, &y);
-    graph->push(x,y,1);//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
+    graph.push(x,y,1);//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
 
 
     std::getline(file,line);
     while (!file.eof()){
       std::sscanf(line.c_str(), "%d %d", &x, &y);
       x--; y--;
-      graph->push(x,y,1);
+      graph.push(x,y,1);
       mEdges++;
       vertDegree[x]++;
       vertDegree[y]++;
@@ -109,3 +109,4 @@ void Graph::buildGraph(std::string path,std::string output){
   return;
 
 }
+template class Graph<adjList>;
