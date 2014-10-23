@@ -47,8 +47,8 @@ class adjList
       return;
     }
 
-    void getWeights(int vertex, float* array){
-      //array = vArray[(vertex*2)+1];
+    void getWeights(int vertex, float** array){
+      *array = wArray[vertex];
       return;
     }
 
