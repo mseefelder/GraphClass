@@ -4,7 +4,7 @@
 #include <queue>
 
 #include "adjlist.h"
-//#include "adjmatrix.h"
+#include "adjmatrix.h"
 
 /**
  * \class Graph

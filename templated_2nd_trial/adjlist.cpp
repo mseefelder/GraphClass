@@ -1,12 +1,12 @@
 #include "adjlist.h"
 
 void adjList::generate(int numVertices){
-  data = new std::forward_list< std::pair<int, int> >[numVertices];
+  data = new std::forward_list< std::pair<int, float> >[numVertices];
   nVertices = numVertices;
   return;
 }
 
-void adjList::push(int x, int y, int w){
+void adjList::push(int x, int y, float w){
   data[x].emplace_front(y,w);
   data[y].emplace_front(x,w);
   return;
@@ -24,7 +24,8 @@ Possible optimization: Parallellism in the loop.
 */
 void adjList::postProcess(){
   degrees = new int[nVertices];
-  dataArray = new int* [nVertices*2]; //first, neigbours; then, weight.
+  vArray = new int*[nVertices]; //first, neigbours; then, weight.
+  wArray = new float*[nVertices];
 
   int size = 0;
   for(int i = 0; i<nVertices; i++){
@@ -36,15 +37,13 @@ void adjList::postProcess(){
     }
 
     degrees[i] = size;
-    dataArray[i*2] = new int[size];
-    dataArray[(i*2)+1] = new int[size];
+    vArray[i] = new int[size];
+    wArray[i] = new float[size];
 
     int index = 0;
     for ( auto it = data[i].begin(); it != data[i].end(); ++it ){
-      dataArray[i*2][index] = (*it).first;
-      std::cout<<dataArray[i*2][index];
-      dataArray[(i*2)+1][index] = (*it).second;
-      std::cout<<" "<<dataArray[(i*2)+1][index]<<std::endl;
+      vArray[i][index] = (*it).first;
+      wArray[i][index] = (*it).second;
       index++;
     }
 

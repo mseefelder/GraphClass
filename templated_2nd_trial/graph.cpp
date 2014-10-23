@@ -50,18 +50,19 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   }
 
   //Begin graph filling:--------------------------------------------------------
-  int x,y,weight;
+  int x,y;
+  float weight;
   //Procedure to fill a weighted Graph
   //std::ifstream file;
   file.open(path, std::ifstream::in);
-  std::getline (file,line);
+  std::getline (file,line);//discard nVertices line
 
   if(weighted){
     //std::sscanf(line.c_str(), "%d %d %d", &x, &y, &weight);
     //graph.push(x,y,weight);
     std::getline(file,line);
     while (!file.eof()){
-      std::sscanf(line.c_str(), "%d %d %d", &x, &y, &weight);
+      std::sscanf(line.c_str(), "%d %d %f", &x, &y, &weight);
       //Correct vertex indexes
       x--; y--;
       //test all the edges for a value < 0
@@ -83,7 +84,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
     while (!file.eof()){
       std::sscanf(line.c_str(), "%d %d", &x, &y);
       x--; y--;
-      graph.push(x,y,1);
+      graph.push(x,y,1.0);
       mEdges++;
       vertDegree[x]++;
       vertDegree[y]++;
@@ -129,7 +130,6 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 }
 
 template<class T> void Graph<T>::BFS(int initial, std::string output){
-  std::cout<<"---BFS---"<<std::endl;
   //Correcting index
   initial = initial -1;
 
@@ -157,28 +157,20 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
   int iterations = 0;
   while(!fifo.empty()){
       current = fifo.front();
-      std::cout<<current<<std::endl;
       iterations = graph.degree(current);
-      neig = graph.getNeighbours(current);
+      graph.getNeighbours(current, &neig);
       for ( int i = 0; i < iterations; i++ ){
-        if (parents[*(neig+i)]==-2){
+        if (parents[neig[i]]==-2){
           fifo.push(*(neig+i));
           parents[*(neig+i)]=current;
           levels[*(neig+i)]=levels[current]+1;
         }
       }
+
+      delete [] neig;
       fifo.pop();
   }
 
-  /*
-  for(int i  = 0; i<nVertices; i++){
-    std::cout<<i;
-    neig = graph.getNeighbours(i);
-    iterations = graph.degree(i);
-    for (int j = 0; j<iterations; j++) std::cout<<" "<<*(neig+j)<<",";
-    std::cout<<"\b "<<std::endl;
-  }
-  */
   std::string vertexString;
   for (int j= 0; j<nVertices; j++){
     vertexString+= "V: "+std::to_string(j+1)+" Pai: "+std::to_string(parents[j]+1)+" Nivel: "+std::to_string(levels[j])+"\n";
@@ -196,4 +188,4 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
 
 template class Graph<adjList>;
 
-//template class Graph<adjMatrix>;
+template class Graph<adjMatrix>;
