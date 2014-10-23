@@ -28,7 +28,7 @@ void adjList::postProcess(){
 
   int size = 0;
   for(int i = 0; i<nVertices; i++){
-
+    size = 0;
     std::cout<<i<<std::endl;
 
     for ( auto it = data[i].begin(); it != data[i].end(); ++it ){

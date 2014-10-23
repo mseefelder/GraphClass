@@ -1,0 +1,7 @@
+Resultado da BFS: 
+V: 1 Pai: 0 Nivel: 0
+V: 2 Pai: 1 Nivel: 1
+V: 3 Pai: 2 Nivel: 2
+V: 4 Pai: 3 Nivel: 3
+V: 5 Pai: 4 Nivel: 4
+

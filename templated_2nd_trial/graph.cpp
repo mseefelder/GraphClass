@@ -170,6 +170,15 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
       fifo.pop();
   }
 
+  /*
+  for(int i  = 0; i<nVertices; i++){
+    std::cout<<i;
+    neig = graph.getNeighbours(i);
+    iterations = graph.degree(i);
+    for (int j = 0; j<iterations; j++) std::cout<<" "<<*(neig+j)<<",";
+    std::cout<<"\b "<<std::endl;
+  }
+  */
   std::string vertexString;
   for (int j= 0; j<nVertices; j++){
     vertexString+= "V: "+std::to_string(j+1)+" Pai: "+std::to_string(parents[j]+1)+" Nivel: "+std::to_string(levels[j])+"\n";
