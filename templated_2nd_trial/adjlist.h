@@ -18,6 +18,9 @@ class adjList
   private:
 
     std::forward_list< std::pair<int, int> >* data;
+    int** dataArray;
+    int nVertices;
+    int* degrees;
 
   public:
     /**
@@ -25,13 +28,40 @@ class adjList
      */
     adjList(){
       data = NULL;
+      dataArray = NULL;
+      degrees = NULL;
+      nVertices = 0;
     }
 
     void generate(int numVertices);
 
+    void postProcess();
+
     void push(int x, int y, int w);
 
-    ~adjList(){}
+    int degree(int v){return degrees[v];}
+
+    int* getNeighbours(int vertex){
+      return dataArray[vertex*2];
+    }
+
+    void getWeights(int vertex, int* array){
+      array = dataArray[(vertex*2)+1];
+      return;
+    }
+
+    ~adjList(){
+      if (dataArray){
+        for(int i=0; i<nVertices; i++){
+          delete [] dataArray[i];
+        }
+        delete [] dataArray;
+      }
+      if (degrees){
+        delete [] degrees;
+      }
+
+    }
 
 protected:
 
