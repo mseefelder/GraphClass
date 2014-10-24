@@ -25,7 +25,7 @@ class heap
         value[i] = arg;
         index[i] = i;
         pointer[i] = &(value[i]);
-        //arg++;
+        arg++;
       }
     }
 	

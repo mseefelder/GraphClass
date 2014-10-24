@@ -20,9 +20,6 @@ int main(){
   //pilha.swap(2,0);
   //pilha.getValueIndex(0);
   pilha.replace(2,0);
-  pilha.replace(4,8);
-  pilha.replace(3,3);
-  pilha.replace(1,5);
   std::cout<<"------- \n";
   for (int i = 0; i<size; i++) std::cout<<pilha.peek(i)<<std::endl;
   std::cout<<"------- \n";
