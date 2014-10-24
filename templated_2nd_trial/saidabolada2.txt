@@ -1,7 +1,6 @@
-Resultado da BFS: 
-V: 1 Pai: 0 Nivel: 0
-V: 2 Pai: -1 Nivel: -1
-V: 3 Pai: -1 Nivel: -1
-V: 4 Pai: -1 Nivel: -1
-V: 5 Pai: -1 Nivel: -1
+#n = 5
+#m = 4
+#mean_degree = 1.6
+Degree:0 --> 0.000000
+Degree:1 --> 0.400000
 

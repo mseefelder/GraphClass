@@ -2,9 +2,32 @@
 //#define GRAPH_H
 
 #include <queue>
+//#include <priority_queue>
 
 #include "adjlist.h"
 #include "adjmatrix.h"
+
+class ComparePrim //used in the heaps
+{
+public:
+    bool operator()(std::pair<int,float> n1, std::pair<int,float> n2)
+    {
+
+      return n1.second<n2.second;
+
+    }
+};
+
+class CompareDist //used in the heaps
+{
+public:
+    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2)
+    {
+
+      return n1.second<n2.second;
+
+    }
+};
 
 /**
  * \class Graph
@@ -35,7 +58,6 @@ class Graph
 
     void buildGraph(std::string path,std::string output);
 
-    //PRIORITY:***
     void BFS(int initial, std::string output);
 
     //PRIORITY:***
@@ -43,9 +65,9 @@ class Graph
 
     //PRIORITY:***
     /*
-    We have to choose: Prim or Kuskal
+    We have to choose: *Prim* or Kuskal
     */
-    //void MST(std::string output);
+    void MST(int initial, std::string output);
 
     //PRIORITY:**
     /*

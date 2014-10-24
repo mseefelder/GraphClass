@@ -64,7 +64,7 @@ class adjMatrix
       return;
     }
 
-    void getWeights(int vertex, float* array){
+    void getWeights(int vertex, float** array){
       //array = vArray[(vertex*2)+1];
       return;
     }

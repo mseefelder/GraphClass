@@ -48,11 +48,13 @@ class adjList
     }
 
     void getWeights(int vertex, float** array){
+      std::cout<<"getWeights"<<std::endl;
       *array = wArray[vertex];
       return;
     }
 
     ~adjList(){
+      /*
       if (vArray){
         for(int i=0; i<nVertices; i++){
           delete [] vArray[i];
@@ -68,7 +70,7 @@ class adjList
       if (degrees){
         delete [] degrees;
       }
-
+      */
     }
 
 protected:

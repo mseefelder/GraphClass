@@ -186,6 +186,75 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
   return;
 }
 
+template<class T> void Graph<T>::MST(int initial, std::string output){
+  std::cout<<"--MST--"<<std::endl;
+  //Correcting index
+  initial = initial -1;
+
+  //Heap
+  std::priority_queue< std::pair<int,float>, std::vector< std::pair<int,float> >,ComparePrim > heap;
+  //MST size
+  int mstSize = 0;
+
+  //For each vertex: store its parent
+  int* parents;
+  parents = new int[nVertices];
+  //For each vertex: store its level
+  float* cost;
+  cost = new float[nVertices];
+  //Fill arrays
+  for (int i  = 0; i<nVertices; i++){
+      parents[i]=-2;
+      cost[i]=-1.0;
+  }
+  //Set initial values
+  parents[initial]=-1;
+  cost[initial]=0;
+  heap.emplace(initial,cost[initial]);
+
+  int current = 0;
+  int* neig = NULL;
+  float* weig = NULL;
+  int iterations = 0;
+  while(!heap.empty()){
+      std::cout<<"while"<<std::endl;
+      current = heap.top().first;
+      iterations = graph.degree(current);
+      graph.getNeighbours(current, &neig);
+      graph.getWeights(current, &weig);
+      std::cout<<"before for"<<std::endl;//////
+      for ( int i = 0; i < iterations; i++ ){
+        std::cout<<neig[i]<<std::endl;////////
+        std::cout<<"in"<<std::endl;
+        if (cost[neig[i]]<0 || cost[neig[i]]>weig[i]){
+          cost[neig[i]] = weig[i];
+          parents[neig[i]] = current;
+        }
+        if (!(cost[neig[i]<0])) heap.emplace(neig[i], cost[neig[i]]);
+      }
+      delete [] neig;
+      delete [] weig;
+      heap.pop();
+  }
+
+  std::string vertexString;
+  for (int j= 0; j<nVertices; j++){
+    if(!(parents[j]<-2)){
+        vertexString+= std::to_string(j+1)+" "+std::to_string(parents[j]+1)+" "+std::to_string(cost[j])+"\n";
+        mstSize++;
+    }
+  }
+
+  std::ofstream outFile;
+  outFile.open(output);
+  outFile<<mstSize<<"\n"<<vertexString<<"\b "<<std::endl;
+  outFile.close();
+
+  delete [] parents; delete [] cost;
+
+  return;
+}
+
 template class Graph<adjList>;
 
 template class Graph<adjMatrix>;
