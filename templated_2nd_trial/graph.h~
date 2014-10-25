@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 #include <queue>
-#include <limits>
+#include <climits>
 //#include <priority_queue>
 
 #include "adjlist.h"

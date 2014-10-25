@@ -1,14 +1,16 @@
 #include <iostream>
-#include "heap.h"
+#include "graph.h"
 
 int main(){
-/*
-  std::string open = "grafoteste.txt";
+
+  std::string open = "example.txt";
   std::string out = "saidabolada2.txt";
 
   Graph<adjList> grafo(open,out);
-  grafo.MST(1,out);
-*/
+  grafo.Dijkstra(1,out);
+
+
+/*
   int size = 5;
   heap<int> pilha(size,999999);
   for (int i = 0; i<size; i++) std::cout<<pilha.peek(i)<<std::endl;
@@ -30,5 +32,7 @@ int main(){
   std::cout<<"------- \n";
   for (int i = 0; i<size; i++) std::cout<<pilha.getValueIndex(i)<<std::endl;
   std::cout<<"------- \n";
+*/ 
+  
   return 0;
 }

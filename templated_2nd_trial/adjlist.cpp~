@@ -46,7 +46,7 @@ void adjList::postProcess(){
       wArray[i][index] = (*it).second; //std::cout<<" w: "<< (*it).second;
       index++;
     }
-    //std::cout<<std::endl;
+    std::cout<<std::endl;
 
   }
 

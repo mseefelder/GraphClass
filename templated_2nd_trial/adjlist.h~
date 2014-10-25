@@ -48,9 +48,9 @@ class adjList
     }
 
     void getWeights(int vertex, float** array){
-      //std::cout<<"In list: getWeights:: ";
-      //for (int i = 0; i<degrees[vertex]; i++) std::cout<<"w "<<wArray[vertex][i]<<" ";
-      //std::cout<<std::endl;
+      std::cout<<"In list: getWeights:: ";
+      for (int i = 0; i<degrees[vertex]; i++) std::cout<<"w "<<wArray[vertex][i]<<" ";
+      std::cout<<std::endl;
       *array = wArray[vertex];
       return;
     }
