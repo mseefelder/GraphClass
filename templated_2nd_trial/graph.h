@@ -73,7 +73,7 @@ class Graph
     /*
     We have to choose: *Prim* or Kuskal
     */
-    //void MST(int initial, std::string output);
+    void MST(int initial, std::string output);
 
     //PRIORITY:**
     /*

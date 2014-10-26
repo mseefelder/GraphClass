@@ -282,6 +282,102 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
 
 }
 
+template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
+ 	//Correct inicial index
+ 	initial--;
+ 	
+ 	//Store each element's parent
+ 	int* parents;
+ 	parents = new int[nVertices];
+ 	
+ 	//Store each element's level
+ 	int* levels;
+ 	levels = new int[nVertices];
+ 	
+ 	//Store each element's cost
+ 	float* cost;
+ 	cost = new float[nVertices];
+ 
+ 	int starter = 999999999;//very big float (gambiarra)
+ 	heap<float> pilha(nVertices,starter);
+
+	//Initialize values
+ 	for(int i =0;i <nVertices;i++){
+ 		parents[i] = -2;
+ 		levels[i] = -1;
+ 		cost[i] = -1.0;
+ 	}
+ 
+ 	//Set values for initial vertex
+ 	pilha.replace(initial,0.0);
+ 	cost[initial] = 0.0;
+ 	parents[initial] = -1;
+ 	levels[initial] = 0;
+ 	
+ 	//Auxiliar variables
+ 	int current;//vertex being computed
+ 	int iterations; //for each vertex, a different # of iterations
+ 	int* neig = NULL; //array to store neighbours
+ 	float* weig = NULL; //array to store weights
+ 	
+ 	while(!pilha.empty()){
+ 		std::cout<<std::endl;
+ 		pilha.printTable();//Logs the weights in each element
+ 		pilha.printHeap();
+ 		current = pilha.top_index();//Gets the minimum value element
+ 		iterations = graph.degree(current);
+ 		graph.getNeighbours(current,&neig);
+ 		graph.getWeights(current,&weig);
+ 		
+ 		for(int i =0;i < iterations; i++){
+ 		
+ 			if(pilha.exists(neig[i])){
+ 				
+ 				//std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
+ 				//std::cout<<"; current:"<<pilha.cost(current)<<"; weight:"<<weig[i];
+ 				//std::cout<<std::endl;
+ 				
+ 				if(pilha.cost(neig[i]) > weig[i] ){
+ 					//parents[neig[i]] = current;
+ 					//levels[neig[i]] = levels[current] + 1;
+ 					//cost[neig[i]] = (pilha.cost(current) + weig[i]);
+ 					
+ 					//std::cout<<"   "<<neig[i]<<","<<pilha.cost(current) + weig[i]<<std::endl;
+ 					
+ 					pilha.replace( neig[i], weig[i] );
+ 				}
+ 				
+ 			}
+ 			
+ 		}
+ 		
+ 		delete [] neig;
+ 		delete [] weig;
+ 		pilha.pop();
+ 	}
+ 	
+ 	//Save the cost to get to each vertex from initial------------------------------------
+ 	int dijsize = 0;
+ 	std::string vertexString;
+  for (int j= 0; j<nVertices; j++){
+    if(!(parents[j]<-2)){
+        vertexString+= std::to_string(j+1)+" "+std::to_string(cost[j])+" "+ +"\n";
+        dijsize++;
+    }
+  }
+
+  std::ofstream outFile;
+  outFile.open(output);
+  outFile<<dijsize<<"\n"<<vertexString<<"\b "<<std::endl;
+  outFile.close();
+  //-------------------------------------------------------------------------------------
+
+	//deletes auxiliary arrays
+  delete [] parents; delete [] levels; delete [] cost;
+
+}
+
+
 template class Graph<adjList>;
 
 template class Graph<adjMatrix>;

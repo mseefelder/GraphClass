@@ -7,7 +7,7 @@ int main(){
   std::string out = "saidabolada2.txt";
 
   Graph<adjList> grafo(open,out);
-  grafo.Dijkstra(1,out);
+  grafo.MST(1,out);
 
 
 /*

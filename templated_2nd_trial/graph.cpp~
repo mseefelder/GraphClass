@@ -187,7 +187,7 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
   return;
 }
 
-template<class T> void Graph<T>::MST(int initial, std::string output){
+template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  	//Correct inicial index
  	initial--;
  	
@@ -242,10 +242,10 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  				//std::cout<<"; current:"<<pilha.cost(current)<<"; weight:"<<weig[i];
  				//std::cout<<std::endl;
  				
- 				if(pilha.cost(neig[i])>weig[i] ){
+ 				if(pilha.cost(neig[i])>(pilha.cost(current) + weig[i]) ){
  					parents[neig[i]] = current;
  					levels[neig[i]] = levels[current] + 1;
- 					cost[neig[i]] = weig[i];
+ 					cost[neig[i]] = (pilha.cost(current) + weig[i]);
  					
  					//std::cout<<"   "<<neig[i]<<","<<pilha.cost(current) + weig[i]<<std::endl;
  					
@@ -376,6 +376,7 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
   delete [] parents; delete [] levels; delete [] cost;
 
 }
+
 
 template class Graph<adjList>;
 
