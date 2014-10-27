@@ -13,17 +13,6 @@
 #include "adjmatrix.h"
 #include "heap.h"
 
-class ComparePrim //used in the heaps
-{
-public:
-    bool operator()(std::pair<int,float> n1, std::pair<int,float> n2)
-    {
-
-      return n1.second<n2.second;
-
-    }
-};
-
 class CompareDist //used in the heaps
 {
 public:
@@ -85,7 +74,7 @@ class Graph
     void Distance(int vertexA, int vertexB);
 
     //PRIORITY:**
-    //void DistanceToAll();
+    void DistanceToAll(int vertex);
 
     //PRIORITY:**
     //void MeanDistance();

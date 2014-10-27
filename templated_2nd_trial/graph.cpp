@@ -16,7 +16,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   file.open(path, std::ifstream::in);
   std::getline (file,line);
   std::sscanf(line.c_str(), "%d", &nVertices);
-
+  std::cout << "lendo"<< std::endl;
   //Check whether matrix is weighted or not-------------------------------------
   int count=0, size;
   std::getline(file,line);
@@ -29,13 +29,14 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   //Sets weighted flag
   if(count == 1) weighted = false;
   else if (count == 2) weighted = true;
+  std::cout << "weighted : "<< weighted << std::endl;
 
   file.close();
 
   //Instantiate-----------------------------------------------------------------
 
   graph.generate(nVertices);//WE HAVE TO IMPLEMENT THIS
-
+  std::cout << "generate"<< std::endl;
   //Auxiliary structures--------------------------------------------------------
   //stores each vertex: it's degree
   int* vertDegree;
@@ -125,9 +126,9 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 
   //Delete auxiliary structures so as to not leak memory
   delete [] degrees; delete [] vertDegree;
-
+std::cout << "starting postProcess"<< std::endl;
   graph.postProcess();//
-
+std::cout << "fim"<< std::endl;
   return;
 
 }
@@ -158,10 +159,11 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
   int* neig = NULL;
   int elementIndex=0;
   int iterations = 0;
+  bool deleteFlag;
   while(!fifo.empty()){
       current = fifo.front();
       iterations = graph.degree(current);
-      graph.getNeighbours(current, &neig);
+      deleteFlag = graph.getNeighbours(current, &neig);
       for ( int i = 0; i < iterations; i++ ){
         if (parents[neig[i]]==-2){
           fifo.push(*(neig+i));
@@ -169,9 +171,10 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
           levels[*(neig+i)]=levels[current]+1;
         }
       }
-
-      delete [] neig;
       fifo.pop();
+      if(deleteFlag){
+        delete [] neig;
+      }
   }
 
   std::string vertexString;
@@ -227,7 +230,8 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
  	float* weig = NULL; //array to store weights
-
+  bool deleteFlagN;
+  bool deleteFlagW;
  	while(!pilha.empty()){
  		std::cout<<std::endl;
  		pilha.printTable();//Logs the weights in each element
@@ -235,8 +239,8 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  		current = pilha.top_index();//Gets the minimum value element
     curCost = pilha.cost(current);
  		iterations = graph.degree(current);
- 		graph.getNeighbours(current,&neig);
- 		graph.getWeights(current,&weig);
+ 		deleteFlagN = graph.getNeighbours(current,&neig);
+ 		deleteFlagW = graph.getWeights(current,&weig);
 
     pilha.pop();
 
@@ -261,10 +265,10 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  			}
 
  		}
-
- 		//delete [] neig;
- 		//delete [] weig;
- 		//pilha.pop();
+    if(deleteFlagN){
+      delete [] neig;}
+    if(deleteFlagW){
+      delete [] weig;}
  	}
 
  	//Save the cost to get to each vertex from initial------------------------------------
@@ -371,10 +375,11 @@ template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents
   int* neig = NULL;
   int elementIndex=0;
   int iterations = 0;
+  bool deleteFlag;
   while(!fifo.empty()){
       current = fifo.front();
       iterations = graph.degree(current);
-      graph.getNeighbours(current, &neig);
+      deleteFlag = graph.getNeighbours(current, &neig);
       for ( int i = 0; i < iterations; i++ ){
         if (parents[neig[i]]==-2){
           fifo.push(*(neig+i));
@@ -382,9 +387,10 @@ template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents
           distance[*(neig+i)] = distance[current]+1;
         }
       }
-
-      delete [] neig;
       fifo.pop();
+      if(deleteFlag){
+        delete [] neig;
+      }
   }
   return;
 }
@@ -414,7 +420,8 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
   int iterations; //for each vertex, a different # of iterations
   int* neig = NULL; //array to store neighbours
   float* weig = NULL; //array to store weights
-
+  bool deleteFlagN;
+  bool deleteFlagW;
   while(!pilha.empty()){
     std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
  		std::cout<<std::endl;
@@ -425,8 +432,8 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
  		std::cout<<"::::Current vertex"<<current<<std::endl;
  		std::cout<<pilha.cost(current)<<std::endl;
  		iterations = graph.degree(current);
- 		graph.getNeighbours(current,&neig);
- 		graph.getWeights(current,&weig);
+ 		deleteFlagN = graph.getNeighbours(current,&neig);
+ 		deleteFlagW = graph.getWeights(current,&weig);
 
  		pilha.pop();
 
@@ -449,10 +456,12 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
         }
       }
     }
-
-    //delete [] neig;
-    //delete [] weig;
-    //pilha.pop();
+    if(deleteFlagN){
+      delete [] neig;
+    }
+    if(deleteFlagW){
+      delete [] weig;
+    }
   }
   std::cout<<"Dijkstra_mod finished!::::::::::::::::::::";
   for(int i=0;i<nVertices;i++)std::cout<<"distance["<<i<<"] ="<<distance[i]<<" ";
@@ -499,22 +508,23 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
  	float* weig = NULL; //array to store weights
-
+  bool deleteFlagN;
+  bool deleteFlagW;
  	while(!pilha.empty()){
- 		std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
- 		std::cout<<std::endl;
- 		pilha.printTable();//Logs the weights in each element
- 		pilha.printHeap();
+ 		//std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
+ 		//std::cout<<std::endl;
+ 		//pilha.printTable();//Logs the weights in each element
+ 		//pilha.printHeap();
  		current = pilha.top_index();//Gets the minimum value element
  		iterations = graph.degree(current);
- 		graph.getNeighbours(current,&neig);
- 		graph.getWeights(current,&weig);
+ 		deleteFlagN = graph.getNeighbours(current,&neig);
+ 		deleteFlagW = graph.getWeights(current,&weig);
 
  		pilha.pop();
 
  		for(int i =0;i < iterations; i++){
- 			std::cout<<"v:"<<current;for(int i=0; i<iterations; i++)std::cout<<" n:"<<neig[i];std::cout<<std::endl;
- 			std::cout<<"exists("<<neig[i]<<")"<<std::endl;
+ 			//std::cout<<"v:"<<current;for(int i=0; i<iterations; i++)std::cout<<" n:"<<neig[i];std::cout<<std::endl;
+ 			//std::cout<<"exists("<<neig[i]<<")"<<std::endl;
  			if(pilha.exists(neig[i])){
 
  				//std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
@@ -526,7 +536,7 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  					levels[neig[i]] = levels[current] + 1;
  					cost[neig[i]] = weig[i];
 
- 					std::cout<<"   >Replace ["<<neig[i]<<"] ,"<<weig[i]<<std::endl;
+ 					//std::cout<<"   >Replace ["<<neig[i]<<"] ,"<<weig[i]<<std::endl;
 
  					pilha.replace( neig[i], weig[i] );
  				}
@@ -534,21 +544,35 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  			}
 
  		}
-
- 		//std::cout<<"Deleting..."<<std::endl;
- 		//delete [] neig;
- 		//delete [] weig;
-
+    if(deleteFlagN){
+      delete [] neig;
+    }
+    if(deleteFlagW){
+      delete [] weig;
+    }
  	}
 
  	//Save the cost to get to each vertex from initial------------------------------------
- 	int dijsize = 0;
+  int* newindex;
+  newindex = new int[nVertices];
+  int removed = 0;
+  for (int j= 0; j<nVertices; j++){
+    if(!(parents[j]<-1)){
+      newindex[j] = (j+1)- removed;
+    }
+    else{
+      newindex[j]= -1;
+      removed++;
+      }
+  }
+ 	int dijsize = nVertices;
  	std::string vertexString;
   for (int j= 0; j<nVertices; j++){
-    if(!(parents[j]<-2)){
-        vertexString+= std::to_string(j+1)+" "+std::to_string(cost[j])+" "+ +"\n";
-        dijsize++;
+    if(parents[j]==-1){}
+    else if(!(parents[j]<-1)){
+        vertexString+=std::to_string(newindex[parents[j]])+" "+std::to_string(newindex[j])+" "+std::to_string(cost[j])+" "+ +"\n";
     }
+    else{dijsize--;}
   }
 
   std::ofstream outFile;
@@ -560,6 +584,72 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
 	//deletes auxiliary arrays
   delete [] parents; delete [] levels; delete [] cost;
 
+}
+template<class T> void Graph<T>::DistanceToAll(int Vertex){
+  int* parents;
+  parents = new int[nVertices];
+  std::string path;
+
+  //Weighted case---------------------------------------------------
+  if (weighted == true && negativeWeight == false){
+    float* distance;
+    distance = new float[nVertices];
+    Dijkstra_mod(Vertex,distance,parents);
+    int counter;
+    for(int i= 1 ;i<(nVertices + 1);i++){
+      if(i != Vertex-1){
+
+        if(parents[i-1]<0){
+        }
+        else{
+          std::cout<<"vertice : "<<i<<" distancia : "<<distance[i-1]<< " ";
+          counter = i - 1;
+          while(counter != (Vertex - 1) ){// != (VertexA - 1), what we look for!:::::
+            //path +=std::to_string(counter+1)+ ", ";
+            std::cout<< counter+1 << ", ";
+            counter = parents[counter];
+          }
+          std::cout<<Vertex<< std::endl;
+          //path += std::to_string(Vertex);
+
+          //std::cout<<"Distancia : " << distance[i-1] <<" "<< "Caminho : " << path << std::endl;
+          //path = "";
+        }
+      }
+    }
+    delete [] distance;
+  }
+  //Non-weighted case-------------------------------------------------
+  else if(weighted == false){
+    int* distance;
+    distance = new int[nVertices];
+    BFS_mod(Vertex,distance,parents);
+    int counter;
+    for(int i= 1 ;i<(nVertices + 1);i++){
+      if(i != Vertex-1){
+        if(parents[i-1]<0){
+        }
+        else{
+
+          std::cout<<"vertice : "<<i<<" distancia : "<<distance[i-1]<< " ";
+          counter = i - 1;
+          while(counter != (Vertex - 1) ){// != (VertexA - 1), what we look for!:::::
+            //path +=std::to_string(counter+1)+ ", ";
+            std::cout<< counter+1 << ", ";
+            counter = parents[counter];
+          }
+          std::cout<<Vertex<< std::endl;
+          //path += std::to_string(Vertex);
+
+          //std::cout<<"Distancia : " << distance[i-1] <<" "<< "Caminho : " << path << std::endl;
+          //path = "";
+        }
+      }
+    }
+    delete [] distance;
+  }
+  delete [] parents;
+  return;
 }
 
 

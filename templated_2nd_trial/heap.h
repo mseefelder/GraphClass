@@ -12,16 +12,16 @@ class heap
     int starter;//starter value (has to be as big as possible)
     int lastElement;//keep record of the actual number of elements
     								//maps index
-    								
+
     //now, some important global flags!-----------------------------------------------------------
-    
+
     bool upping;
     bool downing;
     int upper;
     int downer;
-    
+
     //--------------------------------------------------------------------------------------------
-    
+
     //insert element at the heap's bottom and sorts it
     //ALWAYS CALLED AFTER ERASE
     void insert(V v){
@@ -29,38 +29,38 @@ class heap
     	value[lastElement] = v;
     	heap_up(lastElement);
     	return;
-    	
+
     }
-    
+
     //Sets element i's value to "starter" and sorts heap.
     //ONLY CALLED BEFORE INSERT
     void erase(int i){ //receives element's index (find address through pointer[])
     	//std::cout<<"erase("<<i<<")"<<std::endl;
     	//std::cout<<lastElement+1<<"elements. Bottom element is"<<index[lastElement]<<std::endl;
-    	
+
     	int slot = getValueIndex(i);
     	value[slot] = starter;//makes value infinite
     	swap(i, index[lastElement]);//swaps it with last one
-    	
+
     	//fix heap:
     	if( ((slot-1)/2)>-1 ){
-    		
+
     		if(value[slot]<value[((slot-1)/2)]) {
     			heap_up(slot);
     		}
-    		
+
     		else if( ((2*slot)+1) <= lastElement ){
-    			
+
     			if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
     				heap_down(slot);
     			}
-    			
+
     		}
-    		
+
     	}
-    	
+
     	return;
-    	
+
     }
 
   public:
@@ -71,21 +71,21 @@ class heap
     heap(int size, V arg){
     	nElements = size-1;
     	lastElement = nElements;
-    	
+
     	//allocate arrays
       value = new V[size];
       pointer = new V*[size];
       index = new int[size];
-      
+
       //Set starter value
       starter = arg;
-      
+
       //Set flags
       upping = false;
       downing = false;
       upper = 0;
       downer = 0;
-      
+
       //Initialize arrays
       for(int i = 0; i<size; i++){
         value[i] = arg;
@@ -93,7 +93,7 @@ class heap
         pointer[i] = &(value[i]);
       }
     }
-	
+
 		//Swaps two elements by element index
     void swap(int index_a, int index_b){ //Receives the element's index (maps pointer[])
     	//std::cout<<"Swap:"<<index_a<<"<->"<<index_b<<std::endl;
@@ -103,33 +103,33 @@ class heap
       int drafti = index[slot_a];
       index[slot_a] = index[slot_b];
       index[slot_b] = drafti;
-      
+
       //swap value[a] <-> value[b]
       V *a = pointer[index_a];//value[a]'s address
       V *b = pointer[index_b];//value[b]'s address
       V draft = *a;
       *a = *b;
       *b = draft;
-      
+
       //swap pointer[a] <-> pointer[b]
       V* draftp = pointer[index_b];
       pointer[index_b] = pointer[index_a];
       pointer[index_a] = draftp;
     }
-    
+
     //Given an element index, find its index on array "value[]"
     int getValueIndex(int i){
       return (int)(pointer[i]-value);
     }
-    
+
     //Heap sorting operation to make element ascend to the right place
-    //	If element's value < parent's value: 
+    //	If element's value < parent's value:
     //		swap them
     //		call procedure again for the element
     void heap_up(int slot_init){//receives element's address (value)
     	bool proceed = true;//-----//
     	int slot = slot_init;//-----//
-    	
+
     	while(proceed){
     		proceed = false;
     		//std::cout<<"Heaping up "<<index[slot]<<std::endl;
@@ -142,19 +142,19 @@ class heap
 					}
     		}
     	}
-    	
+
     	return;
     }
-    
+
     //Heap sorting operation to make element descend to the right place
     //	Compares element with minimum possible child
-    //  If element's value > child's value: 
+    //  If element's value > child's value:
     //		swap them
     //		call procedure again for the element
     void heap_down(int slot_init){ //receives element's address (value)
 			bool proceed = true;//-----//
     	int slot = slot_init;//-----//
-    	
+
     	while(proceed){//-----//
     		proceed = false;//-----//
     		//std::cout<<"Heaping down "<<index[slot]<<std::endl;
@@ -185,15 +185,15 @@ class heap
     			//heap_down(child);
     		}
     	}
-    	
-    	
+
+
     	return;
-    	
+
     }
-    
+
     //Remove top element from the heap
     void pop(){
-    	
+
     	//std::cout<<"Heap pop(): \n    ";
     	//If there's only 1 element: remove it and return
     	if(lastElement == 0){
@@ -201,31 +201,31 @@ class heap
     		pointer[index[0]] = NULL;
     		lastElement--;
     		return;
-    	}	
-    	
+    	}
+
     	//Else:
     	int slot = 0;
     	//1 -	Make its value = starter
     	value[slot] = starter;
     	//2 -	swap it with last element
     	swap(index[slot], index[lastElement]);
-    	
+
     	//4 - Remove last element (popped element) from heap by:
     	//	4.1 - Making the elements pointer be a NULL pointer
     	pointer[index[lastElement]] = NULL;
     	//	4.2 - Decrease the last element's index
     	lastElement--;
-    	
+
     	//3 - Fix heap
     	if(((2*slot)+1)<=lastElement){
     		if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
     			heap_down(slot);
     		}
     	}
-    	
+
     	return;
     }
-    
+
     //Check if element i is still on the heap
     bool exists(int i){
     	//If the pointer to it is NULL, it was removed
@@ -237,9 +237,9 @@ class heap
     		//std::cout<<"Element "<<i<<" exists."<<std::endl;
     		return true;
     	}
-    	
+
     }
-    
+
     //Replace element i's value (and sorts heap)
     void replace(int i, V v){
     	//std::cout<<"Replacing "<<i<<"'s value: "<<v<<std::endl;
@@ -249,33 +249,33 @@ class heap
     	//printHeap();
     	return;
     }
-    
+
     //Returns value of any element
     V cost(int i){ //receives element's index (find address through pointer[])
-    	std::cout<<"["<<i<<"] -> cost = "<<std::endl<<value[getValueIndex(i)];
-    	std::cout<<std::endl;
+    	//std::cout<<"["<<i<<"] -> cost = "<<std::endl<<value[getValueIndex(i)];
+    	//std::cout<<std::endl;
     	return value[getValueIndex(i)];
     }
-    
+
     //Returns value of the top element
     V top_value(){
     	//std::cout<<"Top value is:"<<value[0]<<std::endl;
     	return value[0];
-    	
+
     }
-    
+
     //Returns index of the top element
     int top_index(){
     	//std::cout<<"Top element's index is:"<<index[0]<<std::endl;
     	return index[0];
-    	
+
     }
-    
+
     //To see if heap is empty
     bool empty(){
-    
+
     	if (lastElement<0) {
-    		std::cout<<"Heap is empty!"<<std::endl;	
+    		std::cout<<"Heap is empty!"<<std::endl;
     		return true;
     	}
     	else {
@@ -283,16 +283,16 @@ class heap
     		return false;
     	}
     }
-    
+
     //Prints a line with each element's value
     void printTable(){
 			for (int i = 0; i<(nElements+1); i++){
 				if (exists(i)) std::cout<<"["<<i<<"]="<<*(pointer[i])<<"; ";
 				else 	std::cout<<"["<<i<<"]="<<"---"<<"; ";
-			}    
+			}
 			std::cout<<std::endl;
     }
-		
+
 		//Prints a heap representation, has to be recursive
 		void printHeap(){
 			std::cout<<"Top: "<<index[0]<<":  ";
@@ -302,7 +302,7 @@ class heap
 			std::cout<<std::endl;
 			return;
     }
-		
+
 
     ~heap(){
     	if(value) delete [] value;

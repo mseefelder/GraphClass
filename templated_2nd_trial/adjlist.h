@@ -42,17 +42,17 @@ class adjList
 
     int degree(int v){return degrees[v];}
 
-    void getNeighbours(int vertex, int** array){
+    bool getNeighbours(int vertex, int** array){
       *array = vArray[vertex];
-      return;
+      return false;
     }
 
-    void getWeights(int vertex, float** array){
+    bool getWeights(int vertex, float** array){
       //std::cout<<"In list: getWeights:: ";
       //for (int i = 0; i<degrees[vertex]; i++) std::cout<<"w "<<wArray[vertex][i]<<" ";
       //std::cout<<std::endl;
       *array = wArray[vertex];
-      return;
+      return false;
     }
 
     ~adjList(){

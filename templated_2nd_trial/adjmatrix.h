@@ -41,9 +41,31 @@ class adjMatrix
 
     int degree(int v){return degrees[v];}
 
-    void getNeighbours(int vertex, int** array){
+    bool getNeighbours(int vertex, int** array){
       int* draft;
       *array = new int[degrees[vertex]];
+      draft = *array;
+
+      long long index = 0;
+      int counter = 0;
+      for(int i = 0; i<nVertices; i++){
+        if (vertex > i){
+          index = (((vertex+1)*vertex)/2)-vertex+i;
+        }
+        else{
+          index = (((i+1)*i)/2)-i+vertex;
+        }
+        if(data[index]!=-1){
+          draft[counter]=i;
+          counter++;
+        }
+      }
+      return true;
+    }
+
+    bool getWeights(int vertex, float** array){
+      float* draft;
+      *array = new float[degrees[vertex]];
       draft = *array;
 
       long long index = 0;
@@ -60,13 +82,7 @@ class adjMatrix
           counter++;
         }
       }
-
-      return;
-    }
-
-    void getWeights(int vertex, float** array){
-      //array = vArray[(vertex*2)+1];
-      return;
+      return true;
     }
 
     void postProcess();
