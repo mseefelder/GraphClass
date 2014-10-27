@@ -9,6 +9,7 @@ int main(){
 
   Graph<adjList> grafo(open,out);
   grafo.Distance(1,2);
+  grafo.MST(1,out);
 
 
 /*

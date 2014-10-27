@@ -12,12 +12,20 @@ class heap
     int starter;//starter value (has to be as big as possible)
     int lastElement;//keep record of the actual number of elements
     								//maps index
+    								
+    //now, some important global flags!-----------------------------------------------------------
+    
+    bool upping;
+    bool downing;
+    int upper;
+    int downer;
+    
+    //--------------------------------------------------------------------------------------------
     
     //insert element at the heap's bottom and sorts it
     //ALWAYS CALLED AFTER ERASE
     void insert(V v){
     	//std::cout<<"inserting "<<v<<"..."<<std::endl;
-    	
     	value[lastElement] = v;
     	heap_up(lastElement);
     	return;
@@ -35,11 +43,20 @@ class heap
     	swap(i, index[lastElement]);//swaps it with last one
     	
     	//fix heap:
-    	if(value[slot]<value[((slot-1)/2)]) {
-    		heap_up(slot);
-    	}
-    	else if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
-    		heap_down(slot);
+    	if( ((slot-1)/2)>-1 ){
+    		
+    		if(value[slot]<value[((slot-1)/2)]) {
+    			heap_up(slot);
+    		}
+    		
+    		else if( ((2*slot)+1) <= lastElement ){
+    			
+    			if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
+    				heap_down(slot);
+    			}
+    			
+    		}
+    		
     	}
     	
     	return;
@@ -62,6 +79,12 @@ class heap
       
       //Set starter value
       starter = arg;
+      
+      //Set flags
+      upping = false;
+      downing = false;
+      upper = 0;
+      downer = 0;
       
       //Initialize arrays
       for(int i = 0; i<size; i++){
@@ -103,14 +126,24 @@ class heap
     //	If element's value < parent's value: 
     //		swap them
     //		call procedure again for the element
-    void heap_up(int slot){//receives element's address (value)
-    	//std::cout<<"Heaping up "<<index[slot]<<std::endl;
-    	if(slot>0){
-    		if(value[slot]<value[((slot-1)/2)]){
-					swap(index[slot], index[((slot-1)/2)]);
-					heap_up(((slot-1)/2));
-				}
+    void heap_up(int slot_init){//receives element's address (value)
+    	bool proceed = true;//-----//
+    	int slot = slot_init;//-----//
+    	
+    	while(proceed){
+    		proceed = false;
+    		//std::cout<<"Heaping up "<<index[slot]<<std::endl;
+    		if(slot>0){
+    			if(value[slot]<value[((slot-1)/2)]){
+						swap(index[slot], index[((slot-1)/2)]);
+						slot = ((slot-1)/2);//-----//
+						proceed = true;//-----//
+						//heap_up(((slot-1)/2));
+					}
+    		}
     	}
+    	
+    	return;
     }
     
     //Heap sorting operation to make element descend to the right place
@@ -118,33 +151,43 @@ class heap
     //  If element's value > child's value: 
     //		swap them
     //		call procedure again for the element
-    void heap_down(int slot){ //receives element's address (value)
-    	//std::cout<<"Heaping down "<<index[slot]<<std::endl;
-    	//First we select with wich child we'll compare the element---
-    	int child;
-    	//If left child's index on value[] > last element's index
-    	//This cant happen, so it ends
-    	if(((2*slot)+1)>lastElement){
-    		return;
+    void heap_down(int slot_init){ //receives element's address (value)
+			bool proceed = true;//-----//
+    	int slot = slot_init;//-----//
+    	
+    	while(proceed){//-----//
+    		proceed = false;//-----//
+    		//std::cout<<"Heaping down "<<index[slot]<<std::endl;
+    		//First we select with wich child we'll compare the element---
+    		int child;
+    		//If left child's index on value[] > last element's index
+    		//This cant happen, so it ends
+    		if(((2*slot)+1)>lastElement){
+    			return;
+    		}
+    		//If left child's index on value[] < last element's index
+    		//Then, choose minimum valued child
+    		else if(((2*slot)+1)<lastElement){
+    			if(value[(2*slot)+2]<value[(2*slot)+1]) child = (2*slot)+2;
+    			else child = (2*slot)+1;
+    		}
+    		//If left child's index on value[] = last element's index
+    		//Then, there is no right child. Choose left child.
+    		else if(((2*slot)+1)==lastElement){
+    			child = (2*slot)+1;
+    		}
+    		//----------------------------------------------------------
+    		//Compare the element with its child
+    		if(value[child]<value[slot]){
+    			swap(index[child], index[slot]);
+    			slot = child;//-----//
+    			proceed = true;//-----//
+    			//heap_down(child);
+    		}
     	}
-    	//If left child's index on value[] < last element's index
-    	//Then, choose minimum valued child
-    	else if(((2*slot)+1)<lastElement){
-    		if(value[(2*slot)+2]<value[(2*slot)+1]) child = (2*slot)+2;
-    		else child = (2*slot)+1;
-    	}
-    	//If left child's index on value[] = last element's index
-    	//Then, there is no right child. Choose left child.
-    	else if(((2*slot)+1)==lastElement){
-    		child = (2*slot)+1;
-    	}
-    	//----------------------------------------------------------
-    	//Compare the element with its child
-    	if(value[child]<value[slot]){
-    		swap(index[child], index[slot]);
-    		heap_down(child);
-    		
-    	}
+    	
+    	
+    	return;
     	
     }
     
@@ -167,16 +210,18 @@ class heap
     	//2 -	swap it with last element
     	swap(index[slot], index[lastElement]);
     	
-    	//3 - Fix heap
-    	if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
-    		heap_down(slot);
-    	}
-    	
     	//4 - Remove last element (popped element) from heap by:
     	//	4.1 - Making the elements pointer be a NULL pointer
     	pointer[index[lastElement]] = NULL;
     	//	4.2 - Decrease the last element's index
     	lastElement--;
+    	
+    	//3 - Fix heap
+    	if(((2*slot)+1)<=lastElement){
+    		if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
+    			heap_down(slot);
+    		}
+    	}
     	
     	return;
     }
@@ -259,7 +304,11 @@ class heap
     }
 		
 
-    ~heap(){}
+    ~heap(){
+    	if(value) delete [] value;
+    	if(index) delete [] index;
+    	if(pointer) delete [] pointer;
+    }
 };
 
 /*
