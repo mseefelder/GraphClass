@@ -65,9 +65,11 @@ class Graph
     void buildGraph(std::string path,std::string output);
 
     void BFS(int initial, std::string output);
+    void BFS_mod(int initial,int* distance,int* parents);
 
     //PRIORITY:***
     void Dijkstra(int initial, std::string output);
+    void Dijkstra_mod(int initial,float* distance, int* parents);
 
     //PRIORITY:***
     /*
@@ -80,7 +82,7 @@ class Graph
     If graph is weighted: use Dijkstra
     Else: use BFS
     */
-    //void Distance(int vertexA, int vertexB);
+    void Distance(int vertexA, int vertexB);
 
     //PRIORITY:**
     //void DistanceToAll();

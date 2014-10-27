@@ -1,4 +1,6 @@
 #include "graph.h"
+#include "iostream"
+#include "string"
 
 template<class T> void Graph<T>::buildGraph(std::string path,std::string output){
 
@@ -190,19 +192,19 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
 template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  	//Correct inicial index
  	initial--;
- 	
+
  	//Store each element's parent
  	int* parents;
  	parents = new int[nVertices];
- 	
+
  	//Store each element's level
  	int* levels;
  	levels = new int[nVertices];
- 	
+
  	//Store each element's cost
  	float* cost;
  	cost = new float[nVertices];
- 
+
  	int starter = 999999999;//very big float (gambiarra)
  	heap<float> pilha(nVertices,starter);
 
@@ -212,19 +214,19 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  		levels[i] = -1;
  		cost[i] = -1.0;
  	}
- 
+
  	//Set values for initial vertex
  	pilha.replace(initial,0.0);
  	cost[initial] = 0.0;
  	parents[initial] = -1;
  	levels[initial] = 0;
- 	
+
  	//Auxiliar variables
  	int current;//vertex being computed
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
  	float* weig = NULL; //array to store weights
- 	
+
  	while(!pilha.empty()){
  		std::cout<<std::endl;
  		pilha.printTable();//Logs the weights in each element
@@ -233,34 +235,34 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  		iterations = graph.degree(current);
  		graph.getNeighbours(current,&neig);
  		graph.getWeights(current,&weig);
- 		
+
  		for(int i =0;i < iterations; i++){
- 		
+
  			if(pilha.exists(neig[i])){
- 				
+
  				//std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
  				//std::cout<<"; current:"<<pilha.cost(current)<<"; weight:"<<weig[i];
  				//std::cout<<std::endl;
- 				
+
  				if(pilha.cost(neig[i])>(pilha.cost(current) + weig[i]) ){
  					parents[neig[i]] = current;
  					levels[neig[i]] = levels[current] + 1;
  					cost[neig[i]] = (pilha.cost(current) + weig[i]);
- 					
+
  					//std::cout<<"   "<<neig[i]<<","<<pilha.cost(current) + weig[i]<<std::endl;
- 					
+
  					pilha.replace( neig[i], (pilha.cost(current) + weig[i]) );
  				}
- 				
+
  			}
- 			
+
  		}
- 		
+
  		delete [] neig;
  		delete [] weig;
  		pilha.pop();
  	}
- 	
+
  	//Save the cost to get to each vertex from initial------------------------------------
  	int dijsize = 0;
  	std::string vertexString;
@@ -280,6 +282,129 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
 	//deletes auxiliary arrays
   delete [] parents; delete [] levels; delete [] cost;
 
+}
+template<class T> void Graph<T>::Distance(int VertexA, int VertexB){
+  int* parents;
+  parents = new int[nVertices];
+  std::string path;
+  if (weighted == true && negativeWeight == false){
+    float* distance;
+    distance = new float[nVertices];
+    Dijkstra_mod(VertexA,distance,parents);
+    int counter;
+    counter = parents[VertexB];
+    while(parents[counter]!=0){
+      path +=std::to_string(counter+1)+ ", "; // gambiarra para aparecer certo.
+      counter = parents[counter];
+  }
+  std::cout<<"Distancia : " << distance[VertexB] <<" "<< "Caminho : " << path << std::endl;
+  delete [] distance;
+}
+  else if(weighted == false){
+    int* distance;
+    distance = new int[nVertices];
+    BFS_mod(VertexA,distance,parents);
+    int counter;
+    counter = parents[VertexB];
+    while(parents[counter]!=0){
+      path += ", " + std::to_string(counter);
+      counter = parents[counter];
+    }
+    std::cout<<"Distancia : " << distance[VertexB] <<" "<< "Caminho : " << path << std::endl;
+    delete [] distance;
+  }
+
+  delete [] parents;
+;
+  return;
+}
+template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents){
+  //Correcting index
+  initial = initial -1;
+
+  //Auxiliary queue used during the algorithm
+  std::queue<int> fifo;
+  //For each vertex: store its parent
+  //For each vertex: store its levelr
+  //Fill arrays
+  for (int i  = 0; i<nVertices; i++){
+      parents[i]=-2;
+  }
+  //Set initial values
+  parents[initial]=-1;
+  distance[initial] = 0;
+  fifo.push(initial);
+
+  int current = 0;
+  int* neig = NULL;
+  int elementIndex=0;
+  int iterations = 0;
+  while(!fifo.empty()){
+      current = fifo.front();
+      iterations = graph.degree(current);
+      graph.getNeighbours(current, &neig);
+      for ( int i = 0; i < iterations; i++ ){
+        if (parents[neig[i]]==-2){
+          fifo.push(*(neig+i));
+          parents[*(neig+i)]=current;
+          distance[*(neig+i)] = distance[current]+1;
+        }
+      }
+
+      delete [] neig;
+      fifo.pop();
+  }
+  return;
+}
+template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* parents){
+  //Correct inicial index
+  initial--;
+
+  int starter = 999999999;//very big float (gambiarra)
+  heap<float> pilha(nVertices,starter);
+
+ //Initialize values
+  for(int i =0;i <nVertices;i++){
+    parents[i] = -2;
+    distance[i] = -1.0;
+  }
+
+  //Set values for initial vertex
+  pilha.replace(initial,0.0);
+  distance[initial] = 0.0;
+  parents[initial] = -1;
+
+  //Auxiliar variables
+  int current;//vertex being computed
+  int iterations; //for each vertex, a different # of iterations
+  int* neig = NULL; //array to store neighbours
+  float* weig = NULL; //array to store weights
+
+  while(!pilha.empty()){
+    std::cout<<std::endl;
+    pilha.printTable();//Logs the weights in each element
+    pilha.printHeap();
+    current = pilha.top_index();//Gets the minimum value element
+    iterations = graph.degree(current);
+    graph.getNeighbours(current,&neig);
+    graph.getWeights(current,&weig);
+
+    for(int i =0;i < iterations; i++){
+
+      if(pilha.exists(neig[i])){
+        if(pilha.cost(neig[i])>(pilha.cost(current) + weig[i]) ){
+          parents[neig[i]] = current;
+          distance[neig[i]] = (pilha.cost(current) + weig[i]);
+          pilha.replace( neig[i], (pilha.cost(current) + weig[i]) );
+        }
+      }
+    }
+
+    delete [] neig;
+    delete [] weig;
+    pilha.pop();
+  }
+  return;
 }
 
 template class Graph<adjList>;

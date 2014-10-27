@@ -5,9 +5,10 @@ int main(){
 
   std::string open = "example.txt";
   std::string out = "saidabolada2.txt";
+  std::string out2 = "saidabolada3.txt";
 
   Graph<adjList> grafo(open,out);
-  grafo.Dijkstra(1,out);
+  grafo.Distance(1,2);
 
 
 /*
@@ -32,7 +33,7 @@ int main(){
   std::cout<<"------- \n";
   for (int i = 0; i<size; i++) std::cout<<pilha.getValueIndex(i)<<std::endl;
   std::cout<<"------- \n";
-*/ 
-  
+*/
+
   return 0;
 }
