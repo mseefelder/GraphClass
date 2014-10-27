@@ -252,8 +252,8 @@ class heap
     
     //Returns value of any element
     V cost(int i){ //receives element's index (find address through pointer[])
-    	//std::cout<<"["<<i<<"] -> cost = "<<value[getValueIndex(i)];
-    	//std::cout<<std::endl;
+    	std::cout<<"["<<i<<"] -> cost = "<<std::endl<<value[getValueIndex(i)];
+    	std::cout<<std::endl;
     	return value[getValueIndex(i)];
     }
     

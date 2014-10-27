@@ -3,13 +3,23 @@
 
 int main(){
 
-  std::string open = "example.txt";
+  std::string open = "../../datasets/as_graph.txt";
   std::string out = "saidabolada2.txt";
   std::string out2 = "saidabolada3.txt";
 
   Graph<adjList> grafo(open,out);
-  grafo.Distance(1,2);
-  grafo.MST(1,out);
+  grafo.BFS(1,out);
+  //grafo.Distance(1,4);
+  //grafo.Dijkstra(1,out);
+  //grafo.Dijkstra(2,out);
+  //grafo.Dijkstra(3,out);
+  //grafo.Dijkstra(4,out);
+  //grafo.Dijkstra(5,out);
+  //grafo.Dijkstra(6,out);
+  //grafo.Dijkstra(7,out);
+  //std::cout<<"MST::::::::::;"<<std::endl;
+  //grafo.MST(1,out);
+  //grafo.MST(7,out);
 
 
 /*

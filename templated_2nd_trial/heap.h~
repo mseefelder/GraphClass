@@ -127,8 +127,8 @@ class heap
     //		swap them
     //		call procedure again for the element
     void heap_up(int slot_init){//receives element's address (value)
-    	bool proceed = true;
-    	int slot = slot_init;
+    	bool proceed = true;//-----//
+    	int slot = slot_init;//-----//
     	
     	while(proceed){
     		proceed = false;
@@ -136,7 +136,8 @@ class heap
     		if(slot>0){
     			if(value[slot]<value[((slot-1)/2)]){
 						swap(index[slot], index[((slot-1)/2)]);
-						slot = ((slot-1)/2);
+						slot = ((slot-1)/2);//-----//
+						proceed = true;//-----//
 						//heap_up(((slot-1)/2));
 					}
     		}
@@ -251,8 +252,8 @@ class heap
     
     //Returns value of any element
     V cost(int i){ //receives element's index (find address through pointer[])
-    	//std::cout<<"["<<i<<"] -> cost = "<<value[getValueIndex(i)];
-    	//std::cout<<std::endl;
+    	std::cout<<"["<<i<<"] -> cost = "<<value[getValueIndex(i)];
+    	std::cout<<std::endl;
     	return value[getValueIndex(i)];
     }
     

@@ -223,6 +223,7 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
 
  	//Auxiliar variables
  	int current;//vertex being computed
+  int curCost;
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
  	float* weig = NULL; //array to store weights
@@ -232,9 +233,12 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  		pilha.printTable();//Logs the weights in each element
  		pilha.printHeap();
  		current = pilha.top_index();//Gets the minimum value element
+    curCost = pilha.cost(current);
  		iterations = graph.degree(current);
  		graph.getNeighbours(current,&neig);
  		graph.getWeights(current,&weig);
+
+    pilha.pop();
 
  		for(int i =0;i < iterations; i++){
 
@@ -244,23 +248,23 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  				//std::cout<<"; current:"<<pilha.cost(current)<<"; weight:"<<weig[i];
  				//std::cout<<std::endl;
 
- 				if(pilha.cost(neig[i])>(pilha.cost(current) + weig[i]) ){
+ 				if(pilha.cost(neig[i])>(curCost + weig[i]) ){
  					parents[neig[i]] = current;
  					levels[neig[i]] = levels[current] + 1;
- 					cost[neig[i]] = (pilha.cost(current) + weig[i]);
+ 					cost[neig[i]] = (curCost + weig[i]);
 
  					//std::cout<<"   "<<neig[i]<<","<<pilha.cost(current) + weig[i]<<std::endl;
 
- 					pilha.replace( neig[i], (pilha.cost(current) + weig[i]) );
+ 					pilha.replace( neig[i], (curCost + weig[i]) );
  				}
 
  			}
 
  		}
 
- 		delete [] neig;
- 		delete [] weig;
- 		pilha.pop();
+ 		//delete [] neig;
+ 		//delete [] weig;
+ 		//pilha.pop();
  	}
 
  	//Save the cost to get to each vertex from initial------------------------------------
@@ -283,41 +287,69 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
   delete [] parents; delete [] levels; delete [] cost;
 
 }
+
 template<class T> void Graph<T>::Distance(int VertexA, int VertexB){
   int* parents;
   parents = new int[nVertices];
   std::string path;
+
+  //Weighted case---------------------------------------------------
   if (weighted == true && negativeWeight == false){
+
     float* distance;
     distance = new float[nVertices];
     Dijkstra_mod(VertexA,distance,parents);
     int counter;
-    counter = parents[VertexB];
-    while(parents[counter]!=0){
+    counter = VertexB - 1;//VertexB - 1 to correct index!::::::
+
+    //In case VertexA doesn't reach VertexB:
+    if(parents[VertexB-1]<0){
+    	std::cout<<"Nao ha caminho de "<<VertexA<<" para "<<VertexB<<"!"<<std::endl;
+    	return;
+    }
+
+    while(counter != (VertexA - 1) ){// != (VertexA - 1), what we look for!:::::
+      std::cout<<"Counter"<<counter<<std::endl;
       path +=std::to_string(counter+1)+ ", "; // gambiarra para aparecer certo.
       counter = parents[counter];
-  }
-  std::cout<<"Distancia : " << distance[VertexB] <<" "<< "Caminho : " << path << std::endl;
-  delete [] distance;
-}
+  	}
+    path += std::to_string(VertexA);
+
+    std::cout<<"Distancia : " << distance[VertexB-1] <<" "<< "Caminho : " << path << std::endl;
+    delete [] distance;
+
+	}
+	//Non-weighted case-------------------------------------------------
   else if(weighted == false){
     int* distance;
     distance = new int[nVertices];
     BFS_mod(VertexA,distance,parents);
     int counter;
-    counter = parents[VertexB];
-    while(parents[counter]!=0){
-      path += ", " + std::to_string(counter);
+    counter = VertexB - 1;//VertexB - 1 to correct index!::::::
+
+    //In case VertexA doesn't reach VertexB:
+    if(parents[VertexB-1]<0){
+      std::cout<<"Nao ha caminho de "<<VertexA<<" para "<<VertexB<<"!"<<std::endl;
+      return;
+    }
+
+    while(counter != (VertexA - 1) ){// != (VertexA - 1), what we look for!:::::
+      std::cout<<"Counter"<<counter<<std::endl;
+      path +=std::to_string(counter+1)+ ", "; // gambiarra para aparecer certo.
       counter = parents[counter];
     }
-    std::cout<<"Distancia : " << distance[VertexB] <<" "<< "Caminho : " << path << std::endl;
+    path += std::to_string(VertexA);
+
+    std::cout<<"Distancia : " << distance[VertexB-1] <<" "<< "Caminho : " << path << std::endl;
     delete [] distance;
+
   }
 
   delete [] parents;
-;
+
   return;
 }
+
 template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents){
   //Correcting index
   initial = initial -1;
@@ -325,7 +357,7 @@ template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents
   //Auxiliary queue used during the algorithm
   std::queue<int> fifo;
   //For each vertex: store its parent
-  //For each vertex: store its levelr
+  //For each vertex: store its level
   //Fill arrays
   for (int i  = 0; i<nVertices; i++){
       parents[i]=-2;
@@ -356,7 +388,9 @@ template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents
   }
   return;
 }
+
 template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* parents){
+
   //Correct inicial index
   initial--;
 
@@ -376,34 +410,53 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
 
   //Auxiliar variables
   int current;//vertex being computed
+  int currentValue;
   int iterations; //for each vertex, a different # of iterations
   int* neig = NULL; //array to store neighbours
   float* weig = NULL; //array to store weights
 
   while(!pilha.empty()){
-    std::cout<<std::endl;
-    pilha.printTable();//Logs the weights in each element
-    pilha.printHeap();
-    current = pilha.top_index();//Gets the minimum value element
-    iterations = graph.degree(current);
-    graph.getNeighbours(current,&neig);
-    graph.getWeights(current,&weig);
+    std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
+ 		std::cout<<std::endl;
+ 		pilha.printTable();//Logs the weights in each element
+ 		pilha.printHeap();
+ 		current = pilha.top_index();//Gets the minimum value element
+ 		currentValue = pilha.cost(current);
+ 		std::cout<<"::::Current vertex"<<current<<std::endl;
+ 		std::cout<<pilha.cost(current)<<std::endl;
+ 		iterations = graph.degree(current);
+ 		graph.getNeighbours(current,&neig);
+ 		graph.getWeights(current,&weig);
+
+ 		pilha.pop();
 
     for(int i =0;i < iterations; i++){
 
+    	// std::cout<<"v:"<<current;for(int i=0; i<iterations; i++)std::cout<<" n:"<<neig[i];std::cout<<std::endl;
+ 		// 	std::cout<<"exists("<<neig[i]<<")"<<std::endl;
+      //
+ 		// 	std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
+ 		// 	std::cout<<"; current:"<<currentValue<<"; weight:"<<weig[i];
+ 		// 	std::cout<<std::endl;
+
       if(pilha.exists(neig[i])){
-        if(pilha.cost(neig[i])>(pilha.cost(current) + weig[i]) ){
+        if(pilha.cost(neig[i])>(currentValue + weig[i]) ){
+        	std::cout<<"Parents"<<std::endl;
           parents[neig[i]] = current;
-          distance[neig[i]] = (pilha.cost(current) + weig[i]);
-          pilha.replace( neig[i], (pilha.cost(current) + weig[i]) );
+          std::cout<<"Distance"<<std::endl;
+          distance[neig[i]] = (currentValue + weig[i]);
+          pilha.replace( neig[i], (currentValue + weig[i]) );
         }
       }
     }
 
-    delete [] neig;
-    delete [] weig;
-    pilha.pop();
+    //delete [] neig;
+    //delete [] weig;
+    //pilha.pop();
   }
+  std::cout<<"Dijkstra_mod finished!::::::::::::::::::::";
+  for(int i=0;i<nVertices;i++)std::cout<<"distance["<<i<<"] ="<<distance[i]<<" ";
+  std::cout<<std::endl;
   return;
 }
 
@@ -412,19 +465,19 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
 template<class T> void Graph<T>::MST(int initial, std::string output){
  	//Correct inicial index
  	initial--;
- 	
+
  	//Store each element's parent
  	int* parents;
  	parents = new int[nVertices];
- 	
+
  	//Store each element's level
  	int* levels;
  	levels = new int[nVertices];
- 	
+
  	//Store each element's cost
  	float* cost;
  	cost = new float[nVertices];
- 
+
  	int starter = 999999999;//very big float (gambiarra)
  	heap<float> pilha(nVertices,starter);
 
@@ -434,19 +487,19 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  		levels[i] = -1;
  		cost[i] = -1.0;
  	}
- 
+
  	//Set values for initial vertex
  	pilha.replace(initial,0.0);
  	cost[initial] = 0.0;
  	parents[initial] = -1;
  	levels[initial] = 0;
- 	
+
  	//Auxiliar variables
  	int current;//vertex being computed
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
  	float* weig = NULL; //array to store weights
- 	
+
  	while(!pilha.empty()){
  		std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
  		std::cout<<std::endl;
@@ -456,43 +509,38 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  		iterations = graph.degree(current);
  		graph.getNeighbours(current,&neig);
  		graph.getWeights(current,&weig);
- 		
+
  		pilha.pop();
- 		
+
  		for(int i =0;i < iterations; i++){
  			std::cout<<"v:"<<current;for(int i=0; i<iterations; i++)std::cout<<" n:"<<neig[i];std::cout<<std::endl;
  			std::cout<<"exists("<<neig[i]<<")"<<std::endl;
  			if(pilha.exists(neig[i])){
- 				
+
  				//std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
  				//std::cout<<"; current:"<<pilha.cost(current)<<"; weight:"<<weig[i];
  				//std::cout<<std::endl;
- 				
+
  				if(pilha.cost(neig[i]) > weig[i] ){
  					parents[neig[i]] = current;
  					levels[neig[i]] = levels[current] + 1;
  					cost[neig[i]] = weig[i];
- 					
+
  					std::cout<<"   >Replace ["<<neig[i]<<"] ,"<<weig[i]<<std::endl;
- 					
+
  					pilha.replace( neig[i], weig[i] );
  				}
- 				
+
  			}
- 			
+
  		}
- 		
+
  		//std::cout<<"Deleting..."<<std::endl;
- 		delete [] neig;
- 		delete [] weig;
- 		
- 		//std::cout<<"Before pop(): \n    ";
- 		//pilha.printTable();
- 		//std::cout<<"    ";
- 		//pilha.printHeap();
- 		//pilha.pop();
+ 		//delete [] neig;
+ 		//delete [] weig;
+
  	}
- 	
+
  	//Save the cost to get to each vertex from initial------------------------------------
  	int dijsize = 0;
  	std::string vertexString;
