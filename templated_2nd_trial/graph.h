@@ -7,6 +7,7 @@
 #include <string>
 #include <queue>
 #include <limits>
+#include <omp.h>
 //#include <priority_queue>
 
 #include "adjlist.h"
@@ -54,7 +55,7 @@ class Graph
     void buildGraph(std::string path,std::string output);
 
     void BFS(int initial, std::string output);
-    void BFS_mod(int initial,int* distance,int* parents);
+    void BFS_mod(int initial,float* distance,int* parents);
 
     //PRIORITY:***
     void Dijkstra(int initial, std::string output);
@@ -73,11 +74,13 @@ class Graph
     */
     void Distance(int vertexA, int vertexB);
 
+    int simpleDistance(int Vertex, float* cost);
+
     //PRIORITY:**
     void DistanceToAll(int vertex);
 
     //PRIORITY:**
-    //void MeanDistance();
+    float MeanDistance();
 
     //PRIORITY:*
     //void DFS(int initial, std::string output);

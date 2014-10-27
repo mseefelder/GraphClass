@@ -126,9 +126,9 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 
   //Delete auxiliary structures so as to not leak memory
   delete [] degrees; delete [] vertDegree;
-std::cout << "starting postProcess"<< std::endl;
+  std::cout << "starting postProcess"<< std::endl;
   graph.postProcess();//
-std::cout << "fim"<< std::endl;
+  std::cout << "fim"<< std::endl;
   return;
 
 }
@@ -295,66 +295,71 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
 template<class T> void Graph<T>::Distance(int VertexA, int VertexB){
   int* parents;
   parents = new int[nVertices];
-  std::string path;
+
+  float* distance;
+  distance = new float[nVertices];
 
   //Weighted case---------------------------------------------------
   if (weighted == true && negativeWeight == false){
-
-    float* distance;
-    distance = new float[nVertices];
     Dijkstra_mod(VertexA,distance,parents);
-    int counter;
-    counter = VertexB - 1;//VertexB - 1 to correct index!::::::
-
-    //In case VertexA doesn't reach VertexB:
-    if(parents[VertexB-1]<0){
-    	std::cout<<"Nao ha caminho de "<<VertexA<<" para "<<VertexB<<"!"<<std::endl;
-    	return;
-    }
-
-    while(counter != (VertexA - 1) ){// != (VertexA - 1), what we look for!:::::
-      std::cout<<"Counter"<<counter<<std::endl;
-      path +=std::to_string(counter+1)+ ", "; // gambiarra para aparecer certo.
-      counter = parents[counter];
-  	}
-    path += std::to_string(VertexA);
-
-    std::cout<<"Distancia : " << distance[VertexB-1] <<" "<< "Caminho : " << path << std::endl;
-    delete [] distance;
 
 	}
 	//Non-weighted case-------------------------------------------------
   else if(weighted == false){
-    int* distance;
-    distance = new int[nVertices];
     BFS_mod(VertexA,distance,parents);
-    int counter;
-    counter = VertexB - 1;//VertexB - 1 to correct index!::::::
-
-    //In case VertexA doesn't reach VertexB:
-    if(parents[VertexB-1]<0){
-      std::cout<<"Nao ha caminho de "<<VertexA<<" para "<<VertexB<<"!"<<std::endl;
-      return;
-    }
-
-    while(counter != (VertexA - 1) ){// != (VertexA - 1), what we look for!:::::
-      std::cout<<"Counter"<<counter<<std::endl;
-      path +=std::to_string(counter+1)+ ", "; // gambiarra para aparecer certo.
-      counter = parents[counter];
-    }
-    path += std::to_string(VertexA);
-
-    std::cout<<"Distancia : " << distance[VertexB-1] <<" "<< "Caminho : " << path << std::endl;
-    delete [] distance;
-
   }
 
+  int counter;
+  counter = VertexB - 1;//VertexB - 1 to correct index!::::::
+
+  //In case VertexA doesn't reach VertexB:
+  if(parents[VertexB-1]<0){
+    std::cout<<"Nao ha caminho de "<<VertexA<<" para "<<VertexB<<"!"<<std::endl;
+    return;
+  }
+
+  else{
+    std::cout<<"Distancia : "<<distance[VertexB-1]<< " ";
+    counter = VertexB - 1;
+    while(counter != (VertexA - 1) ){// != (VertexA - 1), what we look for!:::::
+      //path +=std::to_string(counter+1)+ ", ";
+      std::cout<< counter+1 << ", ";
+      counter = parents[counter];
+    }
+    std::cout<<VertexA<< std::endl;
+  }
+
+  delete [] distance;
   delete [] parents;
 
   return;
 }
 
-template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents){
+template<class T> int Graph<T>::simpleDistance(int Vertex, float* cost){
+  int* parents;
+  parents = new int[nVertices];
+
+  //Weighted case---------------------------------------------------
+  if (weighted == true && negativeWeight == false){
+    Dijkstra_mod(Vertex,cost,parents);
+  }
+  //Non-weighted case-------------------------------------------------
+  else if(weighted == false){
+    BFS_mod(Vertex,cost,parents);
+  }
+
+  int numberOfPairs = nVertices-1;
+  for (int i = Vertex; i < nVertices; ++i)
+  {
+    if(parents[i] == -1) numberOfPairs--;
+  }
+
+  delete [] parents;
+
+  return numberOfPairs;
+}
+
+template<class T> void Graph<T>::BFS_mod(int initial,float* distance, int* parents){
   //Correcting index
   initial = initial -1;
 
@@ -373,7 +378,6 @@ template<class T> void Graph<T>::BFS_mod(int initial,int* distance, int* parents
 
   int current = 0;
   int* neig = NULL;
-  int elementIndex=0;
   int iterations = 0;
   bool deleteFlag;
   while(!fifo.empty()){
@@ -423,10 +427,6 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
   bool deleteFlagN;
   bool deleteFlagW;
   while(!pilha.empty()){
-    std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
- 		std::cout<<std::endl;
- 		pilha.printTable();//Logs the weights in each element
- 		pilha.printHeap();
  		current = pilha.top_index();//Gets the minimum value element
  		currentValue = pilha.cost(current);
  		std::cout<<"::::Current vertex"<<current<<std::endl;
@@ -585,6 +585,7 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
   delete [] parents; delete [] levels; delete [] cost;
 
 }
+
 template<class T> void Graph<T>::DistanceToAll(int Vertex){
   int* parents;
   parents = new int[nVertices];
@@ -621,8 +622,8 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
   }
   //Non-weighted case-------------------------------------------------
   else if(weighted == false){
-    int* distance;
-    distance = new int[nVertices];
+    float* distance;
+    distance = new float[nVertices];
     BFS_mod(Vertex,distance,parents);
     int counter;
     for(int i= 1 ;i<(nVertices + 1);i++){
@@ -652,6 +653,59 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
   return;
 }
 
+template<class T> float Graph<T>::MeanDistance(){
+  
+  int threadN = omp_get_max_threads();
+  //Store the distance sum on each thread
+  float distance[threadN];
+  //Store the # of considered pair on each thread
+  int usedPairs[threadN];
+
+  for (int i = 0; i < threadN; ++i)
+  {
+    distance[i] = 0.0;
+    usedPairs[i] = 0;
+  }
+
+#pragma omp parallel
+//-----------------------------------------------//-----------------------------------------------
+{
+  int thread = omp_get_thread_num();
+  int cost[nVertices];
+
+  for (int k = 0; k < nVertices; ++k)
+  {
+    cost[k] = 0;
+  }
+
+//-----------------------------------------------
+#pragma omp for
+  for (int i = 0; i < nVertices; ++i)
+  {
+    usedPairs[thread] += simpleDistance( (i+1) , cost);
+    //sum all values on cost[] (erasing them) and add to distance[thread]
+    for (int j = i; j < nVertices; ++j)
+    {
+      distance[thread]+=cost[j];
+      if(cost[j]==-1) distance[thread]++;
+      cost[j]=0;
+    }
+  }  
+//-----------------------------------------------
+
+}
+//-----------------------------------------------//-----------------------------------------------
+  
+  float mean = 0.0;
+  //Calculate mean:
+  for (int t = 0; t < threadN; ++t)
+  {
+    mean += (distance[t]/usedPairs[t])/((float)threadN);
+  }
+
+  return mean;
+
+}
 
 template class Graph<adjList>;
 
