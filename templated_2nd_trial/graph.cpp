@@ -282,7 +282,9 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
 
 }
 
-template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+template<class T> void Graph<T>::MST(int initial, std::string output){
  	//Correct inicial index
  	initial--;
  	
@@ -321,6 +323,7 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  	float* weig = NULL; //array to store weights
  	
  	while(!pilha.empty()){
+ 		std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
  		std::cout<<std::endl;
  		pilha.printTable();//Logs the weights in each element
  		pilha.printHeap();
@@ -329,8 +332,11 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  		graph.getNeighbours(current,&neig);
  		graph.getWeights(current,&weig);
  		
- 		for(int i =0;i < iterations; i++){
+ 		pilha.pop();
  		
+ 		for(int i =0;i < iterations; i++){
+ 			std::cout<<"v:"<<current;for(int i=0; i<iterations; i++)std::cout<<" n:"<<neig[i];std::cout<<std::endl;
+ 			std::cout<<"exists("<<neig[i]<<")"<<std::endl;
  			if(pilha.exists(neig[i])){
  				
  				//std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
@@ -338,11 +344,11 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  				//std::cout<<std::endl;
  				
  				if(pilha.cost(neig[i]) > weig[i] ){
- 					//parents[neig[i]] = current;
- 					//levels[neig[i]] = levels[current] + 1;
- 					//cost[neig[i]] = (pilha.cost(current) + weig[i]);
+ 					parents[neig[i]] = current;
+ 					levels[neig[i]] = levels[current] + 1;
+ 					cost[neig[i]] = weig[i];
  					
- 					//std::cout<<"   "<<neig[i]<<","<<pilha.cost(current) + weig[i]<<std::endl;
+ 					std::cout<<"   >Replace ["<<neig[i]<<"] ,"<<weig[i]<<std::endl;
  					
  					pilha.replace( neig[i], weig[i] );
  				}
@@ -351,9 +357,15 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  			
  		}
  		
+ 		//std::cout<<"Deleting..."<<std::endl;
  		delete [] neig;
  		delete [] weig;
- 		pilha.pop();
+ 		
+ 		//std::cout<<"Before pop(): \n    ";
+ 		//pilha.printTable();
+ 		//std::cout<<"    ";
+ 		//pilha.printHeap();
+ 		//pilha.pop();
  	}
  	
  	//Save the cost to get to each vertex from initial------------------------------------

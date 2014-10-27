@@ -56,23 +56,26 @@ class adjList
     }
 
     ~adjList(){
-      /*
+      
       if (vArray){
-        for(int i=0; i<nVertices; i++){
-          delete [] vArray[i];
-        }
+        //for(int i=0; i<nVertices; i++){
+        //  delete [] vArray[i];
+        //}
         delete [] vArray;
       }
+      
+      
       if (wArray){
-        for(int i=0; i<nVertices; i++){
-          delete [] wArray[i];
-        }
+        //for(int i=0; i<nVertices; i++){
+        //  delete [] wArray[i];
+        //}
         delete [] wArray;
       }
+      
       if (degrees){
         delete [] degrees;
       }
-      */
+      
     }
 
 protected:
