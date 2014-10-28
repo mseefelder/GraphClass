@@ -16,7 +16,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   file.open(path, std::ifstream::in);
   std::getline (file,line);
   std::sscanf(line.c_str(), "%d", &nVertices);
-  std::cout << "lendo"<< std::endl;
+  //std::cout << "lendo"<< std::endl;
   //Check whether matrix is weighted or not-------------------------------------
   int count=0, size;
   std::getline(file,line);
@@ -29,14 +29,14 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   //Sets weighted flag
   if(count == 1) weighted = false;
   else if (count == 2) weighted = true;
-  std::cout << "weighted : "<< weighted << std::endl;
+  //std::cout << "weighted : "<< weighted << std::endl;
 
   file.close();
 
   //Instantiate-----------------------------------------------------------------
 
   graph.generate(nVertices);//WE HAVE TO IMPLEMENT THIS
-  std::cout << "generate"<< std::endl;
+  //std::cout << "generate"<< std::endl;
   //Auxiliary structures--------------------------------------------------------
   //stores each vertex: it's degree
   int* vertDegree;
@@ -126,9 +126,9 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 
   //Delete auxiliary structures so as to not leak memory
   delete [] degrees; delete [] vertDegree;
-  std::cout << "starting postProcess"<< std::endl;
+  //std::cout << "starting postProcess"<< std::endl;
   graph.postProcess();//
-  std::cout << "fim"<< std::endl;
+  //std::cout << "fim"<< std::endl;
   return;
 
 }
@@ -233,9 +233,9 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
   bool deleteFlagN;
   bool deleteFlagW;
  	while(!pilha.empty()){
- 		std::cout<<std::endl;
- 		pilha.printTable();//Logs the weights in each element
- 		pilha.printHeap();
+ 		//std::cout<<std::endl;
+ 		//pilha.printTable();//Logs the weights in each element
+ 		//pilha.printHeap();
  		current = pilha.top_index();//Gets the minimum value element
     curCost = pilha.cost(current);
  		iterations = graph.degree(current);
@@ -348,7 +348,7 @@ template<class T> int Graph<T>::simpleDistance(int Vertex, float* cost){
     BFS_mod(Vertex,cost,parents);
   }
 
-  int numberOfPairs = nVertices-1;
+  int numberOfPairs = nVertices-Vertex;
   for (int i = Vertex; i < nVertices; ++i)
   {
     if(parents[i] == -1) numberOfPairs--;
@@ -429,8 +429,8 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
   while(!pilha.empty()){
  		current = pilha.top_index();//Gets the minimum value element
  		currentValue = pilha.cost(current);
- 		std::cout<<"::::Current vertex"<<current<<std::endl;
- 		std::cout<<pilha.cost(current)<<std::endl;
+ 		//std::cout<<"::::Current vertex"<<current<<std::endl;
+ 		//std::cout<<pilha.cost(current)<<std::endl;
  		iterations = graph.degree(current);
  		deleteFlagN = graph.getNeighbours(current,&neig);
  		deleteFlagW = graph.getWeights(current,&weig);
@@ -448,9 +448,9 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
 
       if(pilha.exists(neig[i])){
         if(pilha.cost(neig[i])>(currentValue + weig[i]) ){
-        	std::cout<<"Parents"<<std::endl;
+        	//std::cout<<"Parents"<<std::endl;
           parents[neig[i]] = current;
-          std::cout<<"Distance"<<std::endl;
+          //std::cout<<"Distance"<<std::endl;
           distance[neig[i]] = (currentValue + weig[i]);
           pilha.replace( neig[i], (currentValue + weig[i]) );
         }
@@ -463,9 +463,9 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
       delete [] weig;
     }
   }
-  std::cout<<"Dijkstra_mod finished!::::::::::::::::::::";
-  for(int i=0;i<nVertices;i++)std::cout<<"distance["<<i<<"] ="<<distance[i]<<" ";
-  std::cout<<std::endl;
+  //std::cout<<"Dijkstra_mod finished!::::::::::::::::::::";
+  //for(int i=0;i<nVertices;i++)std::cout<<"distance["<<i<<"] ="<<distance[i]<<" ";
+  //std::cout<<std::endl;
   return;
 }
 
@@ -667,41 +667,49 @@ template<class T> float Graph<T>::MeanDistance(){
     usedPairs[i] = 0;
   }
 
-#pragma omp parallel
-//-----------------------------------------------//-----------------------------------------------
-{
-  int thread = omp_get_thread_num();
-  int cost[nVertices];
-
-  for (int k = 0; k < nVertices; ++k)
+  #pragma omp parallel
+  //-----------------------------------------------//-----------------------------------------------
   {
-    cost[k] = 0;
-  }
+    int thread = omp_get_thread_num();
+    float cost[nVertices];
 
-//-----------------------------------------------
-#pragma omp for
-  for (int i = 0; i < nVertices; ++i)
-  {
-    usedPairs[thread] += simpleDistance( (i+1) , cost);
-    //sum all values on cost[] (erasing them) and add to distance[thread]
-    for (int j = i; j < nVertices; ++j)
+    for (int k = 0; k < nVertices; ++k)
     {
-      distance[thread]+=cost[j];
-      if(cost[j]==-1) distance[thread]++;
-      cost[j]=0;
+      cost[k] = 0;
     }
-  }  
-//-----------------------------------------------
 
-}
-//-----------------------------------------------//-----------------------------------------------
+    //-----------------------------------------------
+    #pragma omp for
+      for (int i = 0; i < nVertices; ++i)
+      {
+        usedPairs[thread] += simpleDistance( (i+1) , cost);
+        //sum all values on cost[] (erasing them) and add to distance[thread]
+        for (int j = i+1; j < nVertices; ++j)
+        {
+          distance[thread]+=cost[j];
+          
+          if(cost[j]==-1) {
+            distance[thread]++;
+          }
+          cost[j]=0;
+        }
+      }  
+    //-----------------------------------------------
+
+  }
+  //-----------------------------------------------//-----------------------------------------------
   
   float mean = 0.0;
+  int totalThreads = 0.0;
   //Calculate mean:
   for (int t = 0; t < threadN; ++t)
   {
-    mean += (distance[t]/usedPairs[t])/((float)threadN);
+    if(usedPairs[t]>0){
+      mean += (distance[t]/usedPairs[t]);
+      totalThreads += 1.0;
+    }
   }
+  mean = mean/totalThreads;
 
   return mean;
 

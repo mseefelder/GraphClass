@@ -3,7 +3,7 @@
 
 int main(){
 
-  std::string open = "grafoteste.txt";
+  std::string open = "K4.txt";
   std::string out = "saidabolada2.txt";
   std::string out2 = "saidabolada3.txt";
 
@@ -22,6 +22,7 @@ int main(){
   //grafo.MST(1,out2);
   //std::cout<< "fim MST" << std::endl;
   //grafo.MST(7,out);
+  //grafo.Distance(3,4);
   std::cout<<grafo.MeanDistance()<<std::endl;
 
 /*

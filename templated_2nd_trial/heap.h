@@ -275,7 +275,6 @@ class heap
     bool empty(){
 
     	if (lastElement<0) {
-    		std::cout<<"Heap is empty!"<<std::endl;
     		return true;
     	}
     	else {
