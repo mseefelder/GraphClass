@@ -3,12 +3,12 @@
 
 int main(){
 
-  std::string open = "K4.txt";
+  std::string open = "grafoteste.txt";
   std::string out = "saidabolada2.txt";
   std::string out2 = "saidabolada3.txt";
 
   Graph<adjList> grafo(open,out);
-  //grafo.BFS(1,out);
+  grafo.DFS(1,out2);
   //std::cout<< "fim BFS" << std::endl;
   //grafo.Distance(1,4);
   //grafo.Dijkstra(1,out);
@@ -23,7 +23,7 @@ int main(){
   //std::cout<< "fim MST" << std::endl;
   //grafo.MST(7,out);
   //grafo.Distance(3,4);
-  std::cout<<grafo.MeanDistance()<<std::endl;
+  //std::cout<<grafo.MeanDistance()<<std::endl;
 
 /*
   int size = 5;

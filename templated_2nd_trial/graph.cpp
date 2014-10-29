@@ -654,7 +654,7 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
 }
 
 template<class T> float Graph<T>::MeanDistance(){
-  
+
   int threadN = omp_get_max_threads();
   //Store the distance sum on each thread
   float distance[threadN];
@@ -698,7 +698,7 @@ template<class T> float Graph<T>::MeanDistance(){
 
   }
   //-----------------------------------------------//-----------------------------------------------
-  
+
   float mean = 0.0;
   int totalThreads = 0.0;
   //Calculate mean:
@@ -713,6 +713,66 @@ template<class T> float Graph<T>::MeanDistance(){
 
   return mean;
 
+}
+
+template<class T> void Graph<T>::DFS(int initial, std::string output){
+	//Correcting index
+  initial = initial -1;
+
+  //Auxiliary queue used during the algorithm
+  std::stack<int> lifo;
+  //For each vertex: store its parent
+  int* parents;
+  parents = new int[nVertices];
+  //For each vertex: store its level
+  int* levels;
+  levels = new int[nVertices];
+  //Fill arrays
+  for (int i  = 0; i<nVertices; i++){
+      parents[i]=-2;
+      levels[i]=-1;
+  }
+  //Set initial values
+  parents[initial]=-1;
+  levels[initial]=0;
+  lifo.push(initial);
+
+  int current = 0;
+  int* neig = NULL;
+  int elementIndex=0;
+  int iterations = 0;
+  bool deleteFlag;
+  while(!lifo.empty()){
+      current = lifo.top();
+			lifo.pop();
+      iterations = graph.degree(current);
+      deleteFlag = graph.getNeighbours(current, &neig);
+      for ( int i = 0; i < iterations; i++ ){
+        if (parents[neig[i]]==-2){
+          lifo.push(*(neig+i));
+          parents[*(neig+i)]=current;
+          levels[*(neig+i)]=levels[current]+1;
+        }
+      }
+      if(deleteFlag){
+        delete [] neig;
+      }
+  }
+
+  std::string vertexString;
+  for (int j= 0; j<nVertices; j++){
+    vertexString+= "V: "+std::to_string(j+1)+" Pai: "+std::to_string(parents[j]+1)+" Nivel: "+std::to_string(levels[j])+"\n";
+  }
+
+  std::ofstream outFile;
+  outFile.open(output);
+  outFile<<"Resultado da BFS: \n"<<vertexString<<std::endl;
+  outFile.close();
+
+  delete [] parents; delete [] levels;
+
+  return;
+	
 }
 
 template class Graph<adjList>;

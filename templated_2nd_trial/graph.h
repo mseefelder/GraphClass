@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <queue>
+#include <stack>
 #include <limits>
 #include <omp.h>
 //#include <priority_queue>
@@ -83,7 +84,7 @@ class Graph
     float MeanDistance();
 
     //PRIORITY:*
-    //void DFS(int initial, std::string output);
+    void DFS(int initial, std::string output);
 
     //PRIORITY:*
     //int connectedComponents(std::string path);
