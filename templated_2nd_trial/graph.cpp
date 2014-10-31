@@ -687,13 +687,13 @@ template<class T> float Graph<T>::MeanDistance(){
         for (int j = i+1; j < nVertices; ++j)
         {
           distance[thread]+=cost[j];
-          
+
           if(cost[j]==-1) {
             distance[thread]++;
           }
           cost[j]=0;
         }
-      }  
+      }
     //-----------------------------------------------
 
   }
@@ -772,8 +772,214 @@ template<class T> void Graph<T>::DFS(int initial, std::string output){
   delete [] parents; delete [] levels;
 
   return;
-	
+
 }
+template<class T> int Graph<T>::connectedComponents(std::string path){
+  std::cout<<">>||"<<std::endl;
+  int nComponents = 0 ;//vai contar o número de componentes
+
+  //para armazenar pares de <elemento por onde comecei a bfs, tamanho da componente conexa>
+  std::priority_queue< std::pair<int,int>, std::vector< std::pair<int,int> >,CompareDist > myHeap;
+
+  bool* vertices;
+  vertices = new bool[nVertices];//vai marcar quem já ta em alguma CC
+  std::queue<int> fifo;
+  int size = 0;
+
+  for(int x = 0;x<nVertices;x++){
+    vertices[x] = false;//pra primeira BFS, começa tudo falso
+  }
+  int current = 0;
+  int* neig = NULL;
+  int iterations = 0;
+  bool deleteFlagN;
+  std::cout<<"1BFS"<<std::endl;
+
+  for(int i = 0;i<nVertices;i++){
+    size = 0;
+    if(vertices[i]==false){
+      fifo.push(i);
+      vertices[i] = true;
+      size++;
+      nComponents++;
+      while(!fifo.empty()){
+        current = fifo.front(); //fifo.pop() <--removes the object and returns void
+        iterations = graph.degree(current);
+        deleteFlagN = graph.getNeighbours(current, &neig);
+        for (int j = 0;j<iterations;j++){
+          if (vertices[neig[j]]==false){//nessa primeira BFS só olha os vertices que ainda estão false
+            fifo.push(*(neig+j));
+            vertices[*(neig+j)] = true;
+            size++;
+          }
+        }
+      fifo.pop();
+      if(deleteFlagN){
+        delete [] neig;
+        }
+      }
+    myHeap.emplace(i,size);//a heap bota no topo a maior componente (ordena pelo size).
+    }
+  }
+  std::cout<<"1BFS-end"<<std::endl;
+  //IMPORTANTE: Agora, no vertices[], todos os elementos são true.
+  //Pra proxima BFS vamos usar true como ainda nao marcado e false como marcado
+
+  int counter = 0;//Em cada loop interno vai conar em que posicao do array da CC estamos colocando o elemento
+  int vertice = 0;//Vamos guardar o elemento por onde começamos
+
+  int** ccOrder;//array de arrays para guardar todas as componentes conexas.
+  ccOrder = new int*[nComponents];
+  std::cout<<"2BFS"<<std::endl;
+  for(int i = 0;i<nComponents;i++){
+    counter = 2;
+    size = myHeap.top().second;
+    ccOrder[i] = new int[size+1];//aloca tamanho size+1 pra colocar no elemento 0 qual o tamanho da componente que ta vindo e depois insere os vertices todos
+    vertice = myHeap.top().first;
+    ccOrder[i][0] = size;//temos q colocar isso no arquivo e usar pra otimizar o loop de output
+    ccOrder[i][1] = vertice+1;//bota o elemento que vai começar a BFS
+    myHeap.pop();
+
+    //rodo a BFS a partir do vertice e aloco na array da componente conexa dele
+    fifo.push(vertice);
+    vertices[vertice] = false;
+    while(!fifo.empty()){
+      current = fifo.front();
+      iterations = graph.degree(current);
+      deleteFlagN = graph.getNeighbours(current, &neig);
+      for (int j = 0;j<iterations;j++){
+        if (vertices[neig[j]]==true){
+          fifo.push(*(neig+j));
+          vertices[*(neig+j)] = false;
+          counter++;
+          ccOrder[i][counter] = neig[j]+1;
+        }
+      }
+      fifo.pop();
+      if(deleteFlagN){
+        delete [] neig;
+      }
+    }
+  }
+  std::cout<<"2BFS5"<<std::endl;
+  std::cout<<"2BFS-end"<<std::endl;
+
+  //printo
+  std::ofstream outFile;
+  outFile.open(path);
+  outFile<<"Componentes conexas: \n";
+  outFile<<nComponents<<"\n";
+  for (int j=0;j<nComponents;j++){
+    size = ccOrder[j][0];
+    outFile<<"Componente #"<<j<<" - Tamanho: "<<size<<"\n";
+    for (int i = 1; i<size+1; i++){
+      outFile<<ccOrder[j][i]<<", ";
+    }
+    outFile<<"\n";
+    delete [] ccOrder[j];
+  }
+  outFile<<std::endl;
+  outFile.close();
+
+
+  delete [] vertices; delete [] ccOrder;
+
+  return 1;
+}
+
+template<class T> int Graph<T>::getNumberOfVertices(){
+  return nVertices;
+}
+
+template<class T> int Graph<T>::Diameter(int b, int e){
+  int begin = b;
+  int end = e;
+
+ std::cout<<"Starting Diameter(): "<<begin<<" -> "<<end<<std::endl;
+ int diameter = 0;
+
+ int threadN = omp_get_max_threads();
+ std::cout<<threadN<<std::endl;
+
+ int* diameters;
+ diameters = new int[threadN];
+
+ int** levels;
+ levels = new int*[threadN];
+ for(int i = 0; i<threadN; i++){
+   levels[i] = new int[nVertices];
+   diameters[i] = 0;
+ }
+
+ #pragma omp parallel
+    {
+      for(int x = 0; x<nVertices; x++)
+     levels[omp_get_thread_num()][x] = -1;
+    }
+
+ std::queue<int>* fifo;
+ fifo = new std::queue<int>[threadN];
+ bool deleteFlagN;
+ int* neig = NULL;
+
+ std::cout<<"Setup done!"<<std::endl;
+
+#pragma omp parallel
+{
+//////////////A partir daqui tem uma cópia em cada thread, rodando
+  int thread = omp_get_thread_num();
+  int current = 0;
+  bool deleteFlagN;
+  int* neig = NULL;
+  int localDiameter = 0;
+  int iterations = 0;
+
+ //Primeira BFS, pega pra cada componente o vertice inicial e o tamanho
+#pragma omp for
+////////--------------------------------------Esse for e dividido entre os threads
+ for(int i = begin;i<end;i++){
+
+     for(int x = 0; x<nVertices; x++){levels[thread][x] = -1;}
+     fifo[thread].push(i);
+     levels[thread][i] = 0;
+     localDiameter = -1;
+
+     while(!fifo[thread].empty()){
+       current = fifo[thread].front(); //fifo.pop() <--removes the object and returns void
+       iterations = graph.degree(current);
+       deleteFlagN = graph.getNeighbours(current, &neig);
+       for (int j= 0;j<iterations;j++){
+
+         if (levels[thread][neig[j]]==-1){
+
+           fifo[thread].push(*(neig+j));
+           levels[thread][*(neig+j)]=levels[thread][current]+1;
+           if(levels[thread][*(neig+j)]>localDiameter) localDiameter = levels[thread][*(neig+j)];
+
+         }
+
+       }
+
+     fifo[thread].pop();
+
+     }
+     if(localDiameter>diameters[thread]) diameters[thread] = localDiameter;
+////////--------------------------------------
+  }
+
+//////////////
+ for(int j = 0; j<threadN; j++){
+   if(diameters[j]>diameter) diameter = diameters[j];
+ }
+ }
+ std::cout<<"\n ---"<<diameter<<"---\n"<<std::endl;
+ delete [] levels;
+ delete [] diameters;
+ return diameter;
+
+}
+
+
 
 template class Graph<adjList>;
 

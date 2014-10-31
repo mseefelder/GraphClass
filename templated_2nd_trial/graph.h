@@ -87,13 +87,13 @@ class Graph
     void DFS(int initial, std::string output);
 
     //PRIORITY:*
-    //int connectedComponents(std::string path);
+    int connectedComponents(std::string path);
 
     //PRIORITY:*
-    //int getNumberOfVertices();
+    int getNumberOfVertices();
 
     //PRIORITY:*
-    //int Diameter(int b, int e);
+    int Diameter(int b, int e);
 
     ~Graph(){}
 

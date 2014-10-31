@@ -3,12 +3,14 @@
 
 int main(){
 
-  std::string open = "grafoteste.txt";
+  std::string open = "../../datasets/as_graph.txt";
   std::string out = "saidabolada2.txt";
   std::string out2 = "saidabolada3.txt";
 
   Graph<adjList> grafo(open,out);
-  grafo.DFS(1,out2);
+  std::cout<<grafo.getNumberOfVertices()<<std::endl;
+  //grafo.Diameter(0,grafo.getNumberOfVertices());
+  grafo.connectedComponents(out2);
   //std::cout<< "fim BFS" << std::endl;
   //grafo.Distance(1,4);
   //grafo.Dijkstra(1,out);
