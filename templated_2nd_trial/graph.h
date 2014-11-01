@@ -81,7 +81,7 @@ class Graph
     void DistanceToAll(int vertex);
 
     //PRIORITY:**
-    float MeanDistance();
+    float MeanDistance(int init, int end);
 
     //PRIORITY:*
     void DFS(int initial, std::string output);

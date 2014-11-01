@@ -5,22 +5,24 @@
 
 int main(){
 
-  std::string open = "../../datasets/grafo_5.txt";
+  std::string open = "../../datasets/graph3.txt";
   std::string open1 = "../../datasets/rede_colaboracao.txt";
   std::string out = "saidabolada2.txt";
   std::string out2 = "saidabolada3.txt";
 
-  Graph<adjList> grafo(open1,out);
+  Graph<adjList> grafo(open,out);
   /*double ti,tf,tempo; // ti = tempo inicial // tf = tempo final
   ti = tf = tempo = 0;
   timeval tempo_inicio,tempo_fim;
   gettimeofday(&tempo_inicio,NULL);*/
-  grafo.MST(1,out2);
+  //grafo.MST(1,out2);
   /*gettimeofday(&tempo_fim,NULL);
   tf = (double)tempo_fim.tv_usec + ((double)tempo_fim.tv_sec * (1000000.0));
   ti = (double)tempo_inicio.tv_usec + ((double)tempo_inicio.tv_sec * (1000000.0));
   tempo = (tf - ti) / 1000;
   printf("Tempo gasto em milissegundos %.3f\n",tempo);*/
+
+  std::cout<<grafo.MeanDistance(1, 50)<<std::endl;
 
   //std::cout<<grafo.getNumberOfVertices()<<std::endl;
   //grafo.Diameter(0,grafo.getNumberOfVertices());

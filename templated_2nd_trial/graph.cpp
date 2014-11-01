@@ -672,18 +672,18 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
   return;
 }
 
-template<class T> float Graph<T>::MeanDistance(){
+template<class T> float Graph<T>::MeanDistance(int init, int end){
 
   int threadN = omp_get_max_threads();
   //Store the distance sum on each thread
   float distance[threadN];
   //Store the # of considered pair on each thread
-  int usedPairs[threadN];
+  float usedPairs[threadN];
 
   for (int i = 0; i < threadN; ++i)
   {
     distance[i] = 0.0;
-    usedPairs[i] = 0;
+    usedPairs[i] = 0.0;
   }
 
   #pragma omp parallel
@@ -699,9 +699,9 @@ template<class T> float Graph<T>::MeanDistance(){
 
     //-----------------------------------------------
     #pragma omp for
-      for (int i = 0; i < nVertices; ++i)
+      for (int i = init; i < end; ++i)
       {
-        usedPairs[thread] += simpleDistance( (i+1) , cost);
+        usedPairs[thread] += (float)simpleDistance( (i+1) , cost);
         //sum all values on cost[] (erasing them) and add to distance[thread]
         for (int j = i+1; j < nVertices; ++j)
         {
@@ -719,16 +719,45 @@ template<class T> float Graph<T>::MeanDistance(){
   //-----------------------------------------------//-----------------------------------------------
 
   float mean = 0.0;
-  int totalThreads = 0.0;
+  //int totalThreads = 0;
+
+  float totalPairs = 0.0;
+  for (int i = 0; i < threadN; ++i)
+  {
+    totalPairs += usedPairs[i];
+  }
+
+  std::cout<<"Total of used pairs: "<<totalPairs<<std::endl;
+
+  float* threadWeight; threadWeight = new float[threadN];
+  for (int i = 0; i < threadN; ++i)
+  {
+    threadWeight[i] = 0.0;
+  }
+  float totalWeight = 0.0;
+
+  std::cout<<"Distance | Used Pairs | Weight \n";
+
   //Calculate mean:
   for (int t = 0; t < threadN; ++t)
   {
     if(usedPairs[t]>0){
-      mean += (distance[t]/usedPairs[t]);
-      totalThreads += 1.0;
+      std::cout<<"["<<t<<"] ";
+      std::cout<<distance[t]<<" | "<<usedPairs[t];
+      //totalThreads += 1;
+
+      threadWeight[t] = ((float)usedPairs[t]/totalPairs);
+      totalWeight += threadWeight[t];
+
+      std::cout<<" | "<<threadWeight[t]<<"\n";
+
+      mean += threadWeight[t]*(distance[t]/usedPairs[t]);
     }
   }
-  mean = mean/totalThreads;
+
+  std::cout<<"Total weight: "<<totalWeight<<std::endl;
+
+  mean = mean/totalWeight;
 
   return mean;
 
