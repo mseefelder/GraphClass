@@ -276,7 +276,7 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  	std::string vertexString;
   for (int j= 0; j<nVertices; j++){
     if(!(parents[j]<-2)){
-        vertexString+= std::to_string(j+1)+" "+std::to_string(cost[j])+" "+ +"\n";
+        vertexString+= std::to_string(j+1)+" "+std::to_string(cost[j])+" "+std::to_string(parents[j]) +"\n";
         dijsize++;
     }
   }
@@ -551,7 +551,19 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
       delete [] weig;
     }
  	}
-
+  int* feig = NULL;
+  iterations = graph.degree(2272);
+  deleteFlagN = graph.getNeighbours(2272,&feig);
+  std::string neigString;
+  for(int i = 0 ; i<iterations;i++){
+    if(parents[feig[i]] == 2272){
+    neigString += std::to_string(feig[i]) + ", ";
+    }
+  }
+  std::cout << neigString << std:: endl;
+  if(deleteFlagN){
+    delete [] feig;
+  }
  	//Save the cost to get to each vertex from initial------------------------------------
   int* newindex;
   newindex = new int[nVertices];
@@ -565,6 +577,13 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
       removed++;
       }
   }
+  float total_cost = 0;
+  for ( int w = 0; w<nVertices;w++){
+    if(parents[w]>-1){
+      total_cost += cost[w];
+    }
+  }
+  std::cout<<total_cost<<std::endl;
  	int dijsize = nVertices;
  	std::string vertexString;
   for (int j= 0; j<nVertices; j++){
@@ -577,7 +596,7 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
 
   std::ofstream outFile;
   outFile.open(output);
-  outFile<<dijsize<<"\n"<<vertexString<<"\b "<<std::endl;
+  outFile<<dijsize<<"\n"<<total_cost<<"\n"<<vertexString<<"\b "<<std::endl;
   outFile.close();
   //-------------------------------------------------------------------------------------
 
