@@ -13,7 +13,8 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 
   //Open graph file:------------------------------------------------------------
   std::ifstream file;
-  file.open(path, std::ifstream::in);
+  //file.open(path, std::ifstream::in);
+  file.open(path);
   std::getline (file,line);
   std::sscanf(line.c_str(), "%d", &nVertices);
   //std::cout << "lendo"<< std::endl;
@@ -60,12 +61,16 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   file.open(path, std::ifstream::in);
   std::getline (file,line);//discard nVertices line
 
-  if(weighted){
-    //std::sscanf(line.c_str(), "%d %d %d", &x, &y, &weight);
-    //graph.push(x,y,weight);
-    std::getline(file,line);
-    while (!file.eof()){
-      std::sscanf(line.c_str(), "%d %d %f", &x, &y, &weight);
+  if(weighted){    
+    //std::getline(file,line);
+    while (true){//!file.eof()){
+      //std::sscanf(line.c_str(), "%d %d %f", &x, &y, &weight);
+      //alternative:----------
+      file>>x;
+      if(file.eof()) break;
+      file>>y;
+      file>>weight;
+      //----------------------
       //Correct vertex indexes
       x--; y--;
       //test all the edges for a value < 0
@@ -76,7 +81,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
       vertDegree[x]++;
       vertDegree[y]++;
       mean_degree+=2.0;
-      std::getline(file,line);
+      //std::getline(file,line);
     }
   }
 
@@ -84,16 +89,22 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   else{
     //std::sscanf(line.c_str(), "%d %d", &x, &y);
     //graph.push(x,y,1);//WE HAVE TO IMPLEMENT THIS ON THE DATA STRUCTURE
-    std::getline(file,line);
-    while (!file.eof()){
-      std::sscanf(line.c_str(), "%d %d", &x, &y);
+    //std::getline(file,line);
+    while (true){//} (!file.eof()){
+      //std::sscanf(line.c_str(), "%d %d", &x, &y);
+      //alternative:----------
+      file>>x;
+      if(file.eof()) break;
+      file>>y;
+      //----------------------
       x--; y--;
+      //std::cout<<"   "<<x<<","<<y<<std::endl;
       graph.push(x,y,1.0);
       mEdges++;
       vertDegree[x]++;
       vertDegree[y]++;
       mean_degree+=2.0;
-      std::getline(file,line);
+      //std::getline(file,line);
     }
   }
   //Finished reading graph, close file:
@@ -338,6 +349,7 @@ template<class T> void Graph<T>::Distance(int VertexA, int VertexB){
 template<class T> int Graph<T>::simpleDistance(int Vertex, float* cost){
   int* parents;
   parents = new int[nVertices];
+  int numberOfPairs = 0; //Vertex; //nVertices-Vertex;
 
   //Weighted case---------------------------------------------------
   if (weighted == true && negativeWeight == false){
@@ -348,11 +360,35 @@ template<class T> int Graph<T>::simpleDistance(int Vertex, float* cost){
     BFS_mod(Vertex,cost,parents);
   }
 
-  int numberOfPairs = nVertices-Vertex;
-  for (int i = Vertex; i < nVertices; ++i)
+  /*
+  #pragma omp critical
   {
-    if(parents[i] == -1) numberOfPairs--;
+  /////------------------------------------------------------------------
+  std::cout<<"[";
+  for (int i = 0; i < nVertices; ++i)
+  {
+   std::cout<<cost[i]<<", ";
   }
+  std::cout<<"\b ]";
+  for (int i = 0; i < nVertices; ++i)
+  {
+   std::cout<<parents[i]<<", ";
+  }
+  std::cout<<"\b ]";
+  */
+
+  //for (int i = Vertex; i < nVertices; ++i)
+  for (int i = 0; i < Vertex; ++i)
+  {
+    //if(parents[i] < 0) numberOfPairs--;
+    if(parents[i] != -2) if(parents[i] != -1)numberOfPairs++;
+  }
+
+  /*
+  std::cout<<" numberOfPairs: "<<numberOfPairs<<std::endl;
+  /////------------------------------------------------------------------
+  }
+  */
 
   delete [] parents;
 
@@ -404,7 +440,8 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
   //Correct inicial index
   initial--;
 
-  int starter = 999999999;//very big float (gambiarra)
+  float starter = 10000.0;//-5000;//std::numeric_limits<float>::infinity();//very big float (gambiarra)
+  //std::cout<<"starter"<<starter<<std::endl;
   heap<float> pilha(nVertices,starter);
 
  //Initialize values
@@ -447,12 +484,25 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
  		// 	std::cout<<std::endl;
 
       if(pilha.exists(neig[i])){
-        if(pilha.cost(neig[i])>(currentValue + weig[i]) ){
+        if(currentValue==starter){}
+        else if(weig[i]==starter){}
+        else if(pilha.cost(neig[i])==starter){
+          //std::cout<<"Parents"<<std::endl;
+          parents[neig[i]] = current;
+          //std::cout<<"Distance"<<std::endl;
+          distance[neig[i]] = (currentValue + weig[i]);
+          pilha.replace( neig[i], (currentValue + weig[i]) );
+          ////#pragma omp critical
+          ////std::cout<<"Replace: "<<neig[i]<<", "<<(currentValue)<<std::endl;
+        }
+        else if(pilha.cost(neig[i])>(currentValue + weig[i]) ){
         	//std::cout<<"Parents"<<std::endl;
           parents[neig[i]] = current;
           //std::cout<<"Distance"<<std::endl;
           distance[neig[i]] = (currentValue + weig[i]);
           pilha.replace( neig[i], (currentValue + weig[i]) );
+          ////#pragma omp critical
+          ////std::cout<<"Replace: "<<neig[i]<<", "<<(currentValue)<<std::endl;
         }
       }
     }
@@ -551,6 +601,8 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
       delete [] weig;
     }
  	}
+
+  /*
   int* feig = NULL;
   iterations = graph.degree(2272);
   deleteFlagN = graph.getNeighbours(2272,&feig);
@@ -561,9 +613,11 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
     }
   }
   std::cout << neigString << std:: endl;
+
   if(deleteFlagN){
     delete [] feig;
   }
+  */
  	//Save the cost to get to each vertex from initial------------------------------------
   int* newindex;
   newindex = new int[nVertices];
@@ -599,7 +653,7 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
   outFile<<dijsize<<"\n"<<total_cost<<"\n"<<vertexString<<"\b "<<std::endl;
   outFile.close();
   //-------------------------------------------------------------------------------------
-
+  
 	//deletes auxiliary arrays
   delete [] parents; delete [] levels; delete [] cost;
 
@@ -678,12 +732,12 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
   //Store the distance sum on each thread
   float distance[threadN];
   //Store the # of considered pair on each thread
-  float usedPairs[threadN];
+  int usedPairs[threadN];
 
   for (int i = 0; i < threadN; ++i)
   {
     distance[i] = 0.0;
-    usedPairs[i] = 0.0;
+    usedPairs[i] = 0;
   }
 
   #pragma omp parallel
@@ -699,16 +753,18 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
 
     //-----------------------------------------------
     #pragma omp for
-      for (int i = init; i < end; ++i)
+      for (int i = init; i < end+1; ++i)
       {
-        usedPairs[thread] += (float)simpleDistance( (i+1) , cost);
+        usedPairs[thread] += simpleDistance( i , cost);
         //sum all values on cost[] (erasing them) and add to distance[thread]
-        for (int j = i+1; j < nVertices; ++j)
-        {
-          distance[thread]+=cost[j];
+        for (int j = 0; j < nVertices; ++j)
+        { 
+            if((j+1)<i && cost[j]>-1){
+            distance[thread]+=cost[j];
 
-          if(cost[j]==-1) {
-            distance[thread]++;
+            //if(cost[j]==-1) {
+            //  distance[thread]++;
+            //}
           }
           cost[j]=0;
         }
@@ -720,14 +776,15 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
 
   float mean = 0.0;
   //int totalThreads = 0;
+  double totalSum = 0.0;
 
   float totalPairs = 0.0;
+  //long long totalPairsLong = 0;
   for (int i = 0; i < threadN; ++i)
   {
-    totalPairs += usedPairs[i];
+    totalPairs += (float)usedPairs[i];
+    //totalPairsLong += usedPairs[i];
   }
-
-  std::cout<<"Total of used pairs: "<<totalPairs<<std::endl;
 
   float* threadWeight; threadWeight = new float[threadN];
   for (int i = 0; i < threadN; ++i)
@@ -744,6 +801,7 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
     if(usedPairs[t]>0){
       std::cout<<"["<<t<<"] ";
       std::cout<<distance[t]<<" | "<<usedPairs[t];
+      totalSum += distance[t];
       //totalThreads += 1;
 
       threadWeight[t] = ((float)usedPairs[t]/totalPairs);
@@ -756,8 +814,11 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
   }
 
   std::cout<<"Total weight: "<<totalWeight<<std::endl;
+  std::cout<<"Total sum: "<<totalSum<<std::endl;
+  std::cout<<"Total of used pairs: "<<totalPairs<<std::endl;
 
   mean = mean/totalWeight;
+  std::cout<<"Mean Distance: "<<mean<<std::endl;
 
   return mean;
 

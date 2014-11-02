@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 template <class V>
 class heap
@@ -21,6 +22,26 @@ class heap
     int downer;
 
     //--------------------------------------------------------------------------------------------
+
+    //returns true if x>y
+    bool greater(V x, V y){
+        if (x == starter){
+            if (y == starter)  return false;
+            return true;
+        }
+        if (y == starter) return false;
+        return x>y;
+    }
+
+    //returns true if x<y
+    bool lesser(V x, V y){
+        if (x == starter){
+            if (y == starter)  return false;
+            return false;
+        }
+        if (y == starter) return true;
+        return x<y;
+    }
 
     //insert element at the heap's bottom and sorts it
     //ALWAYS CALLED AFTER ERASE
@@ -45,13 +66,15 @@ class heap
     	//fix heap:
     	if( ((slot-1)/2)>-1 ){
 
-    		if(value[slot]<value[((slot-1)/2)]) {
+    		//if(value[slot]<value[((slot-1)/2)]) {
+            if( lesser(value[slot],value[((slot-1)/2)]) ) {
     			heap_up(slot);
     		}
 
     		else if( ((2*slot)+1) <= lastElement ){
 
-    			if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
+    			//if (value[slot]>value[(2*slot)+1]||value[slot]>value[(2*slot)+2]){
+                if ( greater( value[slot],value[(2*slot)+1] )|| greater( value[slot],value[(2*slot)+2] ) ){
     				heap_down(slot);
     			}
 
@@ -78,7 +101,8 @@ class heap
       index = new int[size];
 
       //Set starter value
-      starter = arg;
+      starter = arg;//std::numeric_limits<V>::infinity();
+      //std::cout<<"Infinity! "<<starter<<std::endl;
 
       //Set flags
       upping = false;
@@ -134,7 +158,8 @@ class heap
     		proceed = false;
     		//std::cout<<"Heaping up "<<index[slot]<<std::endl;
     		if(slot>0){
-    			if(value[slot]<value[((slot-1)/2)]){
+    			//if(value[slot]<value[((slot-1)/2)]){
+                if( lesser(value[slot],value[((slot-1)/2)]) ) {
 						swap(index[slot], index[((slot-1)/2)]);
 						slot = ((slot-1)/2);//-----//
 						proceed = true;//-----//
@@ -168,7 +193,8 @@ class heap
     		//If left child's index on value[] < last element's index
     		//Then, choose minimum valued child
     		else if(((2*slot)+1)<lastElement){
-    			if(value[(2*slot)+2]<value[(2*slot)+1]) child = (2*slot)+2;
+    			//if(value[(2*slot)+2]<value[(2*slot)+1]) child = (2*slot)+2;
+                if( lesser(value[(2*slot)+2],value[(2*slot)+1]) ) child = (2*slot)+2;
     			else child = (2*slot)+1;
     		}
     		//If left child's index on value[] = last element's index
@@ -178,7 +204,8 @@ class heap
     		}
     		//----------------------------------------------------------
     		//Compare the element with its child
-    		if(value[child]<value[slot]){
+    		//if(value[child]<value[slot]){
+            if(lesser(value[child],value[slot]) ){
     			swap(index[child], index[slot]);
     			slot = child;//-----//
     			proceed = true;//-----//
@@ -285,21 +312,21 @@ class heap
 
     //Prints a line with each element's value
     void printTable(){
-			for (int i = 0; i<(nElements+1); i++){
-				if (exists(i)) std::cout<<"["<<i<<"]="<<*(pointer[i])<<"; ";
-				else 	std::cout<<"["<<i<<"]="<<"---"<<"; ";
-			}
-			std::cout<<std::endl;
+		for (int i = 0; i<(nElements+1); i++){
+			if (exists(i)) std::cout<<"["<<i<<"]="<<*(pointer[i])<<"; ";
+			else 	std::cout<<"["<<i<<"]="<<"---"<<"; ";
+		}
+	   std::cout<<std::endl;
     }
 
 		//Prints a heap representation, has to be recursive
-		void printHeap(){
-			std::cout<<"Top: "<<index[0]<<":  ";
-			for (int i = 1; i<lastElement+1; i++){
-				std::cout<<index[(i-1)/2]<<"<--"<<index[i]<<";  ";
-			}
-			std::cout<<std::endl;
-			return;
+	void printHeap(){
+		std::cout<<"Top: "<<index[0]<<":  ";
+		for (int i = 1; i<lastElement+1; i++){
+			std::cout<<index[(i-1)/2]<<"<--"<<index[i]<<";  ";
+		}
+		std::cout<<std::endl;
+		return;
     }
 
 
