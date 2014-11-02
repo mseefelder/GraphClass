@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <cfloat>
 
 template <class V>
 class heap

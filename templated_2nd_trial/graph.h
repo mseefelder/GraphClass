@@ -9,6 +9,7 @@
 #include <stack>
 #include <limits>
 #include <omp.h>
+//#include <cdouble>
 //#include <priority_queue>
 
 #include "adjlist.h"
@@ -18,7 +19,7 @@
 class CompareDist //used in the heaps
 {
 public:
-    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2)
+    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2) const
     {
 
       return n1.second<n2.second;
@@ -28,7 +29,7 @@ public:
 
 /**
  * \class Graph
- *
+ *double
  * @brief The Graph class
  */
 template<class T>
@@ -56,11 +57,11 @@ class Graph
     void buildGraph(std::string path,std::string output);
 
     void BFS(int initial, std::string output);
-    void BFS_mod(int initial,float* distance,int* parents);
+    void BFS_mod(int initial,double* distance,int* parents) const;
 
     //PRIORITY:***
     void Dijkstra(int initial, std::string output);
-    void Dijkstra_mod(int initial,float* distance, int* parents);
+    void Dijkstra_mod(int initial,double* distance, int* parents) const;
 
     //PRIORITY:***
     /*
@@ -75,13 +76,13 @@ class Graph
     */
     void Distance(int vertexA, int vertexB);
 
-    int simpleDistance(int Vertex, float* cost);
+    int simpleDistance(int Vertex, double* cost) const;
 
     //PRIORITY:**
     void DistanceToAll(int vertex);
 
     //PRIORITY:**
-    float MeanDistance(int init, int end);
+    double MeanDistance(int init, int end) const;
 
     //PRIORITY:*
     void DFS(int initial, std::string output);

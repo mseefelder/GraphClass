@@ -2,7 +2,7 @@
 
 void adjMatrix::generate(int numVertices){
 	long long size = (numVertices*(numVertices-1))/2;
-  data = new float[size];
+  data = new double[size];
   for(int i = 0; i<size; i++){
   	data[i] = -1.0;
   }
@@ -12,7 +12,7 @@ void adjMatrix::generate(int numVertices){
  	return;
 }
 
-void adjMatrix::push(int x, int y, float w){
+void adjMatrix::push(int x, int y, double w){
   long long index;
   if (x > y){
   	index = (((x+1)*x)/2)-x+y;

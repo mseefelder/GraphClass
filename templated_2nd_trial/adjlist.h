@@ -17,9 +17,9 @@ class adjList
 {
   private:
 
-    std::forward_list< std::pair<int, float> >* data;
+    std::forward_list< std::pair<int, double> >* data;
     int** vArray;
-    float** wArray;
+    double** wArray;
     int nVertices;
     int* degrees;
 
@@ -38,16 +38,16 @@ class adjList
 
     void postProcess();
 
-    void push(int x, int y, float w);
+    void push(int x, int y, double w);
 
-    int degree(int v){return degrees[v];}
+    int degree(int v) const {return degrees[v];}
 
-    bool getNeighbours(int vertex, int** array){
+    bool getNeighbours(int vertex, int** array) const {
       *array = vArray[vertex];
       return false;
     }
 
-    bool getWeights(int vertex, float** array){
+    bool getWeights(int vertex, double** array) const {
       //std::cout<<"In list: getWeights:: ";
       //for (int i = 0; i<degrees[vertex]; i++) std::cout<<"w "<<wArray[vertex][i]<<" ";
       //std::cout<<std::endl;

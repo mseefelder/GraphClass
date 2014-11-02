@@ -1,12 +1,12 @@
 #include "adjlist.h"
 
 void adjList::generate(int numVertices){
-  data = new std::forward_list< std::pair<int, float> >[numVertices];
+  data = new std::forward_list< std::pair<int, double> >[numVertices];
   nVertices = numVertices;
   return;
 }
 
-void adjList::push(int x, int y, float w){
+void adjList::push(int x, int y, double w){
   data[x].emplace_front(y,w);
   data[y].emplace_front(x,w);
   return;
@@ -25,7 +25,7 @@ Possible optimization: Parallellism in the loop.
 void adjList::postProcess(){
   degrees = new int[nVertices];
   vArray = new int*[nVertices]; //first, neigbours; then, weight.
-  wArray = new float*[nVertices];
+  wArray = new double*[nVertices];
 
   int size = 0;
   for(int i = 0; i<nVertices; i++){
@@ -38,7 +38,7 @@ void adjList::postProcess(){
 
     degrees[i] = size;
     vArray[i] = new int[size];
-    wArray[i] = new float[size];
+    wArray[i] = new double[size];
 
     int index = 0;
     for ( auto it = data[i].begin(); it != data[i].end(); ++it ){

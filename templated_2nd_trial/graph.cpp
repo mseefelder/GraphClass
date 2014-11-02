@@ -1,13 +1,12 @@
 #include "graph.h"
-#include "iostream"
-#include "string"
+
 
 template<class T> void Graph<T>::buildGraph(std::string path,std::string output){
 
   //Line used to parse the graph file
   std::string line;
   //(sum of all degrees)/number of vertices()
-  float mean_degree = 0.0;
+  double mean_degree = 0.0;
   //number of edges on the graph
   int mEdges = 0;
 
@@ -55,7 +54,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 
   //Begin graph filling:--------------------------------------------------------
   int x,y;
-  float weight;
+  double weight;
   //Procedure to fill a weighted Graph
   //std::ifstream file;
   file.open(path, std::ifstream::in);
@@ -121,9 +120,9 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
 
   //Prepare a string with empirical distribution of degrees
   std::string degreeString;
-  float temp = 0.0;
+  double temp = 0.0;
   for (int j= 0; j<maxDegree; j++){
-    temp = ((float)degrees[j]/nVertices);
+    temp = ((double)degrees[j]/nVertices);
     degreeString+="Degree:"+std::to_string(j)+" --> "+std::to_string(temp)+"\n";
   }
 
@@ -216,11 +215,11 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
  	levels = new int[nVertices];
 
  	//Store each element's cost
- 	float* cost;
- 	cost = new float[nVertices];
+ 	double* cost;
+ 	cost = new double[nVertices];
 
- 	int starter = 999999999;//very big float (gambiarra)
- 	heap<float> pilha(nVertices,starter);
+ 	int starter = 999999999;//very big double (gambiarra)
+ 	heap<double> pilha(nVertices,starter);
 
 	//Initialize values
  	for(int i =0;i <nVertices;i++){
@@ -240,7 +239,7 @@ template<class T> void Graph<T>::Dijkstra(int initial, std::string output){
   int curCost;
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
- 	float* weig = NULL; //array to store weights
+ 	double* weig = NULL; //array to store weights
   bool deleteFlagN;
   bool deleteFlagW;
  	while(!pilha.empty()){
@@ -307,8 +306,8 @@ template<class T> void Graph<T>::Distance(int VertexA, int VertexB){
   int* parents;
   parents = new int[nVertices];
 
-  float* distance;
-  distance = new float[nVertices];
+  double* distance;
+  distance = new double[nVertices];
 
   //Weighted case---------------------------------------------------
   if (weighted == true && negativeWeight == false){
@@ -346,7 +345,7 @@ template<class T> void Graph<T>::Distance(int VertexA, int VertexB){
   return;
 }
 
-template<class T> int Graph<T>::simpleDistance(int Vertex, float* cost){
+template<class T> int Graph<T>::simpleDistance(int Vertex, double* cost) const{
   int* parents;
   parents = new int[nVertices];
   int numberOfPairs = 0; //Vertex; //nVertices-Vertex;
@@ -395,7 +394,7 @@ template<class T> int Graph<T>::simpleDistance(int Vertex, float* cost){
   return numberOfPairs;
 }
 
-template<class T> void Graph<T>::BFS_mod(int initial,float* distance, int* parents){
+template<class T> void Graph<T>::BFS_mod(int initial,double* distance, int* parents) const{
   //Correcting index
   initial = initial -1;
 
@@ -435,14 +434,14 @@ template<class T> void Graph<T>::BFS_mod(int initial,float* distance, int* paren
   return;
 }
 
-template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* parents){
+template<class T> void Graph<T>::Dijkstra_mod(int initial,double* distance,int* parents) const{
 
   //Correct inicial index
   initial--;
 
-  float starter = 10000.0;//-5000;//std::numeric_limits<float>::infinity();//very big float (gambiarra)
+  double starter = DBL_MAX;//-5000;//std::numeric_limits<double>::infinity();//very big double (gambiarra)
   //std::cout<<"starter"<<starter<<std::endl;
-  heap<float> pilha(nVertices,starter);
+  heap<double> pilha(nVertices,starter);
 
  //Initialize values
   for(int i =0;i <nVertices;i++){
@@ -460,7 +459,7 @@ template<class T> void Graph<T>::Dijkstra_mod(int initial,float* distance,int* p
   int currentValue;
   int iterations; //for each vertex, a different # of iterations
   int* neig = NULL; //array to store neighbours
-  float* weig = NULL; //array to store weights
+  double* weig = NULL; //array to store weights
   bool deleteFlagN;
   bool deleteFlagW;
   while(!pilha.empty()){
@@ -534,11 +533,11 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  	levels = new int[nVertices];
 
  	//Store each element's cost
- 	float* cost;
- 	cost = new float[nVertices];
+ 	double* cost;
+ 	cost = new double[nVertices];
 
- 	int starter = 999999999;//very big float (gambiarra)
- 	heap<float> pilha(nVertices,starter);
+ 	int starter = 999999999;//very big double (gambiarra)
+ 	heap<double> pilha(nVertices,starter);
 
 	//Initialize values
  	for(int i =0;i <nVertices;i++){
@@ -557,7 +556,7 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
  	int current;//vertex being computed
  	int iterations; //for each vertex, a different # of iterations
  	int* neig = NULL; //array to store neighbours
- 	float* weig = NULL; //array to store weights
+ 	double* weig = NULL; //array to store weights
   bool deleteFlagN;
   bool deleteFlagW;
  	while(!pilha.empty()){
@@ -631,7 +630,7 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
       removed++;
       }
   }
-  float total_cost = 0;
+  double total_cost = 0;
   for ( int w = 0; w<nVertices;w++){
     if(parents[w]>-1){
       total_cost += cost[w];
@@ -666,8 +665,8 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
 
   //Weighted case---------------------------------------------------
   if (weighted == true && negativeWeight == false){
-    float* distance;
-    distance = new float[nVertices];
+    double* distance;
+    distance = new double[nVertices];
     Dijkstra_mod(Vertex,distance,parents);
     int counter;
     for(int i= 1 ;i<(nVertices + 1);i++){
@@ -695,8 +694,8 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
   }
   //Non-weighted case-------------------------------------------------
   else if(weighted == false){
-    float* distance;
-    distance = new float[nVertices];
+    double* distance;
+    distance = new double[nVertices];
     BFS_mod(Vertex,distance,parents);
     int counter;
     for(int i= 1 ;i<(nVertices + 1);i++){
@@ -726,11 +725,11 @@ template<class T> void Graph<T>::DistanceToAll(int Vertex){
   return;
 }
 
-template<class T> float Graph<T>::MeanDistance(int init, int end){
+template<class T> double Graph<T>::MeanDistance(int init, int end) const{
 
   int threadN = omp_get_max_threads();
   //Store the distance sum on each thread
-  float distance[threadN];
+  double distance[threadN];
   //Store the # of considered pair on each thread
   int usedPairs[threadN];
 
@@ -744,7 +743,7 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
   //-----------------------------------------------//-----------------------------------------------
   {
     int thread = omp_get_thread_num();
-    float cost[nVertices];
+    double cost[nVertices];
 
     for (int k = 0; k < nVertices; ++k)
     {
@@ -774,24 +773,24 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
   }
   //-----------------------------------------------//-----------------------------------------------
 
-  float mean = 0.0;
+  double mean = 0.0;
   //int totalThreads = 0;
   double totalSum = 0.0;
 
-  float totalPairs = 0.0;
+  double totalPairs = 0.0;
   //long long totalPairsLong = 0;
   for (int i = 0; i < threadN; ++i)
   {
-    totalPairs += (float)usedPairs[i];
+    totalPairs += (double)usedPairs[i];
     //totalPairsLong += usedPairs[i];
   }
 
-  float* threadWeight; threadWeight = new float[threadN];
+  double* threadWeight; threadWeight = new double[threadN];
   for (int i = 0; i < threadN; ++i)
   {
     threadWeight[i] = 0.0;
   }
-  float totalWeight = 0.0;
+  double totalWeight = 0.0;
 
   std::cout<<"Distance | Used Pairs | Weight \n";
 
@@ -804,7 +803,7 @@ template<class T> float Graph<T>::MeanDistance(int init, int end){
       totalSum += distance[t];
       //totalThreads += 1;
 
-      threadWeight[t] = ((float)usedPairs[t]/totalPairs);
+      threadWeight[t] = ((double)usedPairs[t]/totalPairs);
       totalWeight += threadWeight[t];
 
       std::cout<<" | "<<threadWeight[t]<<"\n";

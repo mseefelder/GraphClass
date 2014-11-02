@@ -21,7 +21,7 @@ class adjMatrix
     This array will be indexed ALWAYS with "long long"'s (refer to
      .cpp to see it).
     */
-    float* data;
+    double* data;
     int* degrees;
     int nVertices;
 
@@ -37,11 +37,11 @@ class adjMatrix
 
     void generate(int numVertices);
 
-    void push(int x, int y, float w);
+    void push(int x, int y, double w);
 
-    int degree(int v){return degrees[v];}
+    int degree(int v) const{return degrees[v];}
 
-    bool getNeighbours(int vertex, int** array){
+    bool getNeighbours(int vertex, int** array) const{
       int* draft;
       *array = new int[degrees[vertex]];
       draft = *array;
@@ -63,9 +63,9 @@ class adjMatrix
       return true;
     }
 
-    bool getWeights(int vertex, float** array){
-      float* draft;
-      *array = new float[degrees[vertex]];
+    bool getWeights(int vertex, double** array) const{
+      double* draft;
+      *array = new double[degrees[vertex]];
       draft = *array;
 
       long long index = 0;
