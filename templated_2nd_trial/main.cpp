@@ -5,7 +5,7 @@
 
 int main(){
 
-  std::string open = "graph4.txt";
+  std::string open = "../../datasets/graph5.txt";
   std::string open1 = "../../datasets/rede_colaboracao.txt";
   std::string open2 = "K4.txt";
   std::string out = "saidabolada2.txt";
@@ -47,7 +47,7 @@ int main(){
   }
   */
 
-  Graph<adjList> grafo(open,out);
+  Graph<adjList> grafo(open1,out);
 
   int final = grafo.getNumberOfVertices();
   double ti,tf,tempo; // ti = tempo inicial // tf = tempo final
@@ -57,6 +57,8 @@ int main(){
   gettimeofday(&tempo_inicio,NULL);
 
   std::cout<<grafo.MeanDistance(1, final)<<std::endl;
+  //grafo.Distance(2722,471365);
+
   gettimeofday(&tempo_fim,NULL);
   tf = (double)tempo_fim.tv_usec + ((double)tempo_fim.tv_sec * (1000000.0));
   ti = (double)tempo_inicio.tv_usec + ((double)tempo_inicio.tv_sec * (1000000.0));
