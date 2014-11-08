@@ -1,15 +1,25 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+//#ifndef GRAPH_H
+//#define GRAPH_H
 
-#include <string>
-#include <fstream>
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <queue>
+#include <stack>
+#include <limits>
+#include <omp.h>
+//#include <cdouble>
+//#include <priority_queue>
 
-class CompareDist //used in GraphList::Diameter()
+#include "adjlist.h"
+#include "adjmatrix.h"
+#include "heap.h"
+
+class CompareDist //used in the heaps
 {
 public:
-    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2)
+    bool operator()(std::pair<int,int> n1, std::pair<int,int> n2) const
     {
 
       return n1.second<n2.second;
@@ -19,94 +29,85 @@ public:
 
 /**
  * \class Graph
- *
+ *double
  * @brief The Graph class
  */
+template<class T>
 class Graph
 {
-	public:
+
+
+  public:
     /**
      * @brief Graph Default constructor
      */
-    Graph(){}
+    Graph(){
+      weighted = false;
+      negativeWeight = false;
+      nVertices = 0;
+    }
 
+    Graph(std::string path,std::string output){
+      nVertices = 0;
+      weighted = false;
+      negativeWeight = false;
+      buildGraph(path, output);
+    }
 
-    /**
-     * @brief logGraphInfo Logs info about the graph to a text file.
-     *
-     * The text file format is: \n
-     * '#' n = number of vertices \n
-     * '#' m = number of edges \n
-     * '#' d_medio = mean degree \n
-     * 1 f(1) = n(1)/n \n
-     * 2 f(2) = n(2)/n \n
-     * ... \n
-     * d f(d) \n
-     *
-     * @param path Where to read graph from
-     * @param output Where to save the log
-     * @return 1
-     */
-    //int logGraphInfo(std::string path);// = "./graphInfo.txt");
+    void buildGraph(std::string path,std::string output);
 
-	virtual int loadGraph(std::string path,std::string output) = 0;// = "./graphInfo.txt");
+    void BFS(int initial, std::string output);
+    void BFS_mod(int initial,double* distance,int* parents) const;
 
-    /**
-     * @brief BFS Runs a Breadth-first search and saves the result to a text file
-     *
-     * The text output contains: \n
-     * The search tree. \n
-     * The root's degree is zero. \n
-     * To represent the tree just list for each vertex: \n
-     *  it's parent \n
-     *  it's degree \n
-     *
-     * @param inicial Vertex from wich the search starts
-     * @param path Where to save the results
-     * @return 1
-     */
-    virtual int BFS(int inicial, std::string path) = 0;// = "./graphBFS.txt");
+    //PRIORITY:***
+    void Dijkstra(int initial, std::string output);
+    void Dijkstra_mod(int initial,double* distance, int* parents) const;
 
-    /**
-     * @brief DFS Runs a Depth-first search and saves the result to a text file
-     *
-     * The text output contains:\n
-     * The search tree.\n
-     * The root's degree is zero.\n
-     * To represent the tree just list for each vertex:\n
-     *  it's parent\n
-     *  it's degree\n
-     *
-     * @param inicial Vertex from wich the search starts
-     * @param path Where to save the results
-     * @return 1
-     */
-    virtual int DFS(int inicial, std::string path) = 0;
+    //PRIORITY:***
+    /*
+    We have to choose: *Prim* or Kuskal
+    */
+    void MST(int initial, std::string output);
+    void conservativeMST(int initial, std::string output);
 
-    /**
-     * @brief connectedComponents Computes the graph's Connected Components on a text file.
-     *
-     * Text output format:\n
-     * The number of connected components\n
-     * Size of each component\n
-     * Lists of vertices belonging to each component (in decrescent order of component size)\n
-     *
-     * @return 1
-     */
-    virtual int connectedComponents(std::string path)=0;
-    
-    virtual int getNumberOfVertices()=0;
-    
-    virtual int Diameter(int b, int e)=0;
+    //PRIORITY:**
+    /*
+    If graph is weighted: use Dijkstra
+    Else: use BFS
+    */
+    void Distance(int vertexA, int vertexB);
+
+    int simpleDistance(int Vertex, double* cost) const;
+
+    //PRIORITY:**
+    void DistanceToAll(int vertex);
+
+    //PRIORITY:**
+    double MeanDistance(int init, int end) const;
+
+    //PRIORITY:*
+    void DFS(int initial, std::string output);
+
+    //PRIORITY:*
+    int connectedComponents(std::string path);
+
+    //PRIORITY:*
+    int getNumberOfVertices();
+
+    //PRIORITY:*
+    int Diameter(int b, int e);
 
     ~Graph(){}
 
-protected:
+  protected:
 
+  private:
 
-
-private:
+  bool weighted;//if graph is weigthed = true; else = false
+  bool negativeWeight;//if graph has a negative weighted edge, can't use Dijkstra
+  int nVertices;
+  T graph;
 
 };
 
-#endif // GRAPH_H
+//#endif // GRAPH_H
