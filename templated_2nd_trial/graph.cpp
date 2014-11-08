@@ -1,6 +1,5 @@
 #include "graph.h"
 
-
 template<class T> void Graph<T>::buildGraph(std::string path,std::string output){
 
   //Line used to parse the graph file
@@ -10,12 +9,14 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   //number of edges on the graph
   int mEdges = 0;
 
+  std::cout<<"ahuahuahua"<<std::endl;
   //Open graph file:------------------------------------------------------------
   std::ifstream file;
   //file.open(path, std::ifstream::in);
   file.open(path);
   std::getline (file,line);
   std::sscanf(line.c_str(), "%d", &nVertices);
+  std::cout<<"ahuahuahua"<<std::endl;
   //std::cout << "lendo"<< std::endl;
   //Check whether matrix is weighted or not-------------------------------------
   int count=0, size;
@@ -38,7 +39,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   graph.generate(nVertices);//WE HAVE TO IMPLEMENT THIS
   //std::cout << "generate"<< std::endl;
   //Auxiliary structures--------------------------------------------------------
-  //stores each vertex: it's degree
+  //stores for each vertex: it's degree
   int* vertDegree;
   vertDegree = new int[nVertices];
   for (int i = 0; i<nVertices; i++){
@@ -108,15 +109,75 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   }
   //Finished reading graph, close file:
   file.close();
-
+  std::cout<<"ahuahuahua"<<std::endl;
   //Graph analysis:-------------------------------------------------------------
 
-  //Find the maximum degree:
+  //Find 3 maximum degrees:
+  // int maxVert1 = 0; int maxVert2 = 1; int maxVert3 = 2;
+  // int maxDegree1 = vertDegree[0]; int maxDegree2 = vertDegree[1]; int maxDegree3 = vertDegree[2];
+  // for (int j = 3; j<nVertices; j++){
+  //   if(maxDegree1<maxDegree2 && maxDegree1<maxDegree3){
+  //     if(vertDegree[j]>maxDegree1){
+  //       maxVert1 = j;
+  //       maxDegree1 = vertDegree[j];
+  //     }
+  //   }
+  //   else if(maxDegree2<maxDegree1 && maxDegree2<maxDegree3){
+  //     if(vertDegree[j]>maxDegree2){
+  //       maxVert2 = j;
+  //       maxDegree2 = vertDegree[j];
+  //     }
+  //   }
+  //   else if(maxDegree3<maxDegree2 && maxDegree3<maxDegree1){
+  //     if(vertDegree[j]>maxDegree3){
+  //       maxVert3 = j;
+  //       maxDegree3 = vertDegree[j];
+  //     }
+  //   }
+  // }
+ 
+  
+  int maxDegree1 = 0;
+  int maxIndex1 = 0;
+  for (int j = 0; j<nVertices; j++){
+    if(vertDegree[j]>maxDegree1){ 
+      maxDegree1 = vertDegree[j];
+      maxIndex1 = j;
+    }
+  }
+
+  int maxDegree2 = 0;
+  int maxIndex2 = 0;
+  for (int j = 0; j<nVertices; j++){
+    if(j!=maxIndex1){
+      if(vertDegree[j]>maxDegree2){ 
+        maxDegree2 = vertDegree[j];
+        maxIndex2 = j;
+      }
+    }
+  }
+
+  int maxDegree3 = 0;
+  int maxIndex3 = 0;
+  for (int j = 0; j<nVertices; j++){
+    if(j!=maxIndex1 && j!=maxIndex2){
+      if(vertDegree[j]>maxDegree3){ 
+        maxDegree3 = vertDegree[j];
+        maxIndex3 = j;
+      }
+    }
+  }
+
+  std::cout<<"MaxVert1: "<<maxIndex1<<" Degree: "<<maxDegree1<<std::endl;
+  std::cout<<"MaxVert2: "<<maxIndex2<<" Degree: "<<maxDegree2<<std::endl;
+  std::cout<<"MaxVert3: "<<maxIndex3<<" Degree: "<<maxDegree3<<std::endl;
+
   int maxDegree = 0;
   for (int j = 0; j<nVertices; j++){
     degrees[vertDegree[j]]++;
     if(vertDegree[j]>maxDegree) maxDegree = vertDegree[j];
   }
+  
 
   //Prepare a string with empirical distribution of degrees
   std::string degreeString;
@@ -132,7 +193,7 @@ template<class T> void Graph<T>::buildGraph(std::string path,std::string output)
   //Write file with graph analysis
   std::ofstream outFile;
   outFile.open(output);
-  outFile<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#mean_degree = "<<mean_degree<<"\n"<<degreeString<<std::endl;
+  outFile<<"Max Degree:"<<maxDegree<<"#n = "<<nVertices<<"\n"<<"#m = "<<mEdges<<"\n"<<"#mean_degree = "<<mean_degree<<"\n"<<degreeString<<std::endl;
 
   //Delete auxiliary structures so as to not leak memory
   delete [] degrees; delete [] vertDegree;
@@ -654,6 +715,125 @@ template<class T> void Graph<T>::MST(int initial, std::string output){
   //-------------------------------------------------------------------------------------
   
 	//deletes auxiliary arrays
+  delete [] parents; delete [] levels; delete [] cost;
+
+}
+
+template<class T> void Graph<T>::conservativeMST(int initial, std::string output){
+  //Correct inicial index
+  initial--;
+
+  //Store each element's parent
+  int* parents;
+  parents = new int[nVertices];
+
+  //Store each element's level
+  int* levels;
+  levels = new int[nVertices];
+
+  //Store each element's cost
+  double* cost;
+  cost = new double[nVertices];
+
+  int starter = 999999999;//very big double (gambiarra)
+  heap<double> pilha(nVertices,starter);
+
+  //Initialize values
+  for(int i =0;i <nVertices;i++){
+    parents[i] = -2;
+    levels[i] = -1;
+    cost[i] = -1.0;
+  }
+
+  //Set values for initial vertex
+  pilha.replace(initial,0.0);
+  cost[initial] = 0.0;
+  parents[initial] = -1;
+  levels[initial] = 0;
+
+  //Auxiliar variables
+  int current;//vertex being computed
+  int iterations; //for each vertex, a different # of iterations
+  int* neig = NULL; //array to store neighbours
+  double* weig = NULL; //array to store weights
+  bool deleteFlagN;
+  bool deleteFlagW;
+  while(!pilha.empty()){
+    //std::cout<<"--------------------------------------------------------------------------------------------------------------------------------------------- \n";
+    //std::cout<<std::endl;
+    //pilha.printTable();//Logs the weights in each element
+    //pilha.printHeap();
+    current = pilha.top_index();//Gets the minimum value element
+    iterations = graph.degree(current);
+    deleteFlagN = graph.getNeighbours(current,&neig);
+    deleteFlagW = graph.getWeights(current,&weig);
+
+    pilha.pop();
+
+    for(int i =0;i < iterations; i++){
+      //std::cout<<"v:"<<current;for(int i=0; i<iterations; i++)std::cout<<" n:"<<neig[i];std::cout<<std::endl;
+      //std::cout<<"exists("<<neig[i]<<")"<<std::endl;
+      if(pilha.exists(neig[i])){
+
+        //std::cout<<"index:"<<neig[i]<<"; cost:"<<pilha.cost(neig[i]);
+        //std::cout<<"; current:"<<pilha.cost(current)<<"; weight:"<<weig[i];
+        //std::cout<<std::endl;
+
+        if(pilha.cost(neig[i]) > weig[i] ){
+          parents[neig[i]] = current;
+          levels[neig[i]] = levels[current] + 1;
+          cost[neig[i]] = weig[i];
+
+          //std::cout<<"   >Replace ["<<neig[i]<<"] ,"<<weig[i]<<std::endl;
+
+          pilha.replace( neig[i], weig[i] );
+        }
+
+      }
+
+    }
+    if(deleteFlagN){
+      delete [] neig;
+    }
+    if(deleteFlagW){
+      delete [] weig;
+    }
+  }
+
+  /*
+  int* feig = NULL;
+  iterations = graph.degree(2272);
+  deleteFlagN = graph.getNeighbours(2272,&feig);
+  std::string neigString;
+  for(int i = 0 ; i<iterations;i++){
+    if(parents[feig[i]] == 2272){
+    neigString += std::to_string(feig[i]) + ", ";
+    }
+  }
+  std::cout << neigString << std:: endl;
+
+  if(deleteFlagN){
+    delete [] feig;
+  }
+  */
+  //Save the cost to get to each vertex from initial------------------------------------
+  int dijsize = nVertices;
+  std::string vertexString;
+  for (int j= 0; j<nVertices; j++){
+    if(parents[j]==-1){}
+    else if(!(parents[j]<-1)){
+        vertexString+=std::to_string(parents[j]+1)+" "+std::to_string(j+1)+"\n";//+" "+std::to_string(cost[j])+"\n";
+    }
+    else{dijsize--;}
+  }
+
+  std::ofstream outFile;
+  outFile.open(output);
+  outFile<<nVertices<<"\n"<<vertexString;
+  outFile.close();
+  //-------------------------------------------------------------------------------------
+  
+  //deletes auxiliary arrays
   delete [] parents; delete [] levels; delete [] cost;
 
 }
