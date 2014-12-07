@@ -1,3 +1,8 @@
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <math.h>
+
 struct City{
 	
 	double pos[2]; // x= pos[0], y= pos[1]
@@ -40,7 +45,7 @@ public:
 	void open(std::string path){
 		
 		std::ifstream file;
-		file.open(path);
+		file.open(path,std::ifstream::in);
 		file>>nCities; //number of cities in the problem
 
 		cities = new City*[nCities]; //array with all the cities
@@ -114,7 +119,7 @@ public:
 		{
 			solution[i] = cities[curIndex]->index;
 			cities[curIndex]->indexOnSolution = i;
-			curIndex = cities[curIndex]->nextStop;
+			curIndex = cities[curIndex]->nextStop->index;
 		}
 
 		solved = true;
@@ -134,12 +139,16 @@ public:
 		for (i; i < nCities; ++i)
 		{
 			for (j; j < nCities; ++j)
-			{
+			{	
+				if(i==j || i==starter || j==starter) continue;
+
 				if (pathsCross(cities[i],cities[j]))
 				{
 					aux = totalDistance 
 					- (edgeLength(cities[i]) + edgeLength(cities[j])) 
 					+ (distance(cities[i], cities[j]->nextStop) + distance(cities[j],cities[i]->nextStop));
+
+					std::cout<<aux<<" "<<totalDistance<<std::endl;
 
 					if(totalDistance > aux){
 						twoOptSwap(cities[i],cities[j]);
@@ -152,9 +161,37 @@ public:
 		return;
 	}
 
-	//INCOMPLETE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	void saveResult(std::string path){
+		std::ofstream outFile;
+  		outFile.open(path);
+  		outFile<<solutionDistance()<<"\n";
+  		for (int i = 0; i < nCities; ++i)
+  		{
+  			outFile<<"("<<cities[solution[i]]->pos[0]<<",";
+  			outFile<<cities[solution[i]]->pos[1]<<") \n";
+  		}
+  		outFile<<std::endl;
+  		outFile.close();
+	}
+
 	//Constructor
-	TSP(){}
+	TSP(){
+		nCities = 0;
+		starter = 0;
+		cities = NULL;
+		solution = NULL;
+		solved = false;
+	}
+
+	TSP(std::string path){
+		nCities = 0;
+		starter = 0;
+		cities = NULL;
+		solution = NULL;
+		solved = false;
+
+		open(path);
+	}
 
 private:
 	//Variables:
@@ -174,11 +211,11 @@ private:
 
 	//compute distance from one city to another
 	double distance(City* cityA, City* cityB){
-		return sqrt((cityA->pos[0]-cityB->pos[0] * cityA->pos[0]-cityB->pos[0])+(cityA->pos[1]-cityB->pos[1] * cityA->pos[1]-cityB->pos[1]));
+		return sqrt( ( (cityA->pos[0]-cityB->pos[0]) * (cityA->pos[0]-cityB->pos[0]) ) + ( (cityA->pos[1]-cityB->pos[1]) * (cityA->pos[1]-cityB->pos[1]) ) );
 	}
 
-	double edgeLength(City* city){
-		return sqrt((cityA->pos[0]-cityA->nextStop->pos[0] * cityA->pos[0]-cityA->nextStop->pos[0])+(cityA->pos[1]-cityA->nextStop->pos[1] * cityA->pos[1]-cityA->nextStop->pos[1]));
+	double edgeLength(City* cityA){
+		return sqrt( ( (cityA->pos[0]-cityA->nextStop->pos[0]) * (cityA->pos[0]-cityA->nextStop->pos[0]) )+( (cityA->pos[1]-cityA->nextStop->pos[1]) * (cityA->pos[1]-cityA->nextStop->pos[1]) ) );
 	}
 
 	double solutionDistance(){
@@ -186,6 +223,7 @@ private:
 		for (int i = 0; i < nCities; ++i)
 		{
 			totalDistance += edgeLength(cities[solution[i]]);
+			std::cout<<edgeLength(cities[solution[i]])<<std::endl;
 		}
 		return totalDistance;
 	}
@@ -194,30 +232,27 @@ private:
 	// http://ideone.com/PnPJgb
 	//PROBLEM MUST BE SOLVED
 	bool pathsCross(City* cityA, City* cityB){
-		PointF CmP = new PointF( cityB->pos[0] - cityA->pos[0], cityB->pos[1] - cityA->pos[1]);
-		PointF r = new PointF( cityA->nextStop->pos[0] - cityA->pos[0], cityA->nextStop->pos[1] - cityA->pos[1]);
-		PointF s = new PointF( cityB->nextStop->pos[0] - cityB->pos[0], cityB->nextStop->pos[1] - cityB->pos[1]);
  
 		double CmPxr = ( cityB->pos[0] - cityA->pos[0]) * ( cityA->nextStop->pos[1] - cityA->pos[1]) - ( cityB->pos[1] - cityA->pos[1]) * ( cityA->nextStop->pos[0] - cityA->pos[0]);
 		double CmPxs = ( cityB->pos[0] - cityA->pos[0]) * ( cityB->nextStop->pos[1] - cityB->pos[1]) - ( cityB->pos[1] - cityA->pos[1]) * ( cityB->nextStop->pos[0] - cityB->pos[0]);
 		double rxs = ( cityA->nextStop->pos[0] - cityA->pos[0]) * ( cityB->nextStop->pos[1] - cityB->pos[1]) - ( cityA->nextStop->pos[1] - cityA->pos[1]) * ( cityB->nextStop->pos[0] - cityB->pos[0]);
 		 
-		if ( CmPxr == 0f)
+		if ( CmPxr == 0)
 		{
 		// Lines are collinear, and so intersect if they have any overlap
 		 
-		return ( ( cityB->pos[0] - cityA->pos[0] < 0f) != ( cityB->pos[0] - cityA->nextStop->pos[0] < 0f))
-		|| ( ( cityB->pos[1] - cityA->pos[1] < 0f) != ( cityB->pos[1] - cityA->nextStop->pos[1] < 0f));
+		return ( ( cityB->pos[0] - cityA->pos[0] < 0) != ( cityB->pos[0] - cityA->nextStop->pos[0] < 0))
+		|| ( ( cityB->pos[1] - cityA->pos[1] < 0) != ( cityB->pos[1] - cityA->nextStop->pos[1] < 0));
 		}
 		 
-		if ( rxs == 0f)
+		if ( rxs == 0)
 		return false; // Lines are parallel.
 		 
-		double rxsr = 1f / rxs;
+		double rxsr = 1 / rxs;
 		double t = CmPxs * rxsr;
 		double u = CmPxr * rxsr;
 		 
-		return (t >= 0f) && (t <= 1f) && (u >= 0f) && (u <= 1f);
+		return (t >= 0) && (t <= 1) && (u >= 0) && (u <= 1);
 	}
 
 	//INCOMPLETE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -225,14 +260,36 @@ private:
 	void twoOptSwap(City* cityA, City* cityB){
 		//Here I have to do the path swap on the nodes and on the solution array!
 		
+		int end = cityB->nextStop->indexOnSolution-1;
+
 		//On the nodes:
 		City* temp = cityA->nextStop;
-		cityA->nextStop = cityB->nextStop;
-		cityB->nextStop = temp;
-		
-		//On the solution array:
+		cityA->nextStop = cityB;
+		temp->nextStop = cityB->nextStop;
 
+		int curIndex = cityB->indexOnSolution;
+		while(true){
+			cities[solution[curIndex]]->nextStop = cities[solution[curIndex-1]]; 
+			if(curIndex = temp->indexOnSolution) break;
+			curIndex--;
+		}
 
+		int aux = cityA->indexOnSolution + 1; 
+		while(true){
+			swapSolutionArray(aux,end);
+			aux++;
+			end--;
+			if(aux == end || end==aux+1) break;
+		}
+	}
+
+	void swapSolutionArray(int a, int b){
+		if (a == b) return;
+		std::cout<<a<<"<-->"<<b<<std::endl;
+		int temp = solution[a];
+		solution[a] = solution[b];
+		solution[b] = temp;
+		return;
 	}
 
 
@@ -241,10 +298,5 @@ private:
 /*
 
 TO DO:
-
-twoOptSwap();
-edgeLength();
-distance();
-solutionDistance();
 
 */
