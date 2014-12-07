@@ -62,10 +62,10 @@ bool doIntersect(City *a, City *nextA, City *b, City *nextB){
     return false;
 }
 int main(){
-  City a(1,1,0);
-  City nextA(10,1,1);
-  City b(1,2,2);
-  City nextB(10,2,3);
+  City a(914061,22681,0);
+  City nextA(721054,802978,1);
+  City b(936293,266919,2);
+  City nextB(383510,678241,3);
   doIntersect(&a, &nextA, &b, &nextB)? cout << "Yes\n": cout << "No\n";
   a.pos[0] = 10;
   a.pos[1] = 0;
