@@ -1,8 +1,10 @@
 struct City{
 	
-	double pos[2];
+	double pos[2]; // x= pos[0], y= pos[1]
+	double cornerDist;
 	int index;
-	bool beenTo, left;
+	int indexOnSolution;
+	bool beenTo, left, calcDist;
 	City* nextStop;
 
 	City(){
@@ -12,6 +14,8 @@ struct City{
 		beenTo = false;
 		left = false;
 		nextStop = NULL;
+		cornerDist = 0.0;
+		calcDist = false;
 	}
 
 	City(double x, double y, int i){
@@ -21,6 +25,8 @@ struct City{
 		beenTo = false;
 		left = false;
 		nextStop = NULL;
+		cornerDist = 0.0;
+		calcDist = false;
 	}
 
 };
@@ -67,10 +73,13 @@ public:
 		for (int i = 0; i < nCities; ++i)
 		{
 			dist = distanceFromCorner(cities[i]);
+			cities[i]->cornerDist = dist;
+			cities[i]->calcDist = true;
 			if (dist<minimum)
 			{
 				startingIndex = i;
 				minimum = dist;
+			}
 		}
 
 		starter = startingIndex;
@@ -98,6 +107,16 @@ public:
 			}
 		}
 
+		curIndex = starter;
+		//Fill solution array:
+		solution = new int[nCities];
+		for (int i = 0; i < nCities; ++i)
+		{
+			solution[i] = cities[curIndex]->index;
+			cities[curIndex]->indexOnSolution = i;
+			curIndex = cities[curIndex]->nextStop;
+		}
+
 		solved = true;
 		return;
 	}
@@ -105,10 +124,11 @@ public:
 	//Each vertex has an edge associated with it. We have N=nCities edges.
 	//If we check for each edge if it crosses another edge, we have N**2 checks. (reasonable)
 	void twoOpt(){
-		double totalDistance = 0;
+		double totalDistance = solutionDistance();
 		int i, j;
+		double aux = 0.0;
+
 		repeat:
-		totalDistance = solutionDistance();
 		i = 0; 
 		j = 0;
 		for (i; i < nCities; ++i)
@@ -117,16 +137,15 @@ public:
 			{
 				if (pathsCross(cities[i],cities[j]))
 				{
-					twoOptSwap(cities[i],cities[j]);
-					if( !(solutionDistance()<totalDistance) )
-					{
-						twoOptSwapUndo(cities[i],cities[j]);
-					}
-					else
-					{
-						goto repeat; //Yes, I'm using a go to. Deal with it.
-						//Ps.: Probably there's a better way to do it. I'm lazy now.
-					}
+					aux = totalDistance 
+					- (edgeLength(cities[i]) + edgeLength(cities[j])) 
+					+ (distance(cities[i], cities[j]->nextStop) + distance(cities[j],cities[i]->nextStop));
+
+					if(totalDistance > aux){
+						twoOptSwap(cities[i],cities[j]);
+						totalDistance = aux;
+						goto repeat;
+					} 
 				}
 			}
 		}
@@ -149,44 +168,78 @@ private:
 
 	//Get city's distance from 0,0
 	double distanceFromCorner(City* cityA){
+		
 		return sqrt((cityA->pos[0]*cityA->pos[0])+(cityA->pos[1]*cityA->pos[1]));
 	}
 
+	//compute distance from one city to another
 	double distance(City* cityA, City* cityB){
 
 	}
 
-	double edgeRadius(City* city){
-
+	double edgeLength(City* city){
+		//...
 	}
-	//INCOMPLETE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+	double solutionDistance(){
+		//...
+	}
+
 	//Check if two pths between two pairs of cities cross each other
+	// http://ideone.com/PnPJgb
 	//PROBLEM MUST BE SOLVED
 	bool pathsCross(City* cityA, City* cityB){
-		//first, check if cities radii intersect. (radii = plural of radius)
-		//So, if the distance between two path starting points is smaller
-		//than the sum of the paths' radii, the radii intersect
-		if(distance(cityA,cityB)<edgeRadius(cityA)+edgeRadius(cityB))
+		PointF CmP = new PointF( cityB->pos[0] - cityA->pos[0], cityB->pos[1] - cityA->pos[1]);
+		PointF r = new PointF( cityA->nextStop->pos[0] - cityA->pos[0], cityA->nextStop->pos[1] - cityA->pos[1]);
+		PointF s = new PointF( cityB->nextStop->pos[0] - cityB->pos[0], cityB->nextStop->pos[1] - cityB->pos[1]);
+ 
+		double CmPxr = ( cityB->pos[0] - cityA->pos[0]) * ( cityA->nextStop->pos[1] - cityA->pos[1]) - ( cityB->pos[1] - cityA->pos[1]) * ( cityA->nextStop->pos[0] - cityA->pos[0]);
+		double CmPxs = ( cityB->pos[0] - cityA->pos[0]) * ( cityB->nextStop->pos[1] - cityB->pos[1]) - ( cityB->pos[1] - cityA->pos[1]) * ( cityB->nextStop->pos[0] - cityB->pos[0]);
+		double rxs = ( cityA->nextStop->pos[0] - cityA->pos[0]) * ( cityB->nextStop->pos[1] - cityB->pos[1]) - ( cityA->nextStop->pos[1] - cityA->pos[1]) * ( cityB->nextStop->pos[0] - cityB->pos[0]);
+		 
+		if ( CmPxr == 0f)
 		{
-			//Now we have to check if the PATHS intersect:
-
+		// Lines are collinear, and so intersect if they have any overlap
+		 
+		return ( ( cityB->pos[0] - cityA->pos[0] < 0f) != ( cityB->pos[0] - cityA->nextStop->pos[0] < 0f))
+		|| ( ( cityB->pos[1] - cityA->pos[1] < 0f) != ( cityB->pos[1] - cityA->nextStop->pos[1] < 0f));
 		}
-		else
-		{
-			return false;
-		}
-
+		 
+		if ( rxs == 0f)
+		return false; // Lines are parallel.
+		 
+		double rxsr = 1f / rxs;
+		double t = CmPxs * rxsr;
+		double u = CmPxr * rxsr;
+		 
+		return (t >= 0f) && (t <= 1f) && (u >= 0f) && (u <= 1f);
 	}
+
 	//INCOMPLETE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//ONLY CALLED BY twoOpt(): swapping operation when paths cross
 	void twoOptSwap(City* cityA, City* cityB){
 		//Here I have to do the path swap on the nodes and on the solution array!
-	}
-	//INCOMPLETE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-	//ONLY CALLED BY twoOpt(): swapping operation when paths cross
-	void twoOptSwapUndo(City* cityA, City* cityB){
-		//Here I have to undo the path swap on the nodes and on the solution array!
+		
+		//On the nodes:
+		City* temp = cityA->nextStop;
+		cityA->nextStop = cityB->nextStop;
+		cityB->nextStop = temp;
+		
+		//On the solution array:
+
+
 	}
 
 
 };
+
+/*
+
+TO DO:
+
+twoOptSwap();
+edgeLength();
+distance();
+solutionDistance();
+
+*/

@@ -5,7 +5,7 @@
 
 int main(){
 
-  std::string open = "especifique_o_caminho";
+  std::string open = "../dblp.txt";
   std::string out = "analise.txt";
 
   Graph<adjList> grafo(open,out);
