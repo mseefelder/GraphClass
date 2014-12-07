@@ -4,7 +4,7 @@
 #include <math.h>
 
 struct City{
-	
+
 	double pos[2]; // x= pos[0], y= pos[1]
 	double cornerDist;
 	int index;
@@ -43,7 +43,7 @@ public:
 
 	//Loads problem on an array of cities. Just this.
 	void open(std::string path){
-		
+
 		std::ifstream file;
 		file.open(path,std::ifstream::in);
 		file>>nCities; //number of cities in the problem
@@ -68,7 +68,7 @@ public:
 
 	//Gets city nearest to 0,0 and sets is as starting point
 	void setStartingCity(){
-		
+
 		double minimum = 9999999999;//Very big number
 		int startingIndex = 0;
 
@@ -102,7 +102,7 @@ public:
 			cities[curIndex]->nextStop = cities[nextIndex];
 			//Prepare for next iteration
 			curIndex = nextIndex;
-			//Take care not to cross array boundaries	
+			//Take care not to cross array boundaries
 			if (nextIndex+1<nCities) nextIndex = nextIndex+1;
 			else nextIndex = 0;
 			//If we're back to the start, we're done
@@ -121,6 +121,9 @@ public:
 			cities[curIndex]->indexOnSolution = i;
 			curIndex = cities[curIndex]->nextStop->index;
 		}
+		for (int i = 0 ;i < nCities;i++){
+
+		}
 
 		solved = true;
 		return;
@@ -134,18 +137,19 @@ public:
 		double aux = 0.0;
 
 		repeat:
-		i = 0; 
+		i = 0;
 		j = 0;
 		for (i; i < nCities; ++i)
 		{
 			for (j; j < nCities; ++j)
-			{	
+			{
 				if(i==j || i==starter || j==starter) continue;
 
-				if (pathsCross(cities[i],cities[j]))
+				if (doIntersect(cities[i],cities[j]))
 				{
-					aux = totalDistance 
-					- (edgeLength(cities[i]) + edgeLength(cities[j])) 
+					std::cout << cities[i]->index <<" "<<cities[j]->index<<"\n";
+					aux = totalDistance
+					- (edgeLength(cities[i]) + edgeLength(cities[j]))
 					+ (distance(cities[i], cities[j]->nextStop) + distance(cities[j],cities[i]->nextStop));
 
 					std::cout<<aux<<" "<<totalDistance<<std::endl;
@@ -154,7 +158,7 @@ public:
 						twoOptSwap(cities[i],cities[j]);
 						totalDistance = aux;
 						goto repeat;
-					} 
+					}
 				}
 			}
 		}
@@ -205,7 +209,7 @@ private:
 
 	//Get city's distance from 0,0
 	double distanceFromCorner(City* cityA){
-		
+
 		return sqrt((cityA->pos[0]*cityA->pos[0])+(cityA->pos[1]*cityA->pos[1]));
 	}
 
@@ -231,36 +235,67 @@ private:
 	//Check if two pths between two pairs of cities cross each other
 	// http://ideone.com/PnPJgb
 	//PROBLEM MUST BE SOLVED
-	bool pathsCross(City* cityA, City* cityB){
- 
+	inline bool onSegment(City* a,City* b,City* nextA){
+		if (b->pos[0]<= std::max(a->pos[0],nextA->pos[0]) && b->pos[0]>= std::min(a->pos[0],nextA->pos[0]) &&
+				b->pos[1] <= std::max(a->pos[1],nextA->pos[1]) && b->pos[1]>= std::min(a->pos[1],nextA->pos[1]) )
+				{
+					return true;
+				}
+		return false;
+	}
+	inline int orientation(City *a, City *b , City *nextA){
+		int val  = (b->pos[1] - a->pos[1]) * (nextA->pos[0] - b->pos[0])-
+							(b->pos[0] - a->pos[0]) * (nextA->pos[1] - b->pos[1]);
+		if(val ==0)  return 0;
+		return (val > 0)? 1: 2;
+	}
+
+	bool doIntersect(City *a, City *b){
+			int o1 = orientation(a, a->nextStop, b);
+			int o2 = orientation(a, a->nextStop, b->nextStop);
+			int o3 = orientation(b, b->nextStop , a);
+			int o4 = orientation(b, b->nextStop ,a->nextStop);
+
+			if (o1 != o2 && o3 != o4) return true;
+
+			if (o1 == 0 && onSegment(a, b, a->nextStop)) return true;
+			if (o2 == 0 && onSegment(a, b->nextStop,a->nextStop)) return true;
+			if (o3 == 0 && onSegment(b, a, b->nextStop)) return true;
+			if (o4 == 0 && onSegment(b, a->nextStop , b->nextStop)) return true;
+
+			return false;
+	}
+
+	/*bool pathsCross(City* cityA, City* cityB){
+
 		double CmPxr = ( cityB->pos[0] - cityA->pos[0]) * ( cityA->nextStop->pos[1] - cityA->pos[1]) - ( cityB->pos[1] - cityA->pos[1]) * ( cityA->nextStop->pos[0] - cityA->pos[0]);
 		double CmPxs = ( cityB->pos[0] - cityA->pos[0]) * ( cityB->nextStop->pos[1] - cityB->pos[1]) - ( cityB->pos[1] - cityA->pos[1]) * ( cityB->nextStop->pos[0] - cityB->pos[0]);
 		double rxs = ( cityA->nextStop->pos[0] - cityA->pos[0]) * ( cityB->nextStop->pos[1] - cityB->pos[1]) - ( cityA->nextStop->pos[1] - cityA->pos[1]) * ( cityB->nextStop->pos[0] - cityB->pos[0]);
-		 
+
 		if ( CmPxr == 0)
 		{
 		// Lines are collinear, and so intersect if they have any overlap
-		 
+
 		return ( ( cityB->pos[0] - cityA->pos[0] < 0) != ( cityB->pos[0] - cityA->nextStop->pos[0] < 0))
 		|| ( ( cityB->pos[1] - cityA->pos[1] < 0) != ( cityB->pos[1] - cityA->nextStop->pos[1] < 0));
 		}
-		 
+
 		if ( rxs == 0)
 		return false; // Lines are parallel.
-		 
+
 		double rxsr = 1 / rxs;
 		double t = CmPxs * rxsr;
 		double u = CmPxr * rxsr;
-		 
+
 		return (t >= 0) && (t <= 1) && (u >= 0) && (u <= 1);
-	}
+	}*/
 
 	//INCOMPLETE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//ONLY CALLED BY twoOpt(): swapping operation when paths cross
 	void twoOptSwap(City* cityA, City* cityB){
 		//Here I have to do the path swap on the nodes and on the solution array!
-		
-		int end = cityB->nextStop->indexOnSolution-1;
+
+		int end = cityB->nextStop->indexOnSolution;
 
 		//On the nodes:
 		City* temp = cityA->nextStop;
@@ -269,17 +304,19 @@ private:
 
 		int curIndex = cityB->indexOnSolution;
 		while(true){
-			cities[solution[curIndex]]->nextStop = cities[solution[curIndex-1]]; 
+			cities[solution[curIndex]]->nextStop = cities[solution[curIndex-1]];
 			if(curIndex = temp->indexOnSolution) break;
 			curIndex--;
 		}
 
-		int aux = cityA->indexOnSolution + 1; 
-		while(true){
-			swapSolutionArray(aux,end);
-			aux++;
-			end--;
-			if(aux == end || end==aux+1) break;
+		int aux = cityA->indexOnSolution;
+		if(!(aux > nCities || end < 0)){
+			while(true){
+				swapSolutionArray(aux,end);
+				aux++;
+				end--;
+				if(aux == end || end==aux+1 || aux > nCities || end < 0) break;
+			}
 		}
 	}
 
