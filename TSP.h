@@ -174,15 +174,20 @@ private:
 
 	//compute distance from one city to another
 	double distance(City* cityA, City* cityB){
-
+		return sqrt((cityA->pos[0]-cityB->pos[0] * cityA->pos[0]-cityB->pos[0])+(cityA->pos[1]-cityB->pos[1] * cityA->pos[1]-cityB->pos[1]));
 	}
 
 	double edgeLength(City* city){
-		//...
+		return sqrt((cityA->pos[0]-cityA->nextStop->pos[0] * cityA->pos[0]-cityA->nextStop->pos[0])+(cityA->pos[1]-cityA->nextStop->pos[1] * cityA->pos[1]-cityA->nextStop->pos[1]));
 	}
 
 	double solutionDistance(){
-		//...
+		double totalDistance = 0.0;
+		for (int i = 0; i < nCities; ++i)
+		{
+			totalDistance += edgeLength(cities[solution[i]]);
+		}
+		return totalDistance;
 	}
 
 	//Check if two pths between two pairs of cities cross each other
