@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include <queue>
+#include "heap.h"
 
 //#include <unistd.h>
 
@@ -133,6 +135,257 @@ public:
 		return;
 	}
 
+	//Solves by finding nearest neighbors
+	void greedytravel(){
+		int nextIndex = -1;
+		int passed[nCities];
+		std::queue<int> fifo;
+		for(int i=0 ; i<nCities; i++){
+			passed[i] = 0;
+		}
+		double mindistance;
+		fifo.push(starter);
+		int curIndex = 0;
+		while(!fifo.empty()){
+			curIndex = fifo.front();
+			passed[curIndex] = 1;
+			double aux = 0.0;
+			mindistance = 999999999999;
+			for(int i=0 ; i<nCities; i++){
+				if (i != curIndex){
+					if(passed[i] == 0){
+						aux = distance(cities[curIndex],cities[i]);
+						if (aux < mindistance) {
+							mindistance = aux;
+							nextIndex = i;
+						}
+					}
+				}
+			}
+			if(nextIndex != -1){
+				cities[curIndex]->nextStop = cities[nextIndex];
+				fifo.push(nextIndex);
+				passed[nextIndex] = 1;
+			}
+			else if(nextIndex == -1){
+				cities[curIndex]->nextStop = cities[starter];
+			}
+			fifo.pop();
+			nextIndex = -1;
+		}
+		std::cout<<"Done linking"<<std::endl;
+		curIndex = starter;
+		//Fill solution array:
+		solution = new int[nCities];
+		for (int i = 0; i < nCities; ++i)
+		{
+			solution[i] = cities[curIndex]->index;
+			cities[curIndex]->indexOnSolution = i;
+			curIndex = cities[curIndex]->nextStop->index;
+		}
+		solved = true;
+		return;	
+	}
+
+	//Solves using christofides heuristic
+	void christofides(){
+		int* MSTarray;
+		MST(&MSTarray);
+		int* matching;
+		perfectMatching(MSTarray, &matching);
+		//now, let's walk
+		bool wasVisited[nCities];
+		int visitedCities = 0;
+		for (int i = 0; i < nCities; ++i)
+		{
+			wasVisited[i] = false;
+		}
+		int currentCity = starter;
+		while(visitedCities!=nCities){
+			//...
+		}
+		return;
+	}
+
+	void MST(int** array){
+	 	int initial = starter;
+
+	 	//Store each element's parent
+	 	int* parents;
+	 	parents = new int[nCities];
+
+	 	//Store each element's level
+	 	int* levels;
+	 	levels = new int[nCities];
+
+	 	//Store each element's cost
+	 	double* cost;
+	 	cost = new double[nCities];
+
+	 	double minimum = 999999999999;//very big double (gambiarra)
+	 	heap<double> pilha(nCities,minimum);
+
+		//Initialize values
+	 	for(int i =0;i <nCities;i++){
+	 		parents[i] = -2;
+	 		levels[i] = -1;
+	 		cost[i] = -1.0;
+	 	}
+
+	 	//Set values for initial vertex
+	 	pilha.replace(initial,0.0);
+	 	cost[initial] = 0.0;
+	 	parents[initial] = -1;
+	 	levels[initial] = 0;
+
+	 	//Auxiliar variables
+	 	int current;//vertex being computed
+	 	int iterations = nCities; //for each vertex, a different # of iterations
+	 	int* neig = NULL; //array to store neighbours
+	 	double* weig = NULL; //array to store weights
+	 	int counter;
+		//bool deleteFlagN;
+		//bool deleteFlagW;
+	 	while(!pilha.empty()){
+	 		counter = 0;
+	 		current = pilha.top_index();//Gets the minimum value element
+	 		neig = new int[nCities-1];
+	 		weig = new double[nCities-1];
+	 		for (int i = 0; i < nCities; ++i)
+	 		{
+	 			if(current != i){
+	 				neig[counter] = i;
+	 				weig[counter] = distance(cities[current], cities[i]);
+	 				counter++;
+	 			}
+	 		}
+
+	 		pilha.pop();
+
+	 		for(int i =0;i < iterations; i++){
+	 			if(pilha.exists(neig[i])){
+	 				if(pilha.cost(neig[i]) > weig[i] ){
+	 					parents[neig[i]] = current;
+	 					levels[neig[i]] = levels[current] + 1;
+	 					cost[neig[i]] = weig[i];
+	 					pilha.replace( neig[i], weig[i] );
+	 				}
+
+	 			}
+
+	 		}
+	    delete [] neig;
+	    delete [] weig;
+	 	}
+
+	 	delete [] levels; delete [] cost;
+
+	 	*array = parents;
+	 	return;
+	/*
+
+	  int* newindex;
+	  newindex = new int[nVertices];
+	  int removed = 0;
+	  for (int j= 0; j<nVertices; j++){
+	    if(!(parents[j]<-1)){
+	      newindex[j] = (j+1)- removed;
+	    }
+	    else{
+	      newindex[j]= -1;
+	      removed++;
+	      }
+	  }
+	  double total_cost = 0;
+	  for ( int w = 0; w<nVertices;w++){
+	    if(parents[w]>-1){
+	      total_cost += cost[w];
+	    }
+	  }
+	  std::cout<<total_cost<<std::endl;
+	 	int dijsize = nVertices;
+	 	std::string vertexString;
+	  for (int j= 0; j<nVertices; j++){
+	    if(parents[j]==-1){}
+	    else if(!(parents[j]<-1)){
+	        vertexString+=std::to_string(newindex[parents[j]])+" "+std::to_string(newindex[j])+" "+std::to_string(cost[j])+" "+ +"\n";
+	    }
+	    else{dijsize--;}
+	  }
+
+	  std::ofstream outFile;
+	  outFile.open(output);
+	  outFile<<dijsize<<"\n"<<total_cost<<"\n"<<vertexString<<"\b "<<std::endl;
+	  outFile.close();
+	  //-------------------------------------------------------------------------------------
+	  
+		//deletes auxiliary arrays
+	  delete [] parents; delete [] levels; delete [] cost;
+	*/
+	}
+
+	void perfectMatching(int* MST, int** array){
+		//First, use degree array to find vertices with odd degrees
+		int* degree = new int[nCities];
+		for (int i = 0; i < nCities; ++i)
+		{
+			degree[i] = 0;
+		}
+		for (int i = 0; i < nCities; ++i)
+		{
+			degree[MST[i]]++;
+			degree[i]++;
+		}
+		//Count vertices with odd degrees;
+		int odds = 0;
+		for (int i = 0; i < nCities; ++i)
+		{
+			if(degree[i]%2 != 0) odds++;
+		}
+		//Build array listing odd vertices
+		int* oddArray = new int[odds];
+		int counter = 0;
+		for (int i = 0; i < nCities; ++i)
+		{
+			if(degree[i]%2 != 0) 
+			{
+				oddArray[counter] = i;
+			}
+		}
+		//Compute perfect matching
+		int* matchingResult = new int[nCities];
+		for (int i = 0; i < nCities; ++i)
+		{
+			matchingResult[i] = -1;
+		}
+		int connected = 0; // when connected == odds, all odds are connected;
+		int index = 0;
+		int minIndex = 0;
+		double minDistance = 999999999999;
+		double tempDistance = 0.0;
+
+		while(connected!=odds)
+		{
+			for (int i = 0; i < odds; ++i)
+			{	
+				if(oddArray[i] == -1 || oddArray[index] == -1 || i == index) continue;
+				tempDistance = distance(cities[oddArray[index]],cities[oddArray[i]]);
+				if (tempDistance<minDistance)
+				{
+					minDistance = tempDistance;
+					minIndex = i;
+					connected+=2;
+					matchingResult[oddArray[i]] = oddArray[index];
+					matchingResult[oddArray[index]] = oddArray[i];
+					oddArray[i] = -1; oddArray[index] = -1;
+				}
+			}
+		}
+
+		*array = matchingResult;
+		return;
+	}
+
 	//Each vertex has an edge associated with it. We have N=nCities edges.
 	//If we check for each edge if it crosses another edge, we have N**2 checks. (reasonable)
 	void twoOpt(){
@@ -141,17 +394,14 @@ public:
 		int i, j;
 		double aux = 0.0;
 
-		//repeat:
-		//i = 0;
-		//j = 0;
 		for (i = 0; i < nCities; ++i)
 		{
 			for (j = 0; j < nCities; ++j)
 			{	
-				//std::cout<<"Pontos: "<<i<<", "<<j<<std::endl;
+				//std::cout<<"   Pontos: "<<i<<", "<<j<<std::endl;
 				//std::cout<<"s: "<<cities[i]->indexOnSolution<<" s:"<<cities[j]->indexOnSolution<<std::endl;
 				
-				if(i==j || i==starter || j==starter) 
+				if(i==j)// || i==starter || j==starter) 
 				{
 					//std::cout<<"Nao pode ser"<<std::endl;
 					continue;
@@ -181,11 +431,17 @@ public:
 					//std::cout<<aux<<" vs. "<<totalDistance<<std::endl;
 
 					if(totalDistance > aux){
+						//std::cout<<"Swapping is better"<<std::endl;
 						twoOptSwap(cities[i],cities[j]);
 						totalDistance = aux;
-						//std::cout<<"Swapped"<<std::endl;
+						for (int i = 0; i < nCities; ++i)
+						{
+							//std::cout<<cities[solution[i]]->index<<"->"<<cities[solution[i]]->nextStop->index<<"; ";
+						}
+						//std::cout<<"\n Swapped"<<std::endl;
 						i = 0; j = 0;
 					}
+					else if(totalDistance < aux) std::cout<<"No swap this time"<<std::endl;
 				}
 			}
 			//std::cout<<"--------------------"<<std::endl;
@@ -196,32 +452,25 @@ public:
 	}
 
 	void saveResult(std::string path){
-		std::cout<<"1"<<std::endl;
 		std::ofstream outFile;
   		outFile.open(path);
-  		std::cout<<"2"<<std::endl;
   		outFile<<solutionDistance()<<"\n";
-  		std::cout<<"3"<<std::endl;
   		for (int i = 0; i < nCities; ++i)
-  		{
+  		{	
   			outFile<<"("<<cities[solution[i]]->pos[0]<<",";
   			outFile<<cities[solution[i]]->pos[1]<<") \n";
   		}
-  		std::cout<<"4"<<std::endl;
-  		//outFile<<"Final: ("<<cities[solution[nCities]]->nextStop->pos[0]<<",";
-  		//outFile<<cities[solution[nCities]]->nextStop->pos[1]<<") \n";
-		std::cout<<"5"<<std::endl;
+  		outFile<<"Final: ("<<cities[solution[nCities-1]]->nextStop->pos[0]<<",";
+  		outFile<<cities[solution[nCities-1]]->nextStop->pos[1]<<") \n";
 		for (int i = 0; i < nCities; ++i)
 		{
 			outFile<<cities[i]->index<<"->"<<cities[i]->nextStop->index<<"; ";
 		}
-		std::cout<<"6"<<std::endl;
 		outFile<<"\n";
 		for (int i = 0; i < nCities; ++i)
 		{
 			outFile<<cities[solution[i]]->index<<"->"<<cities[solution[i]]->nextStop->index<<"; ";
 		}
-		std::cout<<"7"<<std::endl;
 
   		outFile<<std::endl;
   		outFile.close();
@@ -276,7 +525,6 @@ private:
 		for (int i = 0; i < nCities; ++i)
 		{
 			totalDistance += edgeLength(cities[solution[i]]);
-			//std::cout<<edgeLength(cities[solution[i]])<<std::endl;
 		}
 		return totalDistance;
 	}
@@ -344,35 +592,51 @@ private:
 	//ONLY CALLED BY twoOpt(): swapping operation when paths cross
 	void twoOptSwap(City* cityA, City* cityB){
 		//Here I have to do the path swap on the nodes and on the solution array!
-		//std::cout<<"Swapping edges..."<<std::endl;
-		int aux = cityA->nextStop->indexOnSolution;
-		int end = cityB->nextStop->indexOnSolution;
+		int curIndex = 0;
 
-		//On the nodes:
-		City* temp = cityA->nextStop;
-		cityA->nextStop = cityB;
-		temp->nextStop = cityB->nextStop;
+		if(cityA->indexOnSolution <= cityB->indexOnSolution){
+			int aux = cityA->nextStop->indexOnSolution;
+			int end = cityB->nextStop->indexOnSolution;
 
-		int curIndex = cityB->indexOnSolution;
-		while(true){
-			//std::cout<<curIndex<<std::endl;
-			cities[solution[curIndex]]->nextStop = cities[solution[curIndex-1]];
-			if(curIndex = temp->indexOnSolution || curIndex == 1) break;
-			curIndex--;
-		}
+			//On the nodes:
+			City* temp = cityA->nextStop;
+			cityA->nextStop = cityB;
+			temp->nextStop = cityB->nextStop;
 
-		/*
-		std::cout<<"Before swap: \n    Aux: S:"<<aux<<" End: S:"<<end<<std::endl;
-		if(!(aux > nCities || end < 0)){
+			curIndex = cityB->indexOnSolution;
 			while(true){
-				std::cout<<"!";
-				swapSolutionArray(aux,end);
-				aux++;
-				end--;
-				if(aux == end || end==aux+1 || aux > nCities || end < 0) break;
+				if(curIndex == temp->indexOnSolution) break;
+				//std::cout<<"Enter while: "<<curIndex<<std::endl;
+				//std::cout<<"now: "<<solution[curIndex]<<" points to "<<solution[curIndex-1]<<"\n";
+				cities[solution[curIndex]]->nextStop = cities[solution[curIndex-1]];
+				if(curIndex == 0) curIndex = nCities-1;
+				else curIndex--;
+				//std::cout<<"End of while: "<<curIndex<<std::endl;
 			}
+			//std::cout<<std::endl;
 		}
-		*/
+		else if(cityA->indexOnSolution > cityB->indexOnSolution){
+			int aux = cityB->nextStop->indexOnSolution;
+			int end = cityA->nextStop->indexOnSolution;
+
+			//On the nodes:
+			City* temp = cityB->nextStop;
+			cityB->nextStop = cityA;
+			temp->nextStop = cityA->nextStop;
+
+			curIndex = cityA->indexOnSolution;
+			while(true){
+				if(curIndex == temp->indexOnSolution) break;
+				//std::cout<<"Enter while: "<<curIndex<<std::endl;
+				//std::cout<<"now: "<<solution[curIndex]<<" points to "<<solution[curIndex-1]<<"\n";
+				cities[solution[curIndex]]->nextStop = cities[solution[curIndex-1]];
+				if(curIndex == 0) curIndex = nCities-1;
+				else curIndex--;
+				//std::cout<<"End of while: "<<curIndex<<std::endl;
+			}
+			//std::cout<<std::endl;
+		}
+
 		curIndex = starter;
 		//Fill solution array:
 		for (int i = 0; i < nCities; ++i)

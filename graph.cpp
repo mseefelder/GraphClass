@@ -232,20 +232,20 @@ template<class T> void Graph<T>::BFS(int initial, std::string output){
   int iterations = 0;
   bool deleteFlag;
   while(!fifo.empty()){
-      current = fifo.front();
-      iterations = graph.degree(current);
-      deleteFlag = graph.getNeighbours(current, &neig);
-      for ( int i = 0; i < iterations; i++ ){
-        if (parents[neig[i]]==-2){
-          fifo.push(*(neig+i));
-          parents[*(neig+i)]=current;
-          levels[*(neig+i)]=levels[current]+1;
-        }
+    current = fifo.front();
+    iterations = graph.degree(current);
+    deleteFlag = graph.getNeighbours(current, &neig);
+    for ( int i = 0; i < iterations; i++ ){
+      if (parents[neig[i]]==-2){
+        fifo.push(*(neig+i));
+        parents[*(neig+i)]=current;
+        levels[*(neig+i)]=levels[current]+1;
       }
-      fifo.pop();
-      if(deleteFlag){
-        delete [] neig;
-      }
+    }
+    fifo.pop();
+    if(deleteFlag){
+      delete [] neig;
+    }
   }
 
   std::string vertexString;
